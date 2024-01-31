@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/color5"
+    tools:context=".CategoryFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CATEGORIES"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="50dp"
+            android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:layout_marginTop="65dp"
+        android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/category_all"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="ALL"
+                android:textSize="25sp"
+                android:textColor="@color/black"
+                android:padding="10dp" />
+
+        <Button
+            android:id="@+id/category_mystery"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/rounded_corner"
+            android:elevation="20dp"
+            android:text="Mystery"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/category_romance"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/rounded_corner"
+            android:elevation="20dp"
+            android:text="Romance"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/category_horror"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:background="@drawable/rounded_corner"
+            android:elevation="20dp"
+            android:text="Horror"
+            android:textColor="@color/black"
+            android:textSize="11sp"
+            android:padding="10dp" />
+
+
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/category_adventure"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="Adventure"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_comedy"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="Comedy"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_fantasy"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="Fantasy"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_fiction"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="Fiction"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/category_comics"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="comics"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_thriller"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="thriller"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_poetry"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="poetry"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_religion"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="religion"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/category_classics"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="classics"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_kids"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="kids"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_cookbook"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="cook book"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_biography"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="biography"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/category_short"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="short story"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_history"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="history"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_teenagers"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="teenagers"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                android:padding="10dp" />
+
+            <Button
+                android:id="@+id/category_business"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/rounded_corner"
+                android:elevation="20dp"
+                android:text="business"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:padding="10dp" />
+
+
+        </LinearLayout>
+
+<!--    <Button-->
+<!--        android:id="@+id/categor_all"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:elevation="20dp"-->
+<!--        android:text="ALL"-->
+<!--        android:textSize="25sp"-->
+<!--        android:layout_marginStart="200dp"-->
+<!--        android:layout_marginTop="260dp"-->
+<!--        android:padding="10dp" />-->
+
+
+<!--    <Button-->
+<!--        android:id="@+id/comedy"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:elevation="20dp"-->
+<!--        android:text="Comedy"-->
+<!--        android:textSize="15sp"-->
+<!--        android:layout_marginStart="50dp"-->
+<!--        android:layout_marginTop="90dp"-->
+<!--        android:padding="10dp"/>-->
+
+
+<!--    <Button-->
+<!--        android:id="@+id/drama_button"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginStart="285dp"-->
+<!--        android:layout_marginTop="490dp"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:elevation="20dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:text="Drama"-->
+<!--        android:textSize="15sp" />-->
+
+
+<!--    <Button-->
+<!--        android:id="@+id/action_button"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginStart="70dp"-->
+<!--        android:layout_marginTop="390dp"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:elevation="20dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:text="Action"-->
+<!--        android:textSize="15sp" />-->
+
+
+<!--    <Button-->
+<!--        android:id="@+id/horror_button"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginStart="270dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:elevation="20dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:text="Horror"-->
+<!--        android:textSize="15sp" />-->
+
+<!--    <Button-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginStart="110dp"-->
+<!--        android:layout_marginTop="590dp"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:elevation="20dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:text="Else"-->
+<!--        android:textSize="15sp" />-->
+
+    </LinearLayout>
+</FrameLayout>

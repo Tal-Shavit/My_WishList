@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lavander"
+    tools:context=".addMovieFragment"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD A MOVIE!"
+        android:textSize="50sp"
+        android:textColor="@color/white"
+        android:gravity="center" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="TITLE"
+            />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="match_parent"/>
+
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="TITLE OF THE BOOK"
+            />
+        <View
+            android:layout_width="16dp"
+            android:layout_height="match_parent"/>
+
+        <ImageButton
+            android:id="@+id/titleButton"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="@drawable/ractangle_shape"
+            android:src="@drawable/baseline_search_24"
+            android:scaleType="fitCenter"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+<Spinner
+    android:id="@+id/dynamicSpinner"
+    android:layout_width="300dp"
+    android:layout_height="60dp"
+    android:layout_gravity="center"
+    android:background="@drawable/ractangle_shape"
+    android:visibility="gone"/>
+    
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <ImageView
+        android:id="@+id/movieImageView"
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <Button
+        android:id="@+id/addButton"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
+        android:text="ADD"
+        android:textSize="20dp"
+        android:background="@drawable/ractangle_shape"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "22213495621",
+    "project_id": "my-wishlist-6d33b",
+    "storage_bucket": "my-wishlist-6d33b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22213495621:android:bfea48b81fa52eba878c2c",
+        "android_client_info": {
+          "package_name": "com.talshavit.my_wishlist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCouwU0rX-TgfrbCtTnAf0gw0dfji9dB5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

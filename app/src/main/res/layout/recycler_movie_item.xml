@@ -10,7 +10,7 @@
         android:id="@+id/textCardView"
         android:layout_width="233dp"
         android:layout_height="350dp"
-        app:cardBackgroundColor="#886A6565"
+        app:cardBackgroundColor="#FFEBEE"
         app:cardCornerRadius="10dp"
         app:cardElevation="8dp"
         android:layout_gravity="center"
@@ -26,10 +26,10 @@
                 android:id="@+id/movieTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <View
@@ -62,7 +62,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:orientation="horizontal">
 
                 <TextView
@@ -93,7 +93,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.7"
                 android:orientation="horizontal">
 
                 <ImageButton

@@ -28,7 +28,6 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
 
     //private Dialog dialogMovieDetails;
     //TextView movieTitle1, movieDescription, movieGenre, movieLenght;
-    CardView textCardView;
 
     private int selectedPosition = RecyclerView.NO_POSITION; // Initially, no item is selected
 
@@ -59,8 +58,10 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
 
         if (position == selectedPosition) {
             holder.textCardView.setVisibility(View.VISIBLE);
+            holder.imageCardView.setVisibility(View.INVISIBLE);
         } else {
             holder.textCardView.setVisibility(View.INVISIBLE);
+            holder.imageCardView.setVisibility((View.VISIBLE));
         }
 
 

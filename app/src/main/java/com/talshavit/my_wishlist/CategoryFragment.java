@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.talshavit.my_wishlist.Book.MovieFragment;
+import com.talshavit.my_wishlist.Movie.MovieFragment;
 
 public class CategoryFragment extends Fragment {
 

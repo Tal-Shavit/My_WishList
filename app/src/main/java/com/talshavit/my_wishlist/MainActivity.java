@@ -26,7 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.Book.MovieFragment;
+import com.talshavit.my_wishlist.Movie.MovieFragment;
 import com.talshavit.my_wishlist.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -162,21 +162,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews() {
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if(isItBookOrMovie.equals("book"))
-                    //dialogBook.show();
-                    replaceFragment(new addMovieFragment());
-//                else if(isItBookOrMovie.equals("movie"))
-//                    dialogMovie.show();
-//                else
-//                    Toast.makeText(MainActivity.this, "YOU HAVE TO CHOOSE BOOK OR MOVIE FIRST!", Toast.LENGTH_SHORT).show();
-
-                //dialog.dismiss();
-
-            }
-        });
 
         allMoviesItems = new ArrayList<MovieInfo>();
         databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
@@ -199,6 +184,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if(isItBookOrMovie.equals("book"))
+                    //dialogBook.show();
+                    replaceFragment(new addMovieFragment());
+//                else if(isItBookOrMovie.equals("movie"))
+//                    dialogMovie.show();
+//                else
+//                    Toast.makeText(MainActivity.this, "YOU HAVE TO CHOOSE BOOK OR MOVIE FIRST!", Toast.LENGTH_SHORT).show();
+
+                //dialog.dismiss();
+
+            }
+        });
+
     }
 
     private void findViews() {

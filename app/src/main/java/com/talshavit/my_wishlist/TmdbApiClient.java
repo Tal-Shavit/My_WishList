@@ -84,7 +84,6 @@ public class TmdbApiClient {
 
                 JsonObject movieObject = results.get(i).getAsJsonObject();
 
-                // Check if "title" field is present
                 if (movieObject.has("title") && movieObject.has("release_date")) {
                     String movieName = movieObject.get("title").getAsString();
                     String releaseDate = movieObject.get("release_date").getAsString();
@@ -198,6 +197,7 @@ public class TmdbApiClient {
                 }
             }
         }
+
 
         return genresList;
     }

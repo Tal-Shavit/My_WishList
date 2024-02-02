@@ -1,6 +1,7 @@
-package com.talshavit.my_wishlist.Book;
+package com.talshavit.my_wishlist.Movie;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -12,7 +13,8 @@ import com.talshavit.my_wishlist.R;
 
 public class MyViewHolderMovie extends RecyclerView.ViewHolder {
 
-    ImageButton movieImageButton,trailerImageButton;
+    ImageButton movieImageButton;
+    Button trailerImageButton;
     TextView movieTitle, movieDescription, movieGenre, movieLenght;
     CardView textCardView,imageCardView;
 

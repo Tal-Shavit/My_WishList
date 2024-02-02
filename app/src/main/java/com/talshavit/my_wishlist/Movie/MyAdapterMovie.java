@@ -1,20 +1,16 @@
-package com.talshavit.my_wishlist.Book;
+package com.talshavit.my_wishlist.Movie;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.MovieInfo;
 import com.talshavit.my_wishlist.R;
@@ -25,9 +21,6 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
 
     private Context context;
     public List<MovieInfo> movieInfoList;
-
-    //private Dialog dialogMovieDetails;
-    //TextView movieTitle1, movieDescription, movieGenre, movieLenght;
 
     private int selectedPosition = RecyclerView.NO_POSITION; // Initially, no item is selected
 
@@ -44,8 +37,13 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolderMovie holder, int position) {
-        holder.movieTitle.setText(movieInfoList.get(position).getMovieName());
-        holder.movieDescription.setText(movieInfoList.get(position).getOverview());
+        holder.movieTitle.setText(movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")");
+
+        String overview = movieInfoList.get(position).getOverview();
+        if(overview.equals(""))
+            holder.movieDescription.setText("There is no overview");
+        else
+            holder.movieDescription.setText(overview);
 
         holder.movieLenght.setText(movieInfoList.get(position).getMovieLenght());
 
@@ -64,7 +62,6 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
             holder.imageCardView.setVisibility((View.VISIBLE));
         }
 
-
         holder.movieImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,19 +71,36 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
             }
         });
 
-//        holder.bookImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //selectBook.onItemBookClicked(bookItems.get(position));
-//                selectedPosition = position;// Update the selected position
-//                notifyDataSetChanged(); // Notify the adapter to rebind views
-//            }
-//        });
-
+        String trailerKey = movieInfoList.get(position).getTrailer();
+        if (trailerKey == null || trailerKey.isEmpty()){
+            holder.trailerImageButton.setVisibility(View.INVISIBLE);
+        }
+        holder.trailerImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openTrailerInWebBrowser(trailerKey);
+            }
+        });
     }
 
+    private void openTrailerInWebBrowser(String trailerKey) {
+        if (trailerKey != null && !trailerKey.isEmpty()) {
+            String trailerUrl = "https://www.youtube.com/watch?v=" + trailerKey;
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            myIntent.setPackage("com.android.chrome");
+            context.startActivity(myIntent);
+        } else {
+            // Handle the case where no trailer key is available
+            Toast.makeText(context, "No trailer available", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private String formatGenres(List<String> genres) {
+        if (genres == null || genres.isEmpty()) {
+            return "There is no genres"; //When genres is null or empty
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         for (String genre : genres) {
             stringBuilder.append(genre).append(", ");

@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.talshavit.my_wishlist.Book.MovieFragment;
+import com.talshavit.my_wishlist.Movie.MovieFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -30,7 +30,11 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        ///////////////////////////////////
+        /////////////////////////////////
+        ////////////////////////////
+        /////////////////fragment setting!!!!!!!!!!!1
+        return inflater.inflate(R.layout.fragment_setting, container, false);
     }
 
     @Override
@@ -87,8 +91,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void findViews(View view) {
-        booksButton = view.findViewById(R.id.books_button);
-        moviesButton = view.findViewById(R.id.movies_button);
+        //booksButton = view.findViewById(R.id.books_button);
+        //moviesButton = view.findViewById(R.id.movies_button);
     }
 
 }

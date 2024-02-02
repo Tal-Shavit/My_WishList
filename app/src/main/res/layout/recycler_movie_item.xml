@@ -26,7 +26,7 @@
                 android:id="@+id/movieTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.7"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -79,16 +79,32 @@
                     android:layout_height="match_parent"
                     android:background="@color/black" />
 
-                <TextView
-                    android:id="@+id/movieGenre"
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
+
+
+                    <TextView
+                        android:id="@+id/movieGenre"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+
+                </ScrollView>
+
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,13 +112,19 @@
                 android:layout_weight="0.7"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <Button
                     android:id="@+id/trailerImageButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:drawableStart="@drawable/baseline_play_arrow_24"
+                    android:text="Play Trailer"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:background="@color/white"/>
 
 
             </LinearLayout>

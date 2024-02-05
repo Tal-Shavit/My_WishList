@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     ValueEventListener eventListener;
 
+    private String password;
+
 
 
 

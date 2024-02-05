@@ -15,7 +15,7 @@ public class MyViewHolderMovie extends RecyclerView.ViewHolder {
 
     ImageButton movieImageButton;
     Button trailerImageButton;
-    TextView movieTitle, movieDescription, movieGenre, movieLenght;
+    TextView movieTitle, movieDescription, movieGenre, movieLenght, movieTextView;
     CardView textCardView,imageCardView;
 
 
@@ -27,6 +27,7 @@ public class MyViewHolderMovie extends RecyclerView.ViewHolder {
         movieDescription = itemView.findViewById(R.id.movieDescription);
         movieGenre = itemView.findViewById(R.id.movieGenre);
         movieLenght = itemView.findViewById(R.id.movieLenght);
+        movieTextView = itemView.findViewById(R.id.movieTextView);
         textCardView = itemView.findViewById(R.id.textCardView);
         imageCardView = itemView.findViewById(R.id.imageCardView);
     }

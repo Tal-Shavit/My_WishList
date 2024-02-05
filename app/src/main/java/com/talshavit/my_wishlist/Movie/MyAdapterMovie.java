@@ -37,7 +37,10 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolderMovie holder, int position) {
-        holder.movieTitle.setText(movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")");
+        String title = movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")";
+        holder.movieTitle.setText(title);
+
+        holder.movieTextView.setText(title);
 
         String overview = movieInfoList.get(position).getOverview();
         if(overview.equals(""))

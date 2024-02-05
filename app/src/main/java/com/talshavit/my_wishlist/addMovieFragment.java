@@ -54,6 +54,9 @@ public class addMovieFragment extends Fragment {
 
     private static String trailer;
 
+    public addMovieFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,7 +103,6 @@ public class addMovieFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 databaseReference= FirebaseDatabase.getInstance().getReference("Movies");
                 MovieInfo movieInfo = new MovieInfo(movieId,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
                 databaseReference.child(movieId+"").setValue(movieInfo);

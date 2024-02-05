@@ -51,7 +51,6 @@ public class MovieFragment extends Fragment {
     private Context fragmentContext;
 
     public MovieFragment() {
-        // Required empty public constructor
     }
 
     @Override

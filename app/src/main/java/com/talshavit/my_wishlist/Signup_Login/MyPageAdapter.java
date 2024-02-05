@@ -5,9 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.talshavit.my_wishlist.Signup_Login.LoginTabFragment;
-import com.talshavit.my_wishlist.Signup_Login.SignInFragment;
-
 public class MyPageAdapter extends FragmentPagerAdapter {
 
     private final int numOfTabes;
@@ -24,7 +21,7 @@ public class MyPageAdapter extends FragmentPagerAdapter {
             case 0:
                 return new LoginTabFragment();
             case 1:
-                return new SignInFragment();
+                return new SignUpFragment();
             default:
                 return null;
         }

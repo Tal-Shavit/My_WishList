@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:gravity="center">
 
+
     <EditText
         android:id="@+id/emailLogin"
         android:layout_width="match_parent"
@@ -17,6 +18,8 @@
         android:textSize="20sp"
         android:paddingLeft="20dp"
         android:background="@drawable/edit_text_background"
+        android:drawableLeft="@drawable/baseline_person_24"
+        android:drawablePadding="8dp"
         />
 
     <EditText
@@ -29,7 +32,9 @@
         android:hint="Password"
         android:paddingLeft="20dp"
         android:textSize="20sp"
-        android:background="@drawable/edit_text_background"/>
+        android:background="@drawable/edit_text_background"
+        android:drawableLeft="@drawable/baseline_lock_24"
+        android:drawablePadding="8dp"/>
 
     <Button
         android:id="@+id/loginButton"

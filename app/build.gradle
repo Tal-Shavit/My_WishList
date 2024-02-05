@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -43,13 +44,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     // OkHttp for making HTTP requests
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 
     // Gson for JSON parsing
     implementation 'com.google.code.gson:gson:2.8.8'
 
     // Picasso for image loading
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.8'
 
     // CardView for UI (optional)
     implementation 'androidx.cardview:cardview:1.0.0'

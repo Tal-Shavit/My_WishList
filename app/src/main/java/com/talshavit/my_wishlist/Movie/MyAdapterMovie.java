@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
-import com.talshavit.my_wishlist.MovieInfo;
 import com.talshavit.my_wishlist.R;
 
 import java.util.List;

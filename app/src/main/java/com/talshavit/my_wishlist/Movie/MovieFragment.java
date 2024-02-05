@@ -20,24 +20,25 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.MovieInfo;
 import com.talshavit.my_wishlist.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -45,10 +46,11 @@ public class MovieFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<MovieInfo> allMoviesItems;
     private DatabaseReference databaseReference;
-    private ValueEventListener eventListener;
     private MyAdapterMovie myAdapterMovie;
 
     private Context fragmentContext;
+
+    private String userID;
 
     public MovieFragment() {
     }
@@ -70,16 +72,17 @@ public class MovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
 
+
         fragmentContext = view.getContext();
 
         allMoviesItems = new ArrayList<MovieInfo>();
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), allMoviesItems);
         recyclerView.setAdapter(myAdapterMovie);
-        //recyclerView.setAdapter(new MyAdapterMovie(getActivity().getApplicationContext(), allMoviesItems));
 
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
-        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.orderByChild("userID").equalTo(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 allMoviesItems.clear();
@@ -87,10 +90,16 @@ public class MovieFragment extends Fragment {
                     MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
                     allMoviesItems.add(movieInfo);
                 }
+
+//                // Sort the list based on serialNumber
+//                Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
+//                    @Override
+//                    public int compare(MovieInfo movie1, MovieInfo movie2) {
+//                        return Integer.compare(movie1.getSerialNumber(), movie2.getSerialNumber());
+//                    }
+//                });
+
                 myAdapterMovie.notifyDataSetChanged();
-                //recyclerView.getAdapter().notifyDataSetChanged();
-
-
             }
 
             @Override
@@ -99,8 +108,23 @@ public class MovieFragment extends Fragment {
             }
         });
 
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
+        //.orderByChild("userID").equalTo(u;
+//        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                allMoviesItems.clear();
+//                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
+//                    MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
+//                    allMoviesItems.add(movieInfo);
+//                }
+//                myAdapterMovie.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
         setSwipeToDelete();
     }
 
@@ -121,7 +145,7 @@ public class MovieFragment extends Fragment {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteMovieFromFirebase(allMoviesItems.get(position).getMovieId());
+                        deleteMovieFromFirebase(allMoviesItems.get(position).getMovieID());
                         allMoviesItems.remove(position);
                         myAdapterMovie.notifyItemRemoved(position);
                     }
@@ -150,7 +174,7 @@ public class MovieFragment extends Fragment {
     }
 
     private void deleteMovieFromFirebase(int movieId) {
-        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Movies").child(String.valueOf(movieId));
+        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Movies").child(userID +" "+movieId);
         movieReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -197,7 +221,6 @@ public class MovieFragment extends Fragment {
         deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconButtom);
         deleteDrawable.draw(c);
     }
-
 
     private void findViews (View view){
             recyclerView = view.findViewById(R.id.recyclerViewBook);

@@ -1,10 +1,10 @@
 package com.talshavit.my_wishlist;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
 
 import java.io.IOException;
 import java.net.URLEncoder;

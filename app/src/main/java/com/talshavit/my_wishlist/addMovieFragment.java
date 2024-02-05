@@ -21,37 +21,35 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.Movie.MovieFragment;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class addMovieFragment extends Fragment {
 
     DatabaseReference databaseReference;
-
     private EditText titleEditText;
     private ImageButton titleButton;
     private static Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
-
     private ImageView movieImageView;
-
     private static Button addButton;
-
     private static String titleNameMovie;
     private static String releaseYearMovie;
-
     private static String imgMovie;
-
-    private static int movieId;
+    private static int movieID;
     private static String movieLenght;
     private static List<String> genres;
     private static String overview;
-
     private static String trailer;
 
     public addMovieFragment() {
@@ -94,8 +92,6 @@ public class addMovieFragment extends Fragment {
                 }
                 else
                     Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
-
-
             }
 
         });
@@ -103,10 +99,12 @@ public class addMovieFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference= FirebaseDatabase.getInstance().getReference("Movies");
-                MovieInfo movieInfo = new MovieInfo(movieId,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
-                databaseReference.child(movieId+"").setValue(movieInfo);
+                MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
+                movieInfo.setUserID(userID);
 
+                databaseReference.child(userID+" "+movieID).setValue(movieInfo);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, MovieFragment.class, null)
@@ -114,7 +112,6 @@ public class addMovieFragment extends Fragment {
                         .commit();
             }
         });
-
     }
 
     private void findViews(View view) {
@@ -159,7 +156,7 @@ public class addMovieFragment extends Fragment {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movieInfos.get(position).getImageUrl()).into(fragment.movieImageView);
                                 addButton.setVisibility(View.VISIBLE);
-                                movieId = movieInfos.get(position).getMovieId();
+                                movieID = movieInfos.get(position).getMovieID();
                                 titleNameMovie = movieInfos.get(position).getMovieName();
                                 releaseYearMovie = movieInfos.get(position).getReleaseYear();
                                 imgMovie = movieInfos.get(position).getImageUrl();

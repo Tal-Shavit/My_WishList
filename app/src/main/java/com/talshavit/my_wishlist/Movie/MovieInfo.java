@@ -1,12 +1,23 @@
-package com.talshavit.my_wishlist;
+package com.talshavit.my_wishlist.Movie;
 
-import android.widget.VideoView;
+import android.content.Context;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.talshavit.my_wishlist.MainActivity;
 
 import java.util.List;
 
 public class MovieInfo {
 
-    private int movieId;
+    private String userID;
+    private int movieID;
     private String movieName;
     private String releaseYear;
     private String imageUrl;
@@ -15,14 +26,12 @@ public class MovieInfo {
     private String overview;
     private String trailer;
 
-    public MovieInfo(){
-
+    public MovieInfo() {
     }
 
-
-    public MovieInfo(int movieId, String movieName, String releaseYear, String imageUrl, String movieLenght, List<String> genres,
+    public MovieInfo(int movieID, String movieName, String releaseYear, String imageUrl, String movieLenght, List<String> genres,
                         String overview, String trailer) {
-        this.movieId = movieId;
+        this.movieID = movieID;
         this.movieName = movieName;
         this.releaseYear = releaseYear;
         this.imageUrl = imageUrl;
@@ -95,13 +104,22 @@ public class MovieInfo {
         return this;
     }
 
-    public int getMovieId() {
-        return movieId;
+
+    public String getUserID() {
+        return userID;
     }
 
-    public MovieInfo setMovieId(int movieId) {
-        this.movieId = movieId;
+    public MovieInfo setUserID(String userID) {
+        this.userID = userID;
         return this;
     }
 
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public MovieInfo setMovieID(int movieID) {
+        this.movieID = movieID;
+        return this;
+    }
 }

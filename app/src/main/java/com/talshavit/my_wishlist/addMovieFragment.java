@@ -1,5 +1,6 @@
 package com.talshavit.my_wishlist;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -85,15 +86,24 @@ public class addMovieFragment extends Fragment {
                 String title = titleEditText.getText().toString();
                 if(!title.equals("")){
                     TmdbApiClient.title = title;
-                    dynamicSpinner.setVisibility(View.VISIBLE);
+                    dynamicSpinner.setVisibility(View.INVISIBLE);
+                    movieImageView.setVisibility(View.INVISIBLE);
+
+                    ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
+                    //progressDialog.setTitle("Loading...");
+                    progressDialog.setCancelable(false);
+
+                    progressDialog.show();
+
 
                     adapter.clear();
                     adapter.notifyDataSetChanged();
 
-                    new MyAsyncTask(addMovieFragment.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new MyAsyncTask(addMovieFragment.this, progressDialog).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 else
                     Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
+
             }
 
         });
@@ -106,7 +116,7 @@ public class addMovieFragment extends Fragment {
                 MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
                 movieInfo.setUserID(userID);
 
-                databaseReference.child(userID+" "+movieID).setValue(movieInfo);
+                databaseReference.child( userID+" "+movieID).setValue(movieInfo);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
@@ -127,9 +137,10 @@ public class addMovieFragment extends Fragment {
 
     private static class MyAsyncTask extends AsyncTask<Void, Void, List<MovieInfo>> {
         private final WeakReference<addMovieFragment> fragmentReference;
-
-        MyAsyncTask(addMovieFragment fragment) {
+        private ProgressDialog progressDialog;
+        MyAsyncTask(addMovieFragment fragment, ProgressDialog progressDialog) {
             this.fragmentReference = new WeakReference<>(fragment);
+            this.progressDialog = progressDialog;
         }
 
         @Override
@@ -150,9 +161,17 @@ public class addMovieFragment extends Fragment {
             if (fragment != null) {
                 Log.d("MovieName", "Fragment is still valid");
                 Log.d("MovieName", "onPostExecute executed");
-                if (movieInfos != null) {
+
+                progressDialog.dismiss();
+
+                if (movieInfos != null && !movieInfos.isEmpty()) {
                     for (MovieInfo movieInfo : movieInfos) {
-                        fragment.adapter.add(movieInfo.getMovieName() + " (" + movieInfo.getReleaseYear() +")");
+                        fragment.adapter.add(movieInfo.getMovieName() + " (" + movieInfo.getReleaseYear() + ")");
+                    }
+                    fragment.adapter.notifyDataSetChanged();  // Notify adapter after adding all items
+
+                    fragment.dynamicSpinner.setVisibility(View.VISIBLE);
+                    fragment.movieImageView.setVisibility(View.VISIBLE);
 
                         dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
@@ -174,11 +193,11 @@ public class addMovieFragment extends Fragment {
 
                             }
                         });
-                    }
-                    fragment.adapter.notifyDataSetChanged();  // Notify adapter after adding all items
                 } else {
-                    Log.e("MovieName", "Error getting movie names");
-                    Toast.makeText(fragment.getContext(), "Error getting movie info", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(fragment.getContext(), "No matches found!", Toast.LENGTH_SHORT).show();
+                    fragment.titleEditText.setText("");
+                    //Log.e("MovieName", "Error getting movie names");
+                    //Toast.makeText(fragment.getContext(), "Error getting movie info", Toast.LENGTH_SHORT).show();
                 }
             }else {
                 Log.e("MovieName", "Fragment reference is null");

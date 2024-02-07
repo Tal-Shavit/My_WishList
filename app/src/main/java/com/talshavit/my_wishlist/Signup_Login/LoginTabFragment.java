@@ -64,8 +64,8 @@ public class LoginTabFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailLogin.getText().toString();
-                String password = passwordLogin.getText().toString();
+                String email = emailLogin.getText().toString().trim();
+                String password = passwordLogin.getText().toString().trim();
 
                 if(email.isEmpty()){
                     emailLogin.setError("You must fill email!");

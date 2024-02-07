@@ -104,7 +104,6 @@ public class MovieInfo {
         return this;
     }
 
-
     public String getUserID() {
         return userID;
     }

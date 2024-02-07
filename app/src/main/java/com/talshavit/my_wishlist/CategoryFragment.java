@@ -45,10 +45,10 @@ public class CategoryFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                MovieFragment bookFragment = new MovieFragment();
-                bookFragment.setArguments(bundle);
+                //MovieFragment bookFragment = new MovieFragment();
+                //bookFragment.setArguments(bundle);
 
-                fragmentTransaction.replace(R.id.frame_layout, bookFragment).commit();
+                //fragmentTransaction.replace(R.id.frame_layout, bookFragment).commit();
             }
         });
 
@@ -61,10 +61,10 @@ public class CategoryFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                MovieFragment bookFragment = new MovieFragment();
-                bookFragment.setArguments(bundle);
+                //MovieFragment bookFragment = new MovieFragment();
+                //bookFragment.setArguments(bundle);
 
-                fragmentTransaction.replace(R.id.frame_layout, bookFragment).commit();
+                //fragmentTransaction.replace(R.id.frame_layout, bookFragment).commit();
             }
         });
 
@@ -77,10 +77,10 @@ public class CategoryFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                MovieFragment bookFragment = new MovieFragment();
-                bookFragment.setArguments(bundle);
+                //MovieFragment bookFragment = new MovieFragment();
+                //bookFragment.setArguments(bundle);
 
-                fragmentTransaction.replace(R.id.frame_layout, bookFragment).commit();
+                //fragmentTransaction.replace(R.id.frame_layout, bookFragment).commit();
             }
         });
     }

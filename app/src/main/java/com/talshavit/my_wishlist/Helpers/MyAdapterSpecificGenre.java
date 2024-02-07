@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.Movie;
+package com.talshavit.my_wishlist.Helpers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,30 +12,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
+import com.talshavit.my_wishlist.Movie.MyViewHolderMovie;
 import com.talshavit.my_wishlist.R;
 
 import java.util.List;
 
-public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
+public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpecificGenre> {
 
     private Context context;
     public List<MovieInfo> movieInfoList;
-
     private int selectedPosition = RecyclerView.NO_POSITION; // Initially, no item is selected
 
-    public MyAdapterMovie(Context context, List<MovieInfo> movieInfoList) {
+    public MyAdapterSpecificGenre(Context context, List<MovieInfo> movieInfoList) {
         this.context = context;
         this.movieInfoList = movieInfoList;
     }
 
     @NonNull
     @Override
-    public MyViewHolderMovie onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolderMovie(LayoutInflater.from(context).inflate(R.layout.recycler_all_movie_item,parent,false));
+    public MyViewHolderSpecificGenre onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new MyViewHolderSpecificGenre(LayoutInflater.from(context).inflate(R.layout.recycler_specific_genre,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolderMovie holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolderSpecificGenre holder, int position) {
         String title = movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")";
         holder.movieTitle.setText(title);
 
@@ -121,5 +122,3 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
         return movieInfoList.size();
     }
 }
-
-

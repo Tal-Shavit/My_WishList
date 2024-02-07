@@ -30,6 +30,7 @@ import com.talshavit.my_wishlist.Movie.MovieInfo;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +52,7 @@ public class addMovieFragment extends Fragment {
     private static List<String> genres;
     private static String overview;
     private static String trailer;
+
 
     public addMovieFragment() {
     }
@@ -103,6 +105,7 @@ public class addMovieFragment extends Fragment {
                 databaseReference= FirebaseDatabase.getInstance().getReference("Movies");
                 MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
                 movieInfo.setUserID(userID);
+
 
                 databaseReference.child(userID+" "+movieID).setValue(movieInfo);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

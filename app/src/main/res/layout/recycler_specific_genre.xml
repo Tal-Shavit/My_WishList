@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="5dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/textCardView"
-        android:layout_width="233dp"
-        android:layout_height="350dp"
+        android:layout_width="160dp"
+        android:layout_height="240dp"
         app:cardBackgroundColor="#FFEBEE"
         app:cardCornerRadius="10dp"
         app:cardElevation="8dp"
-        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp">
 
 
@@ -136,12 +137,12 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/imageCardView"
-        android:layout_width="233dp"
-        android:layout_height="350dp"
+        android:layout_width="160dp"
+        android:layout_height="240dp"
         app:cardBackgroundColor="#886A6565"
         app:cardCornerRadius="10dp"
         app:cardElevation="8dp"
-        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp">
 
         <ImageButton
@@ -153,19 +154,23 @@
             />
 
     </androidx.cardview.widget.CardView>
-
-
-    <TextView
-        android:id="@+id/movieTextView"
+    <ScrollView
         android:layout_width="160dp"
-        android:layout_height="60dp"
-        android:textColor="@color/red"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="360dp"
-        android:paddingTop="10dp"
-        android:layout_marginStart="120dp" />
+        android:layout_height="30dp"
+        android:layout_marginTop="235dp"
+        android:paddingTop="3dp"
+        >
 
+        <TextView
+            android:id="@+id/movieTextView"
+            android:layout_width="160dp"
+            android:layout_height="30dp"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            />
+
+    </ScrollView>
 
 </FrameLayout>

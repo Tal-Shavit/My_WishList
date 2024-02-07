@@ -7,17 +7,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
-import android.app.SearchManager;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.RatingBar;
-import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.talshavit.my_wishlist.Genres.genresMovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.databinding.ActivityMainBinding;
@@ -34,13 +26,17 @@ import com.talshavit.my_wishlist.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private ActivityMainBinding binding;
     private FloatingActionButton addButton;
     private Dialog dialog;
     private List<MovieInfo> allMoviesItems;
     private DatabaseReference databaseReference;
+
+    private PassGenresInterface genresInterface;
+
+    //private List<String> genresList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()){
 
                 case R.id.category:
-                        replaceFragment(new CategoryFragment());
+                        replaceFragment(new MovieFragment(genresInterface));
                     break;
 
 
@@ -107,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.orderByChild("userID").equalTo(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Check if the activity is still valid
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+
                 allMoviesItems.clear();
                 for (DataSnapshot itemSnapshot : snapshot.getChildren()){
                     MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
@@ -121,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
                     dialog.setCancelable(true);
                     dialog.show();
                 }
-                else
-                    replaceFragment(new MovieFragment());
+                else{
+                    PassGenresInterface genresInterface = new genresMovieFragment();
+                    replaceFragment(new MovieFragment(genresInterface));
+                }
+
             }
 
             @Override
@@ -182,4 +186,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
+
+//    @Override
+//    public void passGenres(List<String> genres) {
+//        genresList = genres;
+//        Log.d("lala", "lalala - "+genresList.get(0));
+//    }
 }

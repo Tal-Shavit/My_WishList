@@ -3,6 +3,7 @@ package com.talshavit.my_wishlist.Helpers;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,6 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
     public void onBindViewHolder(@NonNull MyViewHolderSpecificGenre holder, int position) {
         String title = movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")";
         holder.movieTitle.setText(title);
-
-        holder.movieTextView.setText(title);
 
         String overview = movieInfoList.get(position).getOverview();
         if(overview.equals(""))

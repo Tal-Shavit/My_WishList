@@ -241,35 +241,6 @@ public class TmdbApiClient {
 
         return null;
     }
-//    private static String getMovieOverview(int movieId) throws IOException {
-//        OkHttpClient client = new OkHttpClient();
-//
-//        String endpoint = "/movie/" + movieId;
-//        String url = BASE_URL + endpoint + "?api_key=" + API_KEY;
-//
-//        Request request = new Request.Builder()
-//                .url(url)
-//                .build();
-//
-//        try (Response response = client.newCall(request).execute()) {
-//            if (response.isSuccessful()) {
-//                String jsonResponse = response.body().string();
-//                return parseMovieOverview(jsonResponse);
-//            } else {
-//                throw new IOException("Unexpected code " + response);
-//            }
-//        }
-//    }
-//
-//    private static String parseMovieOverview(String jsonResponse) {
-//        JsonParser jsonParser = new JsonParser();
-//        JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
-//
-//        if (jsonObject.has("overview")) {
-//            return jsonObject.get("overview").getAsString();
-//        }
-//
-//        return null;
-//    }
+
 
 }

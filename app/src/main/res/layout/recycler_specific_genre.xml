@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="horizontal"
     android:layout_marginTop="5dp"
     android:layout_marginEnd="5dp">
@@ -23,15 +23,23 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/movieTitle"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.7"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:scrollbars="vertical">
+
+                <TextView
+                    android:id="@+id/movieTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.7"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </ScrollView>
 
             <View
                 android:layout_width="match_parent"
@@ -49,7 +57,7 @@
                     android:id="@+id/movieDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="15dp"
+                    android:paddingStart="10dp"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
@@ -154,23 +162,5 @@
             />
 
     </androidx.cardview.widget.CardView>
-    <ScrollView
-        android:layout_width="160dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="235dp"
-        android:paddingTop="3dp"
-        >
-
-        <TextView
-            android:id="@+id/movieTextView"
-            android:layout_width="160dp"
-            android:layout_height="30dp"
-            android:textColor="@color/red"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            />
-
-    </ScrollView>
 
 </FrameLayout>

@@ -24,96 +24,75 @@
             android:layout_marginTop="10dp"
             />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:orientation="vertical">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ALL MOVIES"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 android:layout_marginStart="20dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewAllMovies"
                 android:layout_width="match_parent"
-                android:layout_height="285dp"
+                android:layout_height="284dp"
                 android:layout_marginTop="5dp"
+                android:scrollbars="horizontal"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white"/>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewGenresButtons"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:scrollbars="horizontal"
                 />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/white"/>
-        </LinearLayout>
+                android:background="@color/white"
+                />
 
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewByGenres"
+            <TextView
+                android:id="@+id/genreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:textSize="16sp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginStart="20dp"/>
+
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:scrollbars="vertical"
-            />
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMoviesBySpecificGenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </FrameLayout>
-
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    tools:context=".Movie.MovieFragment">-->
-
-
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:background="@color/black"-->
-    <!--        android:orientation="vertical">-->
-
-    <!--        &lt;!&ndash;    <androidx.cardview.widget.CardView&ndash;&gt;-->
-    <!--        &lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
-    <!--        &lt;!&ndash;        android:layout_height="match_parent"&ndash;&gt;-->
-    <!--        &lt;!&ndash;        android:layout_margin="10dp"&ndash;&gt;-->
-    <!--        &lt;!&ndash;        app:cardCornerRadius="16dp"&ndash;&gt;-->
-    <!--        &lt;!&ndash;        app:cardElevation="2dp"&ndash;&gt;-->
-    <!--        &lt;!&ndash;        app:cardBackgroundColor="#57000000">&ndash;&gt;-->
-
-
-    <!--            <TextView-->
-    <!--                android:id="@+id/category"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="80dp"-->
-    <!--                android:textSize="50sp"-->
-    <!--                android:textColor="@color/white"-->
-    <!--                android:text="ALL MOVIES"-->
-    <!--                android:textStyle="bold"-->
-    <!--                android:gravity="center"-->
-    <!--                android:layout_marginTop="10dp"-->
-    <!--                />-->
-
-
-
-
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-    <!--            android:id="@+id/recyclerViewBook"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="640dp"-->
-    <!--            android:scrollbars="vertical"-->
-    <!--            />-->
-
-
-    <!--        &lt;!&ndash;    </androidx.cardview.widget.CardView>&ndash;&gt;-->
-
-    <!--    </LinearLayout>-->
-
-    <!--</FrameLayout>-->

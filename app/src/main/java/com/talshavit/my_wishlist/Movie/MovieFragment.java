@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.Helpers.MyAdapterGenres;
+import com.talshavit.my_wishlist.Helpers.MyAdapterSpecificGenre;
 import com.talshavit.my_wishlist.PassGenresInterface;
 import com.talshavit.my_wishlist.R;
 
@@ -45,19 +47,24 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class MovieFragment extends Fragment {
-    private RecyclerView recyclerViewAll, recyclerViewGeners;
+public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClickListener{
+    private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewMoviesBySpecificGenre;
     private List<MovieInfo> allMoviesItems;
     private DatabaseReference databaseReference;
     private MyAdapterMovie myAdapterMovie;
     private MyAdapterGenres myAdapterGenres;
+    private MyAdapterSpecificGenre myAdapterSpecificGenre;
     private Context context;
 
     private String userID;
 
     private List<String> genresList;
 
+    private List<MovieInfo> allMoviesByGenre;
+
     private PassGenresInterface genresInterface;
+
+    private TextView genreTextView;
 
         public MovieFragment() {
     }
@@ -159,10 +166,10 @@ public class MovieFragment extends Fragment {
 //        }
 
         LinearLayoutManager linearLayoutManagerG = new LinearLayoutManager(getContext());
-        linearLayoutManagerG.setOrientation(linearLayoutManagerG.VERTICAL);
-        recyclerViewGeners.setLayoutManager(linearLayoutManagerG);
-        myAdapterGenres = new MyAdapterGenres(context, genresList);
-        recyclerViewGeners.setAdapter(myAdapterGenres);
+        linearLayoutManagerG.setOrientation(linearLayoutManagerG.HORIZONTAL);
+        recyclerViewGenresButtons.setLayoutManager(linearLayoutManagerG);
+        myAdapterGenres = new MyAdapterGenres(context, genresList,this);
+        recyclerViewGenresButtons.setAdapter(myAdapterGenres);
 
     }
 
@@ -317,7 +324,32 @@ public class MovieFragment extends Fragment {
 
     private void findViews (View view){
         recyclerViewAll = view.findViewById(R.id.recyclerViewAllMovies);
-        recyclerViewGeners = view.findViewById(R.id.recyclerViewByGenres);
+        recyclerViewGenresButtons = view.findViewById(R.id.recyclerViewGenresButtons);
+        recyclerViewMoviesBySpecificGenre = view.findViewById(R.id.recyclerViewMoviesBySpecificGenre);
+        genreTextView = view.findViewById(R.id.genreTextView);
+        }
+
+    @Override
+    public void onGenreClick(String genre) {
+            genreTextView.setText(genre);
+            allMoviesByGenre = new ArrayList<MovieInfo>();
+            for(int i=0; i<allMoviesItems.size();i++){
+                List<String> movieGenres = allMoviesItems.get(i).getGenres();
+
+                if(movieGenres != null){
+                        if (movieGenres.contains(genre)) {
+                            if(!(allMoviesByGenre.contains(allMoviesItems.get(i))))
+                                allMoviesByGenre.add(allMoviesItems.get(i));
+                        }
+                }
+            }
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+        recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
+        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, allMoviesByGenre);
+        recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
+
     }
 }
 

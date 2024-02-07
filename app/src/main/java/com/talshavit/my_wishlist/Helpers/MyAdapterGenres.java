@@ -109,23 +109,15 @@ package com.talshavit.my_wishlist.Helpers;//package com.talshavit.my_wishlist.He
 //}
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 
@@ -141,12 +133,14 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
     private List<MovieInfo> allMoviesByGenre;
     private List<MovieInfo> allMovies;
 
+    private GenreClickListener genreClickListener;
     private DatabaseReference databaseReference;
     private MyAdapterSpecificGenre myAdapterSpecificGenre;
 
-    public MyAdapterGenres(Context context, List<String> allGenres) {
+    public MyAdapterGenres(Context context, List<String> allGenres, GenreClickListener genreClickListener) {
         this.context = context;
         this.allGenres = allGenres;
+        this.genreClickListener = genreClickListener;
     }
 
     @NonNull
@@ -161,29 +155,42 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
         allMoviesByGenre = new ArrayList<MovieInfo>();
         allMovies = new ArrayList<MovieInfo>();
         String genre = allGenres.get(position);
-        holder.genreTextView.setText(genre);
+        holder.genreButton.setText(genre);
 
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
-        databaseReference.orderByChild("userID").equalTo(userID).addValueEventListener(new ValueEventListener() {
+        holder.genreButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                allMoviesByGenre.clear();
-                allMovies.clear();
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
-                    MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
-                    allMovies.add(movieInfo);
-
-                    // Check if the movie belongs to the current genre
-                    if (movieInfo != null && movieInfo.getGenres() != null && movieInfo.getGenres().contains(genre)) {
-                            if(!allMoviesByGenre.contains(movieInfo))
-                                allMoviesByGenre.add(movieInfo);
-                    }
-
+            public void onClick(View v) {
+                String genre = allGenres.get(position);
+                if (genreClickListener != null) {
+                    genreClickListener.onGenreClick(genre);
                 }
-                for(int i =0; i<allMoviesByGenre.size();i++){
-                    Log.d("lala", allMoviesByGenre.get(i).getMovieName() +" "+allMoviesByGenre.get(i).getGenres());
-                }
+            }
+        });
+
+//        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
+//        databaseReference.orderByChild("userID").equalTo(userID).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                allMoviesByGenre.clear();
+//                allMovies.clear();
+//                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
+//                    MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
+//                    allMovies.add(movieInfo);
+//
+//                    // Check if the movie belongs to the current genre
+//                    if (movieInfo != null && movieInfo.getGenres() != null && movieInfo.getGenres().contains(genre)) {
+//                            if(!allMoviesByGenre.contains(movieInfo))
+//                                allMoviesByGenre.add(movieInfo);
+//                    }
+//
+//                }
+//                for(int i =0; i<allMoviesByGenre.size();i++){
+//                    Log.d("lala", allMoviesByGenre.get(i).getMovieName() +" "+allMoviesByGenre.get(i).getGenres());
+//                }
+
+
+
 //                allMovies.clear();
 //                allGenres.clear();
 //                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
@@ -235,18 +242,22 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
 //                    }
 //                });
                 //myAdapterMovie.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
-        holder.recyclerViewSpecificGenre.setLayoutManager(linearLayoutManager);
-        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, allMoviesByGenre);
-        holder.recyclerViewSpecificGenre.setAdapter(myAdapterSpecificGenre);
+
+
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+//        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+//        holder.recyclerViewSpecificGenre.setLayoutManager(linearLayoutManager);
+//        myAdapterSpecificGenre = new MyAdapterSpecificGenre(new MovieFragment().getContext(), allMoviesByGenre);
+//        holder.recyclerViewSpecificGenre.setAdapter(myAdapterSpecificGenre);
     }
 
 
@@ -257,16 +268,21 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
         return allGenres.size();
     }
 
+    public interface GenreClickListener {
+        void onGenreClick(String genre);
+    }
+
     public class MyAdapterGenresViewHolder extends RecyclerView.ViewHolder{
-        private LinearLayout linearLayout;
-        private LinearLayout expandLinear;
-        private TextView genreTextView;
-        private RecyclerView recyclerViewSpecificGenre;
+//        private LinearLayout linearLayout;
+//        private LinearLayout expandLinear;
+        //private TextView genreTextView;
+        //private RecyclerView recyclerViewSpecificGenre;
+        private Button genreButton;
 
         public MyAdapterGenresViewHolder(@NonNull View itemView) {
             super(itemView);
-            genreTextView = itemView.findViewById(R.id.genreTextView);
-            recyclerViewSpecificGenre =itemView.findViewById(R.id.recyclerViewCpecificGenre);
+            genreButton = itemView.findViewById(R.id.genreButton);
+            //recyclerViewSpecificGenre =itemView.findViewById(R.id.recyclerViewCpecificGenre);
         }
     }
 

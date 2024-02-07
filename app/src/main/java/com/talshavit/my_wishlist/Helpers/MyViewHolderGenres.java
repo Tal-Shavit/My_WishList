@@ -1,6 +1,7 @@
 package com.talshavit.my_wishlist.Helpers;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,12 +11,13 @@ import com.talshavit.my_wishlist.R;
 
 public class MyViewHolderGenres extends RecyclerView.ViewHolder {
 
-    TextView genreTextView;
-    RecyclerView recyclerViewSpecificGenre;
+    //TextView genreTextView;
+    Button genreButton;
+    //RecyclerView recyclerViewSpecificGenre;
 
     public MyViewHolderGenres(@NonNull View itemView) {
         super(itemView);
-        genreTextView = itemView.findViewById(R.id.genreTextView);
-        recyclerViewSpecificGenre =itemView.findViewById(R.id.recyclerViewCpecificGenre);
+        genreButton = itemView.findViewById(R.id.genreButton);
+        //recyclerViewSpecificGenre =itemView.findViewById(R.id.recyclerViewCpecificGenre);
     }
 }

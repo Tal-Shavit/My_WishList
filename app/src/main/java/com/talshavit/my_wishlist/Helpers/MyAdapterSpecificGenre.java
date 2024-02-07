@@ -40,6 +40,7 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
     public void onBindViewHolder(@NonNull MyViewHolderSpecificGenre holder, int position) {
         String title = movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")";
         holder.movieTitle.setText(title);
+        holder.movieTextView.setText(title);
 
         String overview = movieInfoList.get(position).getOverview();
         if(overview.equals(""))

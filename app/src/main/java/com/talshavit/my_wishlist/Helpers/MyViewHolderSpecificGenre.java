@@ -15,7 +15,7 @@ public class MyViewHolderSpecificGenre extends RecyclerView.ViewHolder {
 
     ImageButton movieImageButton;
     Button trailerImageButton;
-    TextView movieTitle, movieDescription, movieGenre, movieLenght;
+    TextView movieTitle, movieDescription, movieGenre, movieLenght, movieTextView;
     CardView textCardView,imageCardView;
 
 
@@ -25,6 +25,7 @@ public class MyViewHolderSpecificGenre extends RecyclerView.ViewHolder {
         trailerImageButton = itemView.findViewById(R.id.trailerImageButton);
         movieTitle = itemView.findViewById(R.id.movieTitle);
         movieDescription = itemView.findViewById(R.id.movieDescription);
+        movieTextView = itemView.findViewById(R.id.movieTextView);
         movieGenre = itemView.findViewById(R.id.movieGenre);
         movieLenght = itemView.findViewById(R.id.movieLenght);
         textCardView = itemView.findViewById(R.id.textCardView);

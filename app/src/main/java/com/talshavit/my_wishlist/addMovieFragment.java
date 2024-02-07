@@ -106,8 +106,8 @@ public class addMovieFragment extends Fragment {
                 MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
                 movieInfo.setUserID(userID);
 
-
                 databaseReference.child(userID+" "+movieID).setValue(movieInfo);
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, MovieFragment.class, null)

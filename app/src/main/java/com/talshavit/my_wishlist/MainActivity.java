@@ -10,7 +10,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -18,7 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.Genres.genresMovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.databinding.ActivityMainBinding;
@@ -33,10 +31,6 @@ public class MainActivity extends AppCompatActivity{
     private Dialog dialog;
     private List<MovieInfo> allMoviesItems;
     private DatabaseReference databaseReference;
-
-    private PassGenresInterface genresInterface;
-
-    //private List<String> genresList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
             switch (item.getItemId()){
 
                 case R.id.category:
-                        replaceFragment(new MovieFragment(genresInterface));
+                    replaceFragment(new MovieFragment());
                     break;
 
 
@@ -123,8 +117,7 @@ public class MainActivity extends AppCompatActivity{
                     dialog.show();
                 }
                 else{
-                    PassGenresInterface genresInterface = new genresMovieFragment();
-                    replaceFragment(new MovieFragment(genresInterface));
+                    replaceFragment(new MovieFragment());
                 }
 
             }
@@ -136,41 +129,10 @@ public class MainActivity extends AppCompatActivity{
         });
 
 
-
-//        databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
-//        eventListener = databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                allMoviesItems.clear();
-//                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
-//                    MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
-//                    allMoviesItems.add(movieInfo);
-//                }
-//                if(allMoviesItems.size() == 0)
-//                    replaceFragment(new addMovieFragment());
-//                else
-//                    replaceFragment(new MovieFragment());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if(isItBookOrMovie.equals("book"))
-                    //dialogBook.show();
                     replaceFragment(new addMovieFragment());
-//                else if(isItBookOrMovie.equals("movie"))
-//                    dialogMovie.show();
-//                else
-//                    Toast.makeText(MainActivity.this, "YOU HAVE TO CHOOSE BOOK OR MOVIE FIRST!", Toast.LENGTH_SHORT).show();
-
-                //dialog.dismiss();
-
             }
         });
 
@@ -186,10 +148,4 @@ public class MainActivity extends AppCompatActivity{
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-
-//    @Override
-//    public void passGenres(List<String> genres) {
-//        genresList = genres;
-//        Log.d("lala", "lalala - "+genresList.get(0));
-//    }
 }

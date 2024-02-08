@@ -89,11 +89,11 @@ public class addMovieFragment extends Fragment {
                     dynamicSpinner.setVisibility(View.INVISIBLE);
                     movieImageView.setVisibility(View.INVISIBLE);
 
-                    ProgressDialog progressDialog = new ProgressDialog(getContext(), R.style.progressDialog);
-                    //progressDialog.setTitle("Loading...");
+                    ProgressDialog progressDialog = new ProgressDialog(getContext());
                     progressDialog.setCancelable(false);
-
                     progressDialog.show();
+                    progressDialog.setContentView(R.layout.progress_dialog);
+                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
                     adapter.clear();

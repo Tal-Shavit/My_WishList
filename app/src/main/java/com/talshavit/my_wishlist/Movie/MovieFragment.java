@@ -241,7 +241,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
     @Override
     public void onGenreClick(String genre) {
-            genreTextView.setText(genre);
+            genreTextView.setText(genre.toUpperCase());
             allMoviesByGenre = new ArrayList<MovieInfo>();
             for(int i=0; i<allMoviesItems.size();i++){
                 List<String> movieGenres = allMoviesItems.get(i).getGenres();

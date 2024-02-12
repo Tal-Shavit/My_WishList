@@ -14,21 +14,12 @@ import com.talshavit.my_wishlist.R;
 public class MyViewHolderSpecificGenre extends RecyclerView.ViewHolder {
 
     ImageButton movieImageButton;
-    Button trailerImageButton;
-    TextView movieTitle, movieDescription, movieGenre, movieLenght, movieTextView;
-    CardView textCardView,imageCardView;
+    TextView movieTextView;
 
 
     public MyViewHolderSpecificGenre(@NonNull View itemView) {
         super(itemView);
         movieImageButton = itemView.findViewById(R.id.movieImageButton);
-        trailerImageButton = itemView.findViewById(R.id.trailerImageButton);
-        movieTitle = itemView.findViewById(R.id.movieTitle);
-        movieDescription = itemView.findViewById(R.id.movieDescription);
         movieTextView = itemView.findViewById(R.id.movieTextView);
-        movieGenre = itemView.findViewById(R.id.movieGenre);
-        movieLenght = itemView.findViewById(R.id.movieLenght);
-        textCardView = itemView.findViewById(R.id.textCardView);
-        imageCardView = itemView.findViewById(R.id.imageCardView);
     }
 }

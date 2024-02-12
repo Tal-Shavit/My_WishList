@@ -129,10 +129,10 @@
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:drawableStart="@drawable/baseline_play_arrow_24"
+                    android:drawableStart="@drawable/baseline_play__red_arrow_24"
                     android:text="Play Trailer"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
                     android:background="@color/white"/>
 
 

@@ -63,30 +63,6 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-//    //search internet with the default search app
-//    private void searchNet(String words){
-//        try{
-//            Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-//            intent.putExtra(SearchManager.QUERY,words);
-//            startActivity(intent);
-//        }catch (ActivityNotFoundException e){
-//            e.printStackTrace();
-//            searchNetCompat(words);
-//        }
-//    }
-//
-//    //search internet with the browser if there's no  search app
-//    private void searchNetCompat(String words){
-//        try{
-//            Uri uri = Uri.parse("http://www.google.com/#q=" + words);
-//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//            startActivity(intent);
-//        }catch (ActivityNotFoundException e){
-//            e.printStackTrace();
-//            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
     private void initViews() {
 
 
@@ -112,7 +88,7 @@ public class MainActivity extends AppCompatActivity{
                     dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.dialog_add_movie);
                     dialog.getWindow().setLayout(1000,1200);
-                    dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_bg));
+                    dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_add_bg));
                     dialog.setCancelable(true);
                     dialog.show();
                 }

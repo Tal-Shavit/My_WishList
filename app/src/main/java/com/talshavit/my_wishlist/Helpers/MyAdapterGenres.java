@@ -25,8 +25,7 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
     private List<MovieInfo> allMoviesByGenre;
 
     private GenreClickListener genreClickListener;
-    private DatabaseReference databaseReference;
-    private MyAdapterSpecificGenre myAdapterSpecificGenre;
+
 
     public MyAdapterGenres(Context context, List<String> allGenres, GenreClickListener genreClickListener) {
         this.context = context;

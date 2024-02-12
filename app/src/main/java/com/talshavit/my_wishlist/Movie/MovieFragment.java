@@ -50,14 +50,10 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private MyAdapterGenres myAdapterGenres;
     private MyAdapterSpecificGenre myAdapterSpecificGenre;
     private Context context;
-
     private String userID;
-
     private List<String> genresList;
-
     private List<MovieInfo> allMoviesByGenre;
-
-      private TextView genreTextView;
+    private TextView genreTextView;
 
         public MovieFragment() {
     }

@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist;
+package com.talshavit.my_wishlist.Signup_Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabLayout;
+import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.Signup_Login.MyPageAdapter;
 
 public class startActivity extends AppCompatActivity {

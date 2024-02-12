@@ -26,7 +26,6 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
 
     private Context context;
     public List<MovieInfo> movieInfoList;
-    private String title;
 
     private TextView movieTitle;
     private TextView movieDescription;

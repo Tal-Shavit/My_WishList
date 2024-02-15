@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +55,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private List<String> genresList;
     private List<MovieInfo> allMoviesByGenre;
     private TextView genreTextView;
+
 
         public MovieFragment() {
     }
@@ -250,10 +252,11 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 }
             }
 
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
         recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
-        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, allMoviesByGenre);
+        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
         recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
 
     }

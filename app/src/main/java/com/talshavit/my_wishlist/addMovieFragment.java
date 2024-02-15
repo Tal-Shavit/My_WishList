@@ -121,7 +121,7 @@ public class addMovieFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, MovieFragment.class, null)
-                        .setReorderingAllowed(true).addToBackStack("")
+                        .setReorderingAllowed(true).addToBackStack(null)
                         .commit();
             }
         });

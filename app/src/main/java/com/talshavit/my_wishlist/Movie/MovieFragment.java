@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private List<MovieInfo> allMoviesByGenre;
     private TextView genreTextView;
 
+    private String selectedGenre;
+
 
         public MovieFragment() {
     }
@@ -83,7 +86,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
         allMoviesItems = new ArrayList<MovieInfo>();
         recyclerViewAll.setLayoutManager(linearLayoutManager);
-        myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), allMoviesItems);
+        myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), requireContext(), allMoviesItems);
         recyclerViewAll.setAdapter(myAdapterMovie);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -99,6 +102,9 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
                 createGenres(allMoviesItems);
                 myAdapterMovie.notifyDataSetChanged();
+
+                if(selectedGenre != null)
+                    updateGenreList();
             }
 
             @Override
@@ -240,24 +246,62 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     @Override
     public void onGenreClick(String genre) {
             genreTextView.setText(genre.toUpperCase());
-            allMoviesByGenre = new ArrayList<MovieInfo>();
-            for(int i=0; i<allMoviesItems.size();i++){
-                List<String> movieGenres = allMoviesItems.get(i).getGenres();
+            selectedGenre = genre;
+            if(selectedGenre != null)
+                updateGenreList();
+//            allMoviesByGenre = new ArrayList<MovieInfo>();
+//            for(int i=0; i<allMoviesItems.size();i++){
+//                List<String> movieGenres = allMoviesItems.get(i).getGenres();
+//
+//                if(movieGenres != null){
+//                        if (movieGenres.contains(genre)) {
+//                            if(!(allMoviesByGenre.contains(allMoviesItems.get(i))))
+//                                allMoviesByGenre.add(allMoviesItems.get(i));
+//                        }
+//                }
+//            }
+//
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+//        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+//        recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
+//        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
+//        recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
 
-                if(movieGenres != null){
-                        if (movieGenres.contains(genre)) {
-                            if(!(allMoviesByGenre.contains(allMoviesItems.get(i))))
-                                allMoviesByGenre.add(allMoviesItems.get(i));
+    }
+
+    private void updateGenreList() {
+            if(getActivity() != null && !getActivity().isFinishing()) {
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                if (fragmentManager != null) {
+                    genreTextView.setText(selectedGenre.toUpperCase());
+                    allMoviesByGenre = new ArrayList<MovieInfo>();
+                    for (int i = 0; i < allMoviesItems.size(); i++) {
+                        List<String> movieGenres = allMoviesItems.get(i).getGenres();
+
+                        if (movieGenres != null) {
+                            if (movieGenres.contains(selectedGenre)) {
+                                if (!(allMoviesByGenre.contains(allMoviesItems.get(i))))
+                                    allMoviesByGenre.add(allMoviesItems.get(i));
+                            }
                         }
+                    }
+
+
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                    linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+                    recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
+                    myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
+                    recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
                 }
+//                else{
+//                    Log.d("lala", "FragmentManager is null");
+//                }
+
             }
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
-        recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
-        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
-        recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
-
+//            else{
+//                Log.d("lala", "Activity is null or finishing");
+//            }
     }
 }

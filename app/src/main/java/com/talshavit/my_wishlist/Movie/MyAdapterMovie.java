@@ -1,13 +1,13 @@
 package com.talshavit.my_wishlist.Movie;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,13 +20,15 @@ import java.util.List;
 public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
 
     private Context context;
+    private Context context1;
     public List<MovieInfo> movieInfoList;
 
     private int selectedPosition = RecyclerView.NO_POSITION; // Initially, no item is selected
 
-    public MyAdapterMovie(Context context, List<MovieInfo> movieInfoList) {
+    public MyAdapterMovie(Context context, Context context1, List<MovieInfo> movieInfoList) {
         this.context = context;
         this.movieInfoList = movieInfoList;
+        this.context1 = context1;
     }
 
     @NonNull
@@ -81,22 +83,35 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
         holder.trailerImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openTrailerInWebBrowser(trailerKey);
+                openTrailerInWebView(trailerKey);
             }
         });
     }
 
-    private void openTrailerInWebBrowser(String trailerKey) {
-        if (trailerKey != null && !trailerKey.isEmpty()) {
-            String trailerUrl = "https://www.youtube.com/watch?v=" + trailerKey;
-            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            myIntent.setPackage("com.android.chrome");
-            context.startActivity(myIntent);
-        } else {
-            // Handle the case where no trailer key is available
-            Toast.makeText(context, "No trailer available", Toast.LENGTH_SHORT).show();
-        }
+    private void openTrailerInWebView(String trailerKey) {
+//        if (trailerKey != null && !trailerKey.isEmpty()) {
+//            String trailerUrl = "https://www.youtube.com/watch?v=" + trailerKey;
+//            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
+//            myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////            myIntent.setPackage("com.android.chrome");
+//            context.startActivity(myIntent);
+//        } else {
+//            // Handle the case where no trailer key is available
+//            Toast.makeText(context, "No trailer available", Toast.LENGTH_SHORT).show();
+//        }
+        Dialog dialog = new Dialog(context1);
+        dialog.setContentView(R.layout.dialog_trailer_movie);
+        //dialog.getWindow().setBackgroundDrawableResource(R.drawable.progress_bg);
+
+        WebView webView = dialog.findViewById(R.id.webView);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient());
+
+            // Load URL with trailer key
+        String url = "https://www.youtube.com/embed/" + trailerKey;
+        webView.loadUrl(url);
+        dialog.show();
     }
 
     private String formatGenres(List<String> genres) {
@@ -122,5 +137,3 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
         return movieInfoList.size();
     }
 }
-
-

@@ -34,10 +34,12 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
     private String imageUrl;
     private int selectedPosition = RecyclerView.NO_POSITION; // Initially, no item is selected
 
+
     public MyAdapterSpecificGenre(Context context, FragmentManager fragmentManager, List<MovieInfo> movieInfoList) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.movieInfoList = movieInfoList;
+
     }
 
     @NonNull

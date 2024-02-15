@@ -93,15 +93,21 @@
                     android:layout_marginStart="30dp"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/movieGenre"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="comedy"
-                android:textColor="@color/white"
-                android:layout_marginTop="40dp"
-                android:gravity="center"/>
+                android:layout_marginTop="40dp">
+                <TextView
+                    android:id="@+id/movieGenre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="comedy"
+                    android:textColor="@color/white"
+
+                    android:gravity="center"/>
+            </ScrollView>
+
 
 
 

@@ -21,6 +21,7 @@
         android:textSize="49sp"
         android:gravity="center"
         android:textColor="@color/white"
+        android:fontFamily="@font/roboto_light"
         android:textStyle="bold"/>
 
 </LinearLayout>

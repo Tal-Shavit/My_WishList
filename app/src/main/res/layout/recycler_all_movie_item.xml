@@ -36,7 +36,8 @@
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="@font/roboto_light"/>
 
             </ScrollView>
 
@@ -59,7 +60,9 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="10dp"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"/>
 
             </ScrollView>
 
@@ -81,7 +84,9 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"/>
 
                 <View
                     android:layout_width="1.5dp"
@@ -102,7 +107,9 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:textStyle="bold"/>
 
 
                 </ScrollView>
@@ -128,9 +135,10 @@
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold"
                     android:drawableStart="@drawable/baseline_play__red_arrow_24"
                     android:text="Play Trailer"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:background="@color/white"/>
@@ -175,6 +183,7 @@
             android:layout_height="30dp"
             android:textColor="@color/red"
             android:textSize="18sp"
+            android:fontFamily="@font/roboto_light"
             android:textStyle="bold"
             android:gravity="center"
              />

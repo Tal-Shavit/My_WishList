@@ -13,6 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="25sp"
+            android:fontFamily="@font/roboto_light"
+            android:textStyle="bold"
             android:textColor="@color/black"/>
 
     </ScrollView>

@@ -1,6 +1,9 @@
 package com.talshavit.my_wishlist;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +18,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.talshavit.my_wishlist.Signup_Login.StartActivity;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +33,7 @@ import java.io.InputStreamReader;
 
 public class SettingFragment extends Fragment {
 
-    private LinearLayout linearPrivacyPolicy;
+    private LinearLayout linearPrivacyPolicy ,deleteAccount, LogOut;
 
     public SettingFragment() {
     }
@@ -42,10 +53,58 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
         linearPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initDialog();
+            }
+        });
+
+        deleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("DELETE ACCOUNT");
+                builder.setMessage("Are you sure you want to delete your account?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(user != null){
+                            String userID = user.getUid();
+                            //Delete user's movies list from firebase
+                            DatabaseReference moviesReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+                            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        firebaseAuth.signOut();
+                                        openStartActivity();
+                                        moviesReference.removeValue();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        LogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openStartActivity();
             }
         });
     }
@@ -69,6 +128,8 @@ public class SettingFragment extends Fragment {
 
     private void findViews(View view) {
         linearPrivacyPolicy = view.findViewById(R.id.privacy_policy);
+        deleteAccount = view.findViewById(R.id.deleteAccount);
+        LogOut = view.findViewById(R.id.LogOut);
     }
 
     private String loadHtmlFromAsset(String filename){
@@ -91,6 +152,11 @@ public class SettingFragment extends Fragment {
             e.printStackTrace();
         }
         return textFile;
+    }
+
+    private void openStartActivity() {
+        Intent myIntent = new Intent(getContext(), StartActivity.class);
+        startActivity(myIntent);
     }
 
 }

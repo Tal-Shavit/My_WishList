@@ -9,8 +9,8 @@
 
     <item
         android:id="@+id/category"
-        android:title="Categories"
-        android:icon="@drawable/baseline_category_24"/>
+        android:title="Home"
+        android:icon="@drawable/baseline_home_24"/>
 
     <item
         android:id="@+id/fab"

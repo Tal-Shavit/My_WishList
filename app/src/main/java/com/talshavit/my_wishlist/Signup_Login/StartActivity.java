@@ -3,14 +3,13 @@ package com.talshavit.my_wishlist.Signup_Login;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabLayout;
 import com.talshavit.my_wishlist.R;
-import com.talshavit.my_wishlist.Signup_Login.MyPageAdapter;
 
-public class startActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity {
 
     TabLayout tableLayout;
     ViewPager viewPager;
@@ -25,9 +24,10 @@ public class startActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tableLayout.addTab(tableLayout.newTab().setText("Login"));
-        tableLayout.addTab(tableLayout.newTab().setText("Signup"));
+        tableLayout.addTab(tableLayout.newTab().setText("LOGIN"));
+        tableLayout.addTab(tableLayout.newTab().setText("SIGNUP"));
         tableLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
 
         MyPageAdapter adapter = new MyPageAdapter(getSupportFragmentManager(), tableLayout.getTabCount());
         viewPager.setAdapter(adapter);

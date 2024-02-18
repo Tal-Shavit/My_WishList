@@ -14,7 +14,7 @@
         android:theme="@style/Theme.My_WishList"
         tools:targetApi="31">
         <activity
-            android:name=".Signup_Login.startActivity"
+            android:name=".Signup_Login.StartActivity"
             android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

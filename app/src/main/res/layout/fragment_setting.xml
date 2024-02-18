@@ -23,6 +23,7 @@
         android:text="SETTINGS"
         android:textColor="@color/black"
         android:textSize="45dp"
+        android:fontFamily="@font/roboto_light"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
@@ -33,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/inner_layout_black">
 
             <LinearLayout
@@ -41,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginStart="10dp">
 
                 <ImageButton
@@ -59,7 +60,9 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:textSize="25sp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
@@ -67,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginStart="10dp">
 
                 <ImageButton
@@ -85,7 +88,9 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:textSize="25sp"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
@@ -93,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginStart="10dp">
 
                 <ImageButton
@@ -111,6 +116,8 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:textSize="25sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"
                     android:textColor="@color/white"/>
 
             </LinearLayout>
@@ -119,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginStart="10dp">
 
                 <ImageButton
@@ -133,10 +140,70 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rate us"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:text="Rate Us"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="25sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/deleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp">
+
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/delete"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Account"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:textSize="25sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LogOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp">
+
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/exit"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log Out"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/roboto_light"
+                    android:textStyle="bold"
                     android:textColor="@color/white"/>
 
             </LinearLayout>

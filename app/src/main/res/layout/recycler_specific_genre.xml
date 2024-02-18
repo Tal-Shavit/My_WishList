@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/red"
             android:textSize="18sp"
+            android:fontFamily="@font/roboto_light"
             android:textStyle="bold"
             android:gravity="center"
             />

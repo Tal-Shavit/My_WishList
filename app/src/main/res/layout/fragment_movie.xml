@@ -11,19 +11,6 @@
         android:background="@color/black"
         android:orientation="vertical">
 
-
-<!--        <TextView-->
-<!--            android:id="@+id/category"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:textSize="50sp"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:text="ALL GENRES"-->
-<!--            android:textStyle="bold"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            />-->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

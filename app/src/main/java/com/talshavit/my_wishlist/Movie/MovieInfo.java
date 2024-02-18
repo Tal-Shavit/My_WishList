@@ -16,6 +16,7 @@ import java.util.List;
 
 public class MovieInfo {
 
+    private int serialID;
     private String userID;
     private int movieID;
     private String movieName;
@@ -119,6 +120,15 @@ public class MovieInfo {
 
     public MovieInfo setMovieID(int movieID) {
         this.movieID = movieID;
+        return this;
+    }
+
+    public int getSerialID() {
+        return serialID;
+    }
+
+    public MovieInfo setSerialID(int serialID) {
+        this.serialID = serialID;
         return this;
     }
 }

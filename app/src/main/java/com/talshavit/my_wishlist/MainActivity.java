@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,8 +71,8 @@ public class MainActivity extends AppCompatActivity{
         allMoviesItems = new ArrayList<MovieInfo>();
 
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
-        databaseReference.orderByChild("userID").equalTo(userID).addValueEventListener(new ValueEventListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Check if the activity is still valid
@@ -87,10 +89,17 @@ public class MainActivity extends AppCompatActivity{
                     replaceFragment(new addMovieFragment());
                     dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.dialog_add_movie);
-                    dialog.getWindow().setLayout(1000,1200);
+                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,1400);
                     dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_add_bg));
-                    dialog.setCancelable(true);
+                    dialog.setCancelable(false);
+                    ImageButton exitButton = dialog.findViewById(R.id.exitButton);
                     dialog.show();
+                    exitButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
                 }
                 else{
                     replaceFragment(new MovieFragment());

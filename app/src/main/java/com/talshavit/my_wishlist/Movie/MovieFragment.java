@@ -41,6 +41,8 @@ import com.talshavit.my_wishlist.Helpers.MyAdapterSpecificGenre;
 import com.talshavit.my_wishlist.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -90,8 +92,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         recyclerViewAll.setAdapter(myAdapterMovie);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Movies");
-        databaseReference.orderByChild("userID").equalTo(userID).addValueEventListener(new ValueEventListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 allMoviesItems.clear();
@@ -99,6 +101,14 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                     MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
                     allMoviesItems.add(movieInfo);
                 }
+
+                //Sort the list based on serialID in descending order - last in show first
+                Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
+                    @Override
+                    public int compare(MovieInfo movie1, MovieInfo movie2) {
+                        return Integer.compare(movie2.getSerialID(), movie1.getSerialID());
+                    }
+                });
 
                 createGenres(allMoviesItems);
                 myAdapterMovie.notifyDataSetChanged();
@@ -181,11 +191,10 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     }
 
     private void deleteMovieFromFirebase(int movieId) {
-        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Movies").child(userID +" "+movieId);
+        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(movieId+"");
         movieReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(context, "Item deleted from firebase", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -222,10 +231,10 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         int deleteIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
         int deleteIconBottom = deleteIconTop + intrinsicHeight;
 
-// Calculate the horizontal center of the swiped item
+        // Calculate the horizontal center of the swiped item
         int centerX = (itemView.getRight() + itemView.getLeft()) / 2;
 
-// Calculate the half width of the delete icon
+        // Calculate the half width of the delete icon
         int halfDeleteIconWidth = intrinsicWidth / 2;
 
         int additionalLeftMargin = 50;

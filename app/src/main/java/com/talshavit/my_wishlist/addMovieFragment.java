@@ -23,8 +23,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.Movie.MovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
@@ -55,6 +58,9 @@ public class addMovieFragment extends Fragment {
     private static String trailer;
 
 
+    private static int nextID;
+
+
     public addMovieFragment() {
     }
 
@@ -75,6 +81,7 @@ public class addMovieFragment extends Fragment {
     }
 
     private void initView() {
+        checkLastSerialNumber();
 
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -112,11 +119,12 @@ public class addMovieFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                databaseReference= FirebaseDatabase.getInstance().getReference("Movies");
+                databaseReference= FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
                 MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
                 movieInfo.setUserID(userID);
+                movieInfo.setSerialID(nextID);
 
-                databaseReference.child( userID+" "+movieID).setValue(movieInfo);
+                databaseReference.child(movieID+"").setValue(movieInfo);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
@@ -125,6 +133,30 @@ public class addMovieFragment extends Fragment {
                         .commit();
             }
         });
+    }
+
+    private void checkLastSerialNumber() {
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference= FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+        databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    MovieInfo lastAddedMovie = snapshot.getValue(MovieInfo.class);
+                    if (lastAddedMovie != null) {
+                        nextID = lastAddedMovie.getSerialID()+1;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
     }
 
     private void findViews(View view) {

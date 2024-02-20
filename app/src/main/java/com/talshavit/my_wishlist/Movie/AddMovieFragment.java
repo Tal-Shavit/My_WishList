@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist;
+package com.talshavit.my_wishlist.Movie;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -29,19 +29,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.talshavit.my_wishlist.Movie.MovieFragment;
-import com.talshavit.my_wishlist.Movie.MovieInfo;
+import com.talshavit.my_wishlist.R;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class addMovieFragment extends Fragment {
+public class AddMovieFragment extends Fragment {
 
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
     private EditText titleEditText;
     private ImageButton titleButton;
     private static Spinner dynamicSpinner;
@@ -61,7 +56,7 @@ public class addMovieFragment extends Fragment {
     private static int nextID;
 
 
-    public addMovieFragment() {
+    public AddMovieFragment() {
     }
 
     @Override
@@ -106,11 +101,10 @@ public class addMovieFragment extends Fragment {
                     adapter.clear();
                     adapter.notifyDataSetChanged();
 
-                    new MyAsyncTask(addMovieFragment.this, progressDialog).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new MyAsyncTask(AddMovieFragment.this, progressDialog).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 else
                     Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
-
             }
 
         });
@@ -120,7 +114,7 @@ public class addMovieFragment extends Fragment {
             public void onClick(View v) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference= FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-                MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer);
+                MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer,false);
                 movieInfo.setUserID(userID);
                 movieInfo.setSerialID(nextID);
 
@@ -131,6 +125,7 @@ public class addMovieFragment extends Fragment {
                         .replace(R.id.frame_layout, MovieFragment.class, null)
                         .setReorderingAllowed(true).addToBackStack(null)
                         .commit();
+
             }
         });
     }
@@ -154,9 +149,6 @@ public class addMovieFragment extends Fragment {
 
             }
         });
-
-
-
     }
 
     private void findViews(View view) {
@@ -168,9 +160,9 @@ public class addMovieFragment extends Fragment {
     }
 
     private static class MyAsyncTask extends AsyncTask<Void, Void, List<MovieInfo>> {
-        private final WeakReference<addMovieFragment> fragmentReference;
+        private final WeakReference<AddMovieFragment> fragmentReference;
         private ProgressDialog progressDialog;
-        MyAsyncTask(addMovieFragment fragment, ProgressDialog progressDialog) {
+        MyAsyncTask(AddMovieFragment fragment, ProgressDialog progressDialog) {
             this.fragmentReference = new WeakReference<>(fragment);
             this.progressDialog = progressDialog;
         }
@@ -189,7 +181,7 @@ public class addMovieFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<MovieInfo> movieInfos) {
-            addMovieFragment fragment = fragmentReference.get();
+            AddMovieFragment fragment = fragmentReference.get();
             if (fragment != null) {
                 Log.d("MovieName", "Fragment is still valid");
                 Log.d("MovieName", "onPostExecute executed");

@@ -8,18 +8,20 @@
 
 
     <item
-        android:id="@+id/category"
-        android:title="Home"
-        android:icon="@drawable/baseline_home_24"/>
+        android:id="@+id/movies"
+        android:title="Movies"
+        android:icon="@drawable/movie"/>
 
     <item
-        android:id="@+id/fab"
-        android:title=""
-        android:enabled="false"/>
+        android:id="@+id/TvShows"
+        android:title="Tv Shows"
+        android:icon="@drawable/tvshow"
+        />
 
     <item
-        android:id="@+id/person"
-        android:title=""
+        android:id="@+id/Seen"
+        android:title="Watched"
+        android:icon="@drawable/view"
         />
 
     <item

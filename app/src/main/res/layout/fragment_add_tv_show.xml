@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Movie.AddMovieFragment"
+    tools:context=".TvShow.AddTvShowFragment"
     android:orientation="vertical"
     android:gravity="center">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADD A MOVIE!"
+        android:text="ADD A TV SHOW!"
         android:textSize="50sp"
         android:textColor="@color/white"
         android:fontFamily="@font/roboto_light"
@@ -27,7 +27,6 @@
         android:layout_marginTop="15dp"
         android:layout_margin="10dp"
         >
-<!--        android:background="@drawable/ractangle_shape"-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,22 +68,22 @@
         android:layout_width="wrap_content"
         android:layout_height="10dp"/>
 
-<Spinner
-    android:id="@+id/dynamicSpinner"
-    android:layout_width="300dp"
-    android:layout_height="60dp"
-    android:layout_gravity="center"
-    android:fontFamily="@font/roboto_light"
-    android:textStyle="bold"
-    android:background="@drawable/spinner_shape"
-    android:visibility="gone"/>
-    
+    <Spinner
+        android:id="@+id/dynamicSpinner"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/roboto_light"
+        android:textStyle="bold"
+        android:background="@drawable/spinner_shape"
+        android:visibility="gone"/>
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="30dp"/>
 
     <ImageView
-        android:id="@+id/movieImageView"
+        android:id="@+id/tvImageView"
         android:layout_width="250dp"
         android:layout_height="300dp"
         android:layout_gravity="center"/>

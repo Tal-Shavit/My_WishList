@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -83,12 +84,12 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
         holder.trailerImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openTrailerInWebView(trailerKey);
+                openTrailerInWebView(trailerKey, holder.imageCardView, holder.textCardView);
             }
         });
     }
 
-    private void openTrailerInWebView(String trailerKey) {
+    private void openTrailerInWebView(String trailerKey, CardView imageCardView, CardView textCardView) {
 //        if (trailerKey != null && !trailerKey.isEmpty()) {
 //            String trailerUrl = "https://www.youtube.com/watch?v=" + trailerKey;
 //            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
@@ -112,6 +113,10 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
         String url = "https://www.youtube.com/embed/" + trailerKey;
         webView.loadUrl(url);
         dialog.show();
+
+        textCardView.setVisibility(View.INVISIBLE);
+        imageCardView.setVisibility((View.VISIBLE));
+
     }
 
     private String formatGenres(List<String> genres) {

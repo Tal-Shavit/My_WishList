@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,20 +26,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.Helpers.MyAdapterGenres;
-import com.talshavit.my_wishlist.Helpers.MyAdapterSpecificGenre;
+import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterGenres;
+import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
 import com.talshavit.my_wishlist.R;
 
 import java.util.ArrayList;
@@ -61,6 +62,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private TextView genreTextView;
 
     private String selectedGenre;
+
+    private FloatingActionButton addButton;
 
         public MovieFragment() {
     }
@@ -97,29 +100,40 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 allMoviesItems.clear();
-                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
                     allMoviesItems.add(movieInfo);
                 }
 
-                //Sort the list based on serialID in descending order - last in show first
-                Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
-                    @Override
-                    public int compare(MovieInfo movie1, MovieInfo movie2) {
-                        return Integer.compare(movie2.getSerialID(), movie1.getSerialID());
-                    }
-                });
+                if (allMoviesItems.size() == 0) {
+                    replaceFragment(new AddMovieFragment());
+                } else {
+                    //Sort the list based on serialID in descending order - last in show first
+                    Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
+                        @Override
+                        public int compare(MovieInfo movie1, MovieInfo movie2) {
+                            return Integer.compare(movie2.getSerialID(), movie1.getSerialID());
+                        }
+                    });
 
-                createGenres(allMoviesItems);
-                myAdapterMovie.notifyDataSetChanged();
+                    createGenres(allMoviesItems);
+                    myAdapterMovie.notifyDataSetChanged();
 
-                if(selectedGenre != null)
-                    updateGenreList();
+                    if (selectedGenre != null)
+                        updateGenreList();
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new AddMovieFragment());
             }
         });
         setSwipeToDelete();
@@ -250,6 +264,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         recyclerViewGenresButtons = view.findViewById(R.id.recyclerViewGenresButtons);
         recyclerViewMoviesBySpecificGenre = view.findViewById(R.id.recyclerViewMoviesBySpecificGenre);
         genreTextView = view.findViewById(R.id.genreTextView);
+        addButton = view.findViewById(R.id.add_button);
         }
 
     @Override
@@ -258,25 +273,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
             selectedGenre = genre;
             if(selectedGenre != null)
                 updateGenreList();
-//            allMoviesByGenre = new ArrayList<MovieInfo>();
-//            for(int i=0; i<allMoviesItems.size();i++){
-//                List<String> movieGenres = allMoviesItems.get(i).getGenres();
-//
-//                if(movieGenres != null){
-//                        if (movieGenres.contains(genre)) {
-//                            if(!(allMoviesByGenre.contains(allMoviesItems.get(i))))
-//                                allMoviesByGenre.add(allMoviesItems.get(i));
-//                        }
-//                }
-//            }
-//
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-//        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
-//        recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
-//        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
-//        recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
-
     }
 
     private void updateGenreList() {
@@ -304,13 +300,14 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                     myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
                     recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
                 }
-//                else{
-//                    Log.d("lala", "FragmentManager is null");
-//                }
-
             }
-//            else{
-//                Log.d("lala", "Activity is null or finishing");
-//            }
+    }
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

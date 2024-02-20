@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.Helpers;
+package com.talshavit.my_wishlist.MoviesHelpers;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 

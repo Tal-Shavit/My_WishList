@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SpecificMovieFragment"
+    tools:context=".Movie.SpecificMovieFragment"
     android:background="@color/black"
 
     >
@@ -119,34 +119,68 @@
 
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp">
-
-        <TextView
-            android:id="@+id/movieOverview"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textColor="@color/white"
-            android:fontFamily="@font/roboto_light"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="10dp"/>
+            android:layout_height="170dp"
+            android:layout_marginTop="10dp">
 
+            <TextView
+                android:id="@+id/movieOverview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_light"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </ScrollView>
 
-    </ScrollView>
-
-    <WebView
+        <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/deleteMovieButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DELETE"
+                android:backgroundTint="@color/red"
+                android:textColor="@color/white"
+                android:fontFamily="@font/roboto_light"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="0dp"/>
+
+            <Button
+                android:id="@+id/watchedMovieButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WATCHED"
+                android:backgroundTint="@color/yellow"
+                android:textColor="@color/white"
+                android:fontFamily="@font/roboto_light"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
+
+
 
 
 </FrameLayout>

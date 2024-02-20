@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist;
+package com.talshavit.my_wishlist.Movie;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -20,7 +20,7 @@ public class TmdbApiClient {
     private static final String API_KEY = "e7bc0f9166ef27fb13b4271519c0b354";
     private static final String BASE_URL = "https://api.themoviedb.org/3";
 
-    static String title;
+    public static String title;
 
     public static List<MovieInfo> getAllPopularMovies() throws Exception {
         List<MovieInfo> allMovieInfos = new ArrayList<>();
@@ -106,7 +106,7 @@ public class TmdbApiClient {
 
                     String trailer = getMovieTrailerKey(movieId);
 
-                    MovieInfo movieInfo = new MovieInfo(movieId,movieName,releaseYear,imageUrl,movieLenght,genres, overview,trailer);
+                    MovieInfo movieInfo = new MovieInfo(movieId,movieName,releaseYear,imageUrl,movieLenght,genres, overview,trailer, false);
                     movieInfoList.add(movieInfo);
                 }
             }

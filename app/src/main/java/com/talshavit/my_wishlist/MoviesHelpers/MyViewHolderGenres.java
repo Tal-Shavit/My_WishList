@@ -1,8 +1,7 @@
-package com.talshavit.my_wishlist.Helpers;
+package com.talshavit.my_wishlist.MoviesHelpers;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

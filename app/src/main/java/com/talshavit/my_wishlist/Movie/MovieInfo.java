@@ -12,10 +12,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.MainActivity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MovieInfo {
-
+public class MovieInfo implements Serializable {
     private int serialID;
     private String userID;
     private int movieID;
@@ -26,12 +26,13 @@ public class MovieInfo {
     private List<String> genres;
     private String overview;
     private String trailer;
+    private boolean isWatched;
 
     public MovieInfo() {
     }
 
     public MovieInfo(int movieID, String movieName, String releaseYear, String imageUrl, String movieLenght, List<String> genres,
-                        String overview, String trailer) {
+                        String overview, String trailer, boolean isWatched) {
         this.movieID = movieID;
         this.movieName = movieName;
         this.releaseYear = releaseYear;
@@ -40,6 +41,7 @@ public class MovieInfo {
         this.genres = genres;
         this.overview = overview;
         this.trailer = trailer;
+        this.isWatched = isWatched;
     }
 
     public String getMovieName() {
@@ -129,6 +131,15 @@ public class MovieInfo {
 
     public MovieInfo setSerialID(int serialID) {
         this.serialID = serialID;
+        return this;
+    }
+
+    public boolean isWatched() {
+        return isWatched;
+    }
+
+    public MovieInfo setWatched(boolean watched) {
+        isWatched = watched;
         return this;
     }
 }

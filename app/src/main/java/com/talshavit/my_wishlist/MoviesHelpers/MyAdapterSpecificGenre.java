@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.Movie.SpecificMovieFragment;
+import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
     private Context context;
     private FragmentManager fragmentManager;
     public List<MovieInfo> movieInfoList;
+
     private String imageUrl;
     private int selectedPosition = RecyclerView.NO_POSITION; // Initially, no item is selected
 
@@ -31,6 +33,7 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
         this.fragmentManager = fragmentManager;
         this.movieInfoList = movieInfoList;
     }
+
 
     @NonNull
     @Override

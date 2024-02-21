@@ -84,6 +84,10 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
         context = view.getContext();
 
+        initViews();
+    }
+
+    private void initViews() {
         allMoviesItems = new ArrayList<MovieInfo>();
         myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), requireContext(), allMoviesItems);
         initAdapter(recyclerViewAll, myAdapterMovie);

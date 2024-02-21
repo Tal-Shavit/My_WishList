@@ -65,6 +65,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
     private FloatingActionButton addButton;
 
+    private String text;
+
         public MovieFragment() {
     }
 
@@ -136,7 +138,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 replaceFragment(new AddMovieFragment());
             }
         });
-        setSwipeToDelete();
+        setSwipeToWatched("DELETE MOVIE","Do you want to delete \"",ItemTouchHelper.DOWN, "#85F32C2C", R.drawable.baseline_delete_24);
+        setSwipeToWatched("WATCHED THIS MOVIE","Did you watched \"",ItemTouchHelper.UP, "#CDF4F269", R.drawable.baseline_remove_red_eye_24);
     }
 
     private void createGenres(List<MovieInfo> allMoviesItems) {
@@ -156,107 +159,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         recyclerViewGenresButtons.setLayoutManager(linearLayoutManagerG);
         myAdapterGenres = new MyAdapterGenres(context, genresList,this);
         recyclerViewGenresButtons.setAdapter(myAdapterGenres);
-
-    }
-
-    private void setSwipeToDelete() {
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.DOWN) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                int position = viewHolder.getAdapterPosition();
-                builder.setTitle("DELETE MOVIE");
-                builder.setMessage("Do you want to delete \"" + allMoviesItems.get(position).getMovieName().toUpperCase() + "\"?");
-                builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteMovieFromFirebase(allMoviesItems.get(position).getMovieID());
-                        allMoviesItems.remove(position);
-                        myAdapterMovie.notifyItemRemoved(position);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        myAdapterMovie.notifyItemChanged(position);
-                    }
-                });
-                builder.show();
-            }
-
-//            @Override
-//            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-//                return 1f;
-//            }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                setDeleteIcon(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        }).attachToRecyclerView(recyclerViewAll);
-    }
-
-    private void deleteMovieFromFirebase(int movieId) {
-        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(movieId+"");
-        movieReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "failed to delet from firebase", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void setDeleteIcon(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        Paint mClearPaint = new Paint();
-        mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        ColorDrawable mBackground = new ColorDrawable();
-        int backgroundColor = Color.parseColor("#85F32C2C");
-        Drawable deleteDrawable = ContextCompat.getDrawable(getContext(), R.drawable.baseline_delete_24);
-        int intrinsicWidth = deleteDrawable.getIntrinsicWidth();
-        int intrinsicHeight = deleteDrawable.getIntrinsicHeight();
-
-        View itemView = viewHolder.itemView;
-        int itemHeight = itemView.getHeight();
-
-        boolean isCancelled = dY == 0 && !isCurrentlyActive;  // Check the vertical displacement (dY) instead of horizontal (dX)
-
-        if (isCancelled) {
-            c.drawRect((float) itemView.getLeft(), itemView.getTop(),
-                    (float) itemView.getRight(), (float) itemView.getBottom(), mClearPaint);
-            return;
-        }
-
-        mBackground.setColor(backgroundColor);
-        mBackground.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getRight()-30, itemView.getBottom());
-        mBackground.draw(c);
-
-        int deleteIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-        int deleteIconBottom = deleteIconTop + intrinsicHeight;
-
-        // Calculate the horizontal center of the swiped item
-        int centerX = (itemView.getRight() + itemView.getLeft()) / 2;
-
-        // Calculate the half width of the delete icon
-        int halfDeleteIconWidth = intrinsicWidth / 2;
-
-        int additionalLeftMargin = 50;
-        int deleteIconLeft = centerX - halfDeleteIconWidth - additionalLeftMargin;
-        int deleteIconRight = centerX + halfDeleteIconWidth;
-
-        deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
-        deleteDrawable.draw(c);
     }
 
     private void findViews (View view){
@@ -266,7 +168,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         genreTextView = view.findViewById(R.id.genreTextView);
         addButton = view.findViewById(R.id.add_button);
         }
-
     @Override
     public void onGenreClick(String genre) {
             genreTextView.setText(genre.toUpperCase());
@@ -274,7 +175,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
             if(selectedGenre != null)
                 updateGenreList();
     }
-
     private void updateGenreList() {
             if(getActivity() != null && !getActivity().isFinishing()) {
 
@@ -309,5 +209,117 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    private void setSwipeToWatched(String title,String messege, int swipeDirection, String color, int drawable) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, swipeDirection) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                int position = viewHolder.getAdapterPosition();
+                builder.setTitle(title);
+                builder.setMessage(messege + allMoviesItems.get(position).getMovieName().toUpperCase() + "\"?");
+                builder.setCancelable(false);
+                if(swipeDirection  == ItemTouchHelper.DOWN){
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteMovieFromFirebase(allMoviesItems.get(position).getMovieID());
+                            allMoviesItems.remove(position);
+                            myAdapterMovie.notifyItemRemoved(position);
+                        }
+                    });
+                }else{
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            allMoviesItems.get(position).setWatched(true);
+                            databaseReference.child(String.valueOf(allMoviesItems.get(position).getMovieID())).child("watched").setValue(true);
+                            myAdapterMovie.notifyItemChanged(position);
+                        }
+                    });
+                }
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        myAdapterMovie.notifyItemChanged(position);
+                    }
+                });
+                builder.show();
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.5f;
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                setWatchedIcon(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive, color, drawable);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        }).attachToRecyclerView(recyclerViewAll);
+    }
+
+    private void setWatchedIcon(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive, String color, int drawable) {
+        Paint mClearPaint = new Paint();
+        mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        ColorDrawable mBackground = new ColorDrawable();
+        int backgroundColor = Color.parseColor(color);
+        Drawable viewDrawable = ContextCompat.getDrawable(getContext(), drawable);
+        int intrinsicWidth = viewDrawable.getIntrinsicWidth();
+        int intrinsicHeight = viewDrawable.getIntrinsicHeight();
+
+        View itemView = viewHolder.itemView;
+        int itemHeight = itemView.getHeight();
+
+        boolean isCancelled = dY == 0 && !isCurrentlyActive;  // Check the vertical displacement (dY) instead of horizontal (dX)
+
+        if (isCancelled) {
+            c.drawRect((float) itemView.getLeft(), itemView.getTop(),
+                    (float) itemView.getRight(), (float) itemView.getBottom(), mClearPaint);
+            return;
+        }
+
+        mBackground.setColor(backgroundColor);
+        mBackground.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getRight()-30, itemView.getBottom());
+        mBackground.draw(c);
+
+        int viewIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
+        int viewIconBottom = viewIconTop + intrinsicHeight;
+
+        // Calculate the horizontal center of the swiped item
+        int centerX = (itemView.getRight() + itemView.getLeft()) / 2;
+
+        // Calculate the half width of the delete icon
+        int halfviewIconWidth = intrinsicWidth / 2;
+
+        int additionalLeftMargin = 50;
+        int viewIconLeft = centerX - halfviewIconWidth - additionalLeftMargin;
+        int viewIconRight = centerX + halfviewIconWidth;
+
+        viewDrawable.setBounds(viewIconLeft, viewIconTop, viewIconRight, viewIconBottom);
+        viewDrawable.draw(c);
+    }
+
+    private void deleteMovieFromFirebase(int movieId) {
+        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(movieId+"");
+        movieReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "failed to delet from firebase", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -10,5 +10,6 @@
     <color name="lavander">#8692f7</color>
     <color name="turkiz">#6DBDB6</color>
     <color name="yellow">#F6F342</color>
+    <color name="yellow_light">#CDF4F269</color>
     <color name="red">#85F32C2C</color>
 </resources>

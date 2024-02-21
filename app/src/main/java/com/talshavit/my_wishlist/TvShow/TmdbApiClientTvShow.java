@@ -92,14 +92,15 @@ public class TmdbApiClientTvShow {
 
 
                         int tvShowId = tvShowObject.get("id").getAsInt();
-                        //int numberOfSeasons = getNumberOfSeasons(tvShowId);
+                        int numberOfSeasons = getNumberOfSeasons(tvShowId);
+                        //int numberOfSeasons = getNumberOfSeasons(tvShowId, jsonResponse);  // Pass the JSON response
                         List<String> genres = getTvShowGenres(tvShowId);
                         String overview = tvShowObject.get("overview").getAsString();
 
                         String trailerKey = getTvShowTrailerKey(tvShowId);
 
 
-                        TvShowInfo tvShowInfo = new TvShowInfo(tvShowId, tvShowName, imageUrl, releaseYear, 0 ,genres,overview, trailerKey, false);
+                        TvShowInfo tvShowInfo = new TvShowInfo(tvShowId, tvShowName, imageUrl, releaseYear, numberOfSeasons ,genres,overview, trailerKey, false);
                         tvShowInfoList.add(tvShowInfo);
                     }
                 }
@@ -193,7 +194,7 @@ public class TmdbApiClientTvShow {
         return genresList;
     }
 
-    /*private static int getNumberOfSeasons(int tvShowId) {
+    private static int getNumberOfSeasons(int tvShowId) {
         OkHttpClient client = new OkHttpClient();
 
         String endpoint = "/tv/" + tvShowId;
@@ -222,7 +223,8 @@ public class TmdbApiClientTvShow {
         if (jsonObject.has("number_of_seasons")) {
             return jsonObject.get("number_of_seasons").getAsInt();
         } else {
-            return 0; // Default value if the number of seasons is not available
+            return 0; //Default value if the number of seasons is not available
         }
-    }*/
+    }
+
 }

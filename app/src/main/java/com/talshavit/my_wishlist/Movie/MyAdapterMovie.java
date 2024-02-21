@@ -90,20 +90,8 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
     }
 
     private void openTrailerInWebView(String trailerKey, CardView imageCardView, CardView textCardView) {
-//        if (trailerKey != null && !trailerKey.isEmpty()) {
-//            String trailerUrl = "https://www.youtube.com/watch?v=" + trailerKey;
-//            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrl));
-//            myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-////            myIntent.setPackage("com.android.chrome");
-//            context.startActivity(myIntent);
-//        } else {
-//            // Handle the case where no trailer key is available
-//            Toast.makeText(context, "No trailer available", Toast.LENGTH_SHORT).show();
-//        }
         Dialog dialog = new Dialog(context1);
         dialog.setContentView(R.layout.dialog_trailer_movie);
-        //dialog.getWindow().setBackgroundDrawableResource(R.drawable.progress_bg);
-
         WebView webView = dialog.findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);

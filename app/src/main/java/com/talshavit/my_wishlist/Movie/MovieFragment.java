@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,12 +59,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private List<String> genresList;
     private List<MovieInfo> allMoviesByGenre;
     private TextView genreTextView;
-
     private String selectedGenre;
-
     private FloatingActionButton addButton;
-
-    private String text;
 
         public MovieFragment() {
     }
@@ -89,12 +84,9 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
         context = view.getContext();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
         allMoviesItems = new ArrayList<MovieInfo>();
-        recyclerViewAll.setLayoutManager(linearLayoutManager);
         myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), requireContext(), allMoviesItems);
-        recyclerViewAll.setAdapter(myAdapterMovie);
+        initAdapter(recyclerViewAll, myAdapterMovie);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
@@ -117,7 +109,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                             return Integer.compare(movie2.getSerialID(), movie1.getSerialID());
                         }
                     });
-
                     createGenres(allMoviesItems);
                     myAdapterMovie.notifyDataSetChanged();
 
@@ -125,10 +116,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                         updateGenreList();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
@@ -142,6 +131,13 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         setSwipeToWatched("WATCHED THIS MOVIE","Did you watched \"",ItemTouchHelper.UP, "#CDF4F269", R.drawable.baseline_remove_red_eye_24);
     }
 
+    private void initAdapter(RecyclerView recyclerView, RecyclerView.Adapter myAdapter) {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(myAdapter);
+        }
+
     private void createGenres(List<MovieInfo> allMoviesItems) {
         genresList = new ArrayList<String>();
         for(int i=0; i<allMoviesItems.size(); i++){
@@ -153,12 +149,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 }
             }
         }
-
-        LinearLayoutManager linearLayoutManagerG = new LinearLayoutManager(getContext());
-        linearLayoutManagerG.setOrientation(linearLayoutManagerG.HORIZONTAL);
-        recyclerViewGenresButtons.setLayoutManager(linearLayoutManagerG);
         myAdapterGenres = new MyAdapterGenres(context, genresList,this);
-        recyclerViewGenresButtons.setAdapter(myAdapterGenres);
+        initAdapter(recyclerViewGenresButtons, myAdapterGenres);
     }
 
     private void findViews (View view){
@@ -177,7 +169,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     }
     private void updateGenreList() {
             if(getActivity() != null && !getActivity().isFinishing()) {
-
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 if (fragmentManager != null) {
                     genreTextView.setText(selectedGenre.toUpperCase());
@@ -192,13 +183,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                             }
                         }
                     }
-
-
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-                    linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
-                    recyclerViewMoviesBySpecificGenre.setLayoutManager(linearLayoutManager);
                     myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
-                    recyclerViewMoviesBySpecificGenre.setAdapter(myAdapterSpecificGenre);
+                    initAdapter(recyclerViewMoviesBySpecificGenre, myAdapterSpecificGenre);
                 }
             }
     }
@@ -294,13 +280,10 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
         int viewIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
         int viewIconBottom = viewIconTop + intrinsicHeight;
-
         // Calculate the horizontal center of the swiped item
         int centerX = (itemView.getRight() + itemView.getLeft()) / 2;
-
         // Calculate the half width of the delete icon
         int halfviewIconWidth = intrinsicWidth / 2;
-
         int additionalLeftMargin = 50;
         int viewIconLeft = centerX - halfviewIconWidth - additionalLeftMargin;
         int viewIconRight = centerX + halfviewIconWidth;

@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
         //findViews();
         //initViews();
+        replaceFragment(new LottieFragment());
 
         binding.bottomNavigationView.setBackground(null);
 

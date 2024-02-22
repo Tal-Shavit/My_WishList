@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.MoviesHelpers;
+package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.view.View;
 import android.widget.Button;

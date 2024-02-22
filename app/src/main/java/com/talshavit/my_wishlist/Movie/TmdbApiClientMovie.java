@@ -4,7 +4,6 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.talshavit.my_wishlist.Movie.MovieInfo;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -15,7 +14,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class TmdbApiClient {
+public class TmdbApiClientMovie {
 
     private static final String API_KEY = "e7bc0f9166ef27fb13b4271519c0b354";
     private static final String BASE_URL = "https://api.themoviedb.org/3";
@@ -47,11 +46,6 @@ public class TmdbApiClient {
     }
 
     public static List<MovieInfo> getPopularMovies(int page) throws Exception {
-//        if (page < 1) {  // Adjust the maximum page number as needed
-//            throw new IllegalArgumentException("Invalid page number");
-//        }
-        // || page > 200
-
         OkHttpClient client = new OkHttpClient();
 
         String endpoint = "/search/movie";
@@ -79,10 +73,9 @@ public class TmdbApiClient {
             JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
 
             if (jsonObject.has("results")) {
-            JsonArray results = jsonObject.getAsJsonArray("results");
-            for (int i = 0; i < results.size(); i++) {
-
-                JsonObject movieObject = results.get(i).getAsJsonObject();
+                JsonArray results = jsonObject.getAsJsonArray("results");
+                for (int i = 0; i < results.size(); i++) {
+                    JsonObject movieObject = results.get(i).getAsJsonObject();
 
                 if (movieObject.has("title") && movieObject.has("release_date")) {
                     String movieName = movieObject.get("title").getAsString();

@@ -50,12 +50,16 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
                 showSpecificMovie(position);
             }
         });
+
+        if(tvShowInfos.get(position).isWatched()){
+            holder.seenImageView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showSpecificMovie(int position) {
         imageUrl = tvShowInfos.get(position).getImageUrl();
         String title = tvShowInfos.get(position).getTvShowName();
-        int numOfSeries = tvShowInfos.get(position).getNumOfSeasons();
+        String numOfSeries = tvShowInfos.get(position).getNumOfSeasons();
         String releaseYear = tvShowInfos.get(position).getReleaseYear();
         String overview = tvShowInfos.get(position).getOverview();
         List<String> genres = tvShowInfos.get(position).getGenres();

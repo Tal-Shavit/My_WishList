@@ -2,6 +2,7 @@ package com.talshavit.my_wishlist.TvShow;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
-import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 
 import java.util.List;
@@ -36,30 +36,30 @@ public class MyAdapterTvShow extends RecyclerView.Adapter<MyViewHolderTvShow> {
     @NonNull
     @Override
     public MyViewHolderTvShow onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolderTvShow(LayoutInflater.from(context).inflate(R.layout.recycler_all_movie_item,parent,false));
+        return new MyViewHolderTvShow(LayoutInflater.from(context).inflate(R.layout.recycler_all_items,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolderTvShow holder, int position) {
         String title = tvShowInfoList.get(position).getTvShowName();
-        holder.movieTitle.setText(title);
+        holder.titleTxt.setText(title);
 
-        holder.movieTextView.setText(title);
+        holder.titleTextView.setText(title);
 
         String overview = tvShowInfoList.get(position).getOverview();
         if(overview.equals(""))
-            holder.movieDescription.setText("There is no overview");
+            holder.overviewTxt.setText("There is no overview");
         else
-            holder.movieDescription.setText(overview);
+            holder.overviewTxt.setText(overview);
 
-        holder.movieLenght.setText(String.valueOf(tvShowInfoList.get(position).getNumOfSeasons()));
+        holder.lenghtTxt.setText(tvShowInfoList.get(position).getNumOfSeasons());
 
         String imageUrl = tvShowInfoList.get(position).getImageUrl();
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+imageUrl).into(holder.movieImageButton);
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+imageUrl).into(holder.imageButton);
 
         List<String> genres = tvShowInfoList.get(position).getGenres();
         String formattedGenres = formatGenres(genres);
-        holder.movieGenre.setText(formattedGenres);
+        holder.genreTxt.setText(formattedGenres);
 
         if (position == selectedPosition) {
             holder.textCardView.setVisibility(View.VISIBLE);
@@ -68,8 +68,11 @@ public class MyAdapterTvShow extends RecyclerView.Adapter<MyViewHolderTvShow> {
             holder.textCardView.setVisibility(View.INVISIBLE);
             holder.imageCardView.setVisibility((View.VISIBLE));
         }
+        if(tvShowInfoList.get(position).isWatched()){
+            holder.seenImageView.setVisibility(View.VISIBLE);
+        }
 
-        holder.movieImageButton.setOnClickListener(new View.OnClickListener() {
+        holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedPosition = position;  // Update the selected position
@@ -92,7 +95,7 @@ public class MyAdapterTvShow extends RecyclerView.Adapter<MyViewHolderTvShow> {
 
     private void openTrailerInWebView(String trailerKey, CardView imageCardView, CardView textCardView) {
         Dialog dialog = new Dialog(context1);
-        dialog.setContentView(R.layout.dialog_trailer_movie);
+        dialog.setContentView(R.layout.dialog_trailer);
         WebView webView = dialog.findViewById(R.id.webView);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);

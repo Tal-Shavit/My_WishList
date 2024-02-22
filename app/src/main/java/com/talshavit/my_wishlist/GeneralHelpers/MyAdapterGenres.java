@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.MoviesHelpers;
+package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,32 +9,24 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
-import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAdapterGenresViewHolder> {
 
     private Context context;
-
     private List<String> allGenres;
-
-//    private List<MovieInfo> allMoviesByGenre;
-//    private List<TvShowInfo> allTvShowsByGenre;
-    //private String movieOrTv;
-
 
     private GenreClickListener genreClickListener;
 
+    public MyAdapterGenres() {
+    }
 
     public MyAdapterGenres(Context context, List<String> allGenres, GenreClickListener genreClickListener) {
         this.context = context;
         this.allGenres = allGenres;
         this.genreClickListener = genreClickListener;
-        //this.movieOrTv = movieOrTv;
     }
 
     @NonNull
@@ -46,7 +38,6 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
 
     @Override
     public void onBindViewHolder(@NonNull MyAdapterGenresViewHolder holder, int position) {
-        //allMoviesByGenre = new ArrayList<MovieInfo>();
         String genre = allGenres.get(position);
         holder.genreButton.setText(genre);
 

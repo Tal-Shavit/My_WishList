@@ -57,6 +57,10 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
 
             }
         });
+
+        if(movieInfoList.get(position).isWatched()){
+            holder.seenImageView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showSpecificMovie(int position) {

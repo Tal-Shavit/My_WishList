@@ -1,15 +1,6 @@
 package com.talshavit.my_wishlist.Movie;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,10 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterGenres;
+import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
+import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterGenres;
 import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
 import com.talshavit.my_wishlist.R;
 
@@ -47,7 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClickListener{
+public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClickListener {
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewMoviesBySpecificGenre;
     private List<MovieInfo> allMoviesItems;
     private DatabaseReference databaseReference;
@@ -62,6 +51,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private String selectedGenre;
     private FloatingActionButton addButton;
 
+    GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>();
+
         public MovieFragment() {
     }
 
@@ -74,7 +65,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie, container, false);
+        return inflater.inflate(R.layout.fragment_general, container, false);
     }
 
     @Override
@@ -84,10 +75,10 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
         context = view.getContext();
 
-        initViews();
+        initViews(view);
     }
 
-    private void initViews() {
+    private void initViews(View view) {
         allMoviesItems = new ArrayList<MovieInfo>();
         myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), requireContext(), allMoviesItems);
         initAdapter(recyclerViewAll, myAdapterMovie);
@@ -131,8 +122,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 replaceFragment(new AddMovieFragment());
             }
         });
-        setSwipeToWatched("DELETE MOVIE","Do you want to delete \"",ItemTouchHelper.DOWN, "#85F32C2C", R.drawable.baseline_delete_24);
-        setSwipeToWatched("WATCHED THIS MOVIE","Did you watched \"",ItemTouchHelper.UP, "#CDF4F269", R.drawable.baseline_remove_red_eye_24);
+        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context,allMoviesItems,myAdapterMovie,
+                databaseReference,recyclerViewAll,userID,"movies");
     }
 
     private void initAdapter(RecyclerView recyclerView, RecyclerView.Adapter myAdapter) {
@@ -199,114 +190,5 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-    private void setSwipeToWatched(String title,String messege, int swipeDirection, String color, int drawable) {
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, swipeDirection) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                int position = viewHolder.getAdapterPosition();
-                builder.setTitle(title);
-                builder.setMessage(messege + allMoviesItems.get(position).getMovieName().toUpperCase() + "\"?");
-                builder.setCancelable(false);
-                if(swipeDirection  == ItemTouchHelper.DOWN){
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteMovieFromFirebase(allMoviesItems.get(position).getMovieID());
-                            allMoviesItems.remove(position);
-                            myAdapterMovie.notifyItemRemoved(position);
-                        }
-                    });
-                }else{
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            allMoviesItems.get(position).setWatched(true);
-                            databaseReference.child(String.valueOf(allMoviesItems.get(position).getMovieID())).child("watched").setValue(true);
-                            myAdapterMovie.notifyItemChanged(position);
-                        }
-                    });
-                }
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        myAdapterMovie.notifyItemChanged(position);
-                    }
-                });
-                builder.show();
-            }
-
-            @Override
-            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-                return 0.5f;
-            }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                setWatchedIcon(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive, color, drawable);
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-            }
-        }).attachToRecyclerView(recyclerViewAll);
-    }
-
-    private void setWatchedIcon(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive, String color, int drawable) {
-        Paint mClearPaint = new Paint();
-        mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        ColorDrawable mBackground = new ColorDrawable();
-        int backgroundColor = Color.parseColor(color);
-        Drawable viewDrawable = ContextCompat.getDrawable(getContext(), drawable);
-        int intrinsicWidth = viewDrawable.getIntrinsicWidth();
-        int intrinsicHeight = viewDrawable.getIntrinsicHeight();
-
-        View itemView = viewHolder.itemView;
-        int itemHeight = itemView.getHeight();
-
-        boolean isCancelled = dY == 0 && !isCurrentlyActive;  // Check the vertical displacement (dY) instead of horizontal (dX)
-
-        if (isCancelled) {
-            c.drawRect((float) itemView.getLeft(), itemView.getTop(),
-                    (float) itemView.getRight(), (float) itemView.getBottom(), mClearPaint);
-            return;
-        }
-
-        mBackground.setColor(backgroundColor);
-        mBackground.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getRight()-30, itemView.getBottom());
-        mBackground.draw(c);
-
-        int viewIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
-        int viewIconBottom = viewIconTop + intrinsicHeight;
-        // Calculate the horizontal center of the swiped item
-        int centerX = (itemView.getRight() + itemView.getLeft()) / 2;
-        // Calculate the half width of the delete icon
-        int halfviewIconWidth = intrinsicWidth / 2;
-        int additionalLeftMargin = 50;
-        int viewIconLeft = centerX - halfviewIconWidth - additionalLeftMargin;
-        int viewIconRight = centerX + halfviewIconWidth;
-
-        viewDrawable.setBounds(viewIconLeft, viewIconTop, viewIconRight, viewIconBottom);
-        viewDrawable.draw(c);
-    }
-
-    private void deleteMovieFromFirebase(int movieId) {
-        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(movieId+"");
-        movieReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "failed to delet from firebase", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

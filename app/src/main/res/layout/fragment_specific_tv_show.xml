@@ -176,7 +176,19 @@
                 android:backgroundTint="@color/yellow"
                 android:textColor="@color/white"
                 android:fontFamily="@font/roboto_light"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/notWatchedTvButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DIDNT WATCHED"
+                android:backgroundTint="@color/lavander"
+                android:textColor="@color/white"
+                android:fontFamily="@font/roboto_light"
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

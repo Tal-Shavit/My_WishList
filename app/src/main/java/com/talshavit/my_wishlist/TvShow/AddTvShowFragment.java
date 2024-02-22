@@ -44,8 +44,8 @@ public class AddTvShowFragment extends Fragment {
     private static Button addButton;
     private static Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
-    private static String tvShowName,imageUrl,releaseYear, overview,trailer;
-    private static int numOfSeasons, tvShowID;
+    private static String tvShowName,imageUrl,releaseYear, overview,trailer,numOfSeasons;
+    private static int tvShowID;
     private static List<String> genres;
     private static int nextID;
 
@@ -178,6 +178,7 @@ public class AddTvShowFragment extends Fragment {
                             addButton.setVisibility(View.VISIBLE);
                             tvShowID = tvShowInfos.get(position).getTvShowID();
                             tvShowName = tvShowInfos.get(position).getTvShowName();
+                            numOfSeasons = tvShowInfos.get(position).getNumOfSeasons();
                             imageUrl = tvShowInfos.get(position).getImageUrl();
                             releaseYear = tvShowInfos.get(position).getReleaseYear();
                             genres = tvShowInfos.get(position).getGenres();

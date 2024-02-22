@@ -5,8 +5,6 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.talshavit.my_wishlist.TvShow.TvShowInfo;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -93,14 +91,19 @@ public class TmdbApiClientTvShow {
 
                         int tvShowId = tvShowObject.get("id").getAsInt();
                         int numberOfSeasons = getNumberOfSeasons(tvShowId);
-                        //int numberOfSeasons = getNumberOfSeasons(tvShowId, jsonResponse);  // Pass the JSON response
+                        String seasons;
+                        if(numberOfSeasons > 1)
+                            seasons = numberOfSeasons+" seasons";
+                        else{
+                            seasons = numberOfSeasons+" season";
+                        }
                         List<String> genres = getTvShowGenres(tvShowId);
                         String overview = tvShowObject.get("overview").getAsString();
 
                         String trailerKey = getTvShowTrailerKey(tvShowId);
 
 
-                        TvShowInfo tvShowInfo = new TvShowInfo(tvShowId, tvShowName, imageUrl, releaseYear, numberOfSeasons ,genres,overview, trailerKey, false);
+                        TvShowInfo tvShowInfo = new TvShowInfo(tvShowId, tvShowName, imageUrl, releaseYear, seasons ,genres,overview, trailerKey, false);
                         tvShowInfoList.add(tvShowInfo);
                     }
                 }
@@ -190,7 +193,6 @@ public class TmdbApiClientTvShow {
                 }
             }
         }
-
         return genresList;
     }
 
@@ -212,7 +214,8 @@ public class TmdbApiClientTvShow {
                 throw new IOException("Unexpected code " + response);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return 0; // Default value if an error occurs
         }
     }
 
@@ -222,8 +225,12 @@ public class TmdbApiClientTvShow {
 
         if (jsonObject.has("number_of_seasons")) {
             return jsonObject.get("number_of_seasons").getAsInt();
+        } else if (jsonObject.has("seasons")) {
+            //If "number_of_seasons" is not directly available, try to get it from the "seasons" array
+            JsonArray seasonsArray = jsonObject.getAsJsonArray("seasons");
+            return seasonsArray.size();
         } else {
-            return 0; //Default value if the number of seasons is not available
+            return 0; // Default value if the number of seasons is not available
         }
     }
 

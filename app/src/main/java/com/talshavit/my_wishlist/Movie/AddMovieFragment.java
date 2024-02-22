@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.GeneralHelpers.TmdbApiClientGeneral;
 import com.talshavit.my_wishlist.R;
 
 import java.lang.ref.WeakReference;
@@ -51,10 +52,7 @@ public class AddMovieFragment extends Fragment {
     private static List<String> genres;
     private static String overview;
     private static String trailer;
-
-
     private static int nextID;
-
 
     public AddMovieFragment() {
     }
@@ -87,7 +85,8 @@ public class AddMovieFragment extends Fragment {
             public void onClick(View v) {
                 String title = titleEditText.getText().toString();
                 if(!title.equals("")){
-                    TmdbApiClient.title = title;
+                    TmdbApiClientMovie.title = title;
+
                     dynamicSpinner.setVisibility(View.INVISIBLE);
                     movieImageView.setVisibility(View.INVISIBLE);
 
@@ -171,7 +170,8 @@ public class AddMovieFragment extends Fragment {
         protected List<MovieInfo> doInBackground(Void... voids) {
             try {
                 Log.d("MovieName", "doInBackground executed");
-                return TmdbApiClient.getAllPopularMovies();
+                return TmdbApiClientMovie.getAllPopularMovies();
+
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("MovieName", "Exception in doInBackground: " + e.getMessage());

@@ -1,21 +1,11 @@
 package com.talshavit.my_wishlist.Movie;
 
-import android.content.Context;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.MainActivity;
+import com.talshavit.my_wishlist.GeneralHelpers.GenerealInterfaces;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class MovieInfo implements Serializable {
+public class MovieInfo implements Serializable , GenerealInterfaces{
     private int serialID;
     private String userID;
     private int movieID;
@@ -138,8 +128,22 @@ public class MovieInfo implements Serializable {
         return isWatched;
     }
 
-    public MovieInfo setWatched(boolean watched) {
+    public void setWatched(boolean watched) {
         isWatched = watched;
-        return this;
+        //return this;
     }
+
+    @Override
+    public int getID() {
+        return movieID;
+    }
+
+    @Override
+    public String getName() {
+        return movieName;
+    }
+
+
+
+
 }

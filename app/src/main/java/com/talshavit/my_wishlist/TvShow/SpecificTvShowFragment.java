@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 
@@ -42,18 +43,16 @@ public class SpecificTvShowFragment extends Fragment {
     private ImageView tvShowImageView, imageBackground;
     private TextView tvShowTitle, tvShowNumSeries, tvShowReleaseYear, tvShowOverview, tvShowGenre;
     private ImageButton backButton;
-
     private WebView webView;
     private ScrollView scrollView;
-
-    private Button deleteTvShow, watchedTvShowButton;
-
+    private Button deleteTvShow, watchedTvShowButton, notWatchedTvButton;
     private DatabaseReference databaseReference;
+    GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>();
+
 
     public SpecificTvShowFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +103,7 @@ public class SpecificTvShowFragment extends Fragment {
             tvShowOverview.setText(tvShowInfo.getOverview());
 
         List<String> genres = tvShowInfo.getGenres();
-        String formattedGenres = formatGenres(genres);
+        String formattedGenres = generalFunctions.formatGenres(genres);
         tvShowGenre.setText(formattedGenres);
 
         String trailerKey = tvShowInfo.getTrailer();
@@ -112,15 +111,12 @@ public class SpecificTvShowFragment extends Fragment {
             webView.setVisibility(View.GONE);
             ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
             layoutParams.height = (int) (370 * getResources().getDisplayMetrics().density);
-            //layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            // Apply the updated layout parameters
             scrollView.setLayoutParams(layoutParams);
         }
         else{
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient());
-
             // Load URL with trailer key
             String url = "https://www.youtube.com/embed/" + trailerKey;
             webView.loadUrl(url);
@@ -152,8 +148,14 @@ public class SpecificTvShowFragment extends Fragment {
         watchedTvShowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvShowInfo.setWatched(true);
-                databaseReference.child("watched").setValue(true);
+                AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", tvShowInfo, "add");
+            }
+        });
+
+        notWatchedTvButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"",tvShowInfo, "remove");
             }
         });
 
@@ -161,16 +163,20 @@ public class SpecificTvShowFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Boolean isWatched = snapshot.getValue(Boolean.class);
-                if(isWatched != null && isWatched)
+                if(isWatched != null && isWatched){
                     watchedTvShowButton.setVisibility(View.GONE);
+                    notWatchedTvButton.setVisibility(View.VISIBLE);
+                }
+                else if(isWatched != null && !isWatched){
+                    watchedTvShowButton.setVisibility(View.VISIBLE);
+                    notWatchedTvButton.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-
     }
 
     private void deleteTvFromFirebase(int tvShowID) {
@@ -187,24 +193,6 @@ public class SpecificTvShowFragment extends Fragment {
         });
     }
 
-    private String formatGenres(List<String> genres) {
-        if (genres == null || genres.isEmpty()) {
-            return "There is no genres"; //When genres is null or empty
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String genre : genres) {
-            stringBuilder.append(genre).append(", ");
-        }
-
-        // Remove the trailing comma and space
-        if (stringBuilder.length() > 1) {
-            stringBuilder.setLength(stringBuilder.length() - 2);
-        }
-
-        return stringBuilder.toString();
-    }
-
     private void findViews(View view) {
         tvShowImageView = view.findViewById(R.id.tvShowImageView);
         imageBackground = view.findViewById(R.id.imageBackground);
@@ -218,5 +206,42 @@ public class SpecificTvShowFragment extends Fragment {
         scrollView = view.findViewById(R.id.scrollView);
         deleteTvShow = view.findViewById(R.id.deleteTvShow);
         watchedTvShowButton = view.findViewById(R.id.watchedTvShowButton);
+        notWatchedTvButton = view.findViewById(R.id.notWatchedTvButton);
+    }
+
+    private void AlertDialogFunc(String title,String messege, TvShowInfo tvShowInfo, String removeOrAdd ){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(title);
+        builder.setMessage(messege + tvShowInfo.getTvShowName().toUpperCase() +"\"?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (removeOrAdd.equals("add")) {
+                    tvShowInfo.setWatched(true);
+                    databaseReference.child("watched").setValue(true);
+                    watchedTvShowButton.setVisibility(View.GONE);
+                    notWatchedTvButton.setVisibility(View.VISIBLE);
+                } else {
+                    tvShowInfo.setWatched(false);
+                    databaseReference.child("watched").setValue(false);
+                    watchedTvShowButton.setVisibility(View.VISIBLE);
+                    notWatchedTvButton.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+
+                    }
+                });
+            }
+        });
+        builder.show();
     }
 }

@@ -1,9 +1,11 @@
 package com.talshavit.my_wishlist.TvShow;
 
+import com.talshavit.my_wishlist.GeneralHelpers.GenerealInterfaces;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class TvShowInfo implements Serializable  {
+public class TvShowInfo implements Serializable , GenerealInterfaces {
 
     private int serialID;
     private String userID;
@@ -11,7 +13,8 @@ public class TvShowInfo implements Serializable  {
     String tvShowName;
     String imageUrl;
     private String releaseYear;
-    private int numOfSeasons;
+    //private int numOfSeasons;
+    private String numOfSeasons;
     private List<String> genres;
     private String overview;
     private String trailer;
@@ -21,7 +24,7 @@ public class TvShowInfo implements Serializable  {
     public TvShowInfo() {
     }
 
-    public TvShowInfo(int tvShowID, String tvShowName, String imageUrl, String releaseYear, int numOfSeasons, List<String> genres, String overview, String trailer, boolean isWatched) {
+    public TvShowInfo(int tvShowID, String tvShowName, String imageUrl, String releaseYear, String numOfSeasons, List<String> genres, String overview, String trailer, boolean isWatched) {
         this.tvShowID = tvShowID;
         this.tvShowName = tvShowName;
         this.imageUrl = imageUrl;
@@ -87,11 +90,11 @@ public class TvShowInfo implements Serializable  {
         return this;
     }
 
-    public int getNumOfSeasons() {
+    public String getNumOfSeasons() {
         return numOfSeasons;
     }
 
-    public TvShowInfo setNumOfSeasons(int numOfSeasons) {
+    public TvShowInfo setNumOfSeasons(String numOfSeasons) {
         this.numOfSeasons = numOfSeasons;
         return this;
     }
@@ -127,8 +130,18 @@ public class TvShowInfo implements Serializable  {
         return isWatched;
     }
 
-    public TvShowInfo setWatched(boolean watched) {
+    public void setWatched(boolean watched) {
         isWatched = watched;
-        return this;
+        //return this;
+    }
+
+    @Override
+    public int getID() {
+        return tvShowID;
+    }
+
+    @Override
+    public String getName() {
+        return tvShowName;
     }
 }

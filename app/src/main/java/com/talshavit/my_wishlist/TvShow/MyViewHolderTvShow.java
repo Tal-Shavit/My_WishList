@@ -3,6 +3,7 @@ package com.talshavit.my_wishlist.TvShow;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,22 +14,24 @@ import com.talshavit.my_wishlist.R;
 
 public class MyViewHolderTvShow extends RecyclerView.ViewHolder {
 
-    ImageButton movieImageButton;
+    ImageButton imageButton;
     Button trailerImageButton;
-    TextView movieTitle, movieDescription, movieGenre, movieLenght, movieTextView;
+    TextView titleTxt, overviewTxt, genreTxt, lenghtTxt, titleTextView;
     CardView textCardView,imageCardView;
+    ImageView seenImageView;
 
 
     public MyViewHolderTvShow(@NonNull View itemView) {
         super(itemView);
-        movieImageButton = itemView.findViewById(R.id.movieImageButton);
+        imageButton = itemView.findViewById(R.id.imageButton);
         trailerImageButton = itemView.findViewById(R.id.trailerImageButton);
-        movieTitle = itemView.findViewById(R.id.movieTitle);
-        movieDescription = itemView.findViewById(R.id.movieDescription);
-        movieGenre = itemView.findViewById(R.id.movieGenre);
-        movieLenght = itemView.findViewById(R.id.movieLenght);
-        movieTextView = itemView.findViewById(R.id.movieTextView);
+        titleTxt = itemView.findViewById(R.id.titleTxt);
+        genreTxt = itemView.findViewById(R.id.genreTxt);
+        overviewTxt = itemView.findViewById(R.id.overviewTxt);
+        lenghtTxt = itemView.findViewById(R.id.lenghtTxt);
+        titleTextView = itemView.findViewById(R.id.titleTextView);
         textCardView = itemView.findViewById(R.id.textCardView);
         imageCardView = itemView.findViewById(R.id.imageCardView);
+        seenImageView = itemView.findViewById(R.id.seenImageView);
     }
 }

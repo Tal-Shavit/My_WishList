@@ -1,5 +1,7 @@
 package com.talshavit.my_wishlist.GeneralHelpers;
 
+import java.util.List;
+
 public interface GenerealInterfaces {
     void setWatched(boolean watched);
     int getID();
@@ -7,4 +9,16 @@ public interface GenerealInterfaces {
     String getName();
 
     boolean isWatched();
+
+    String getImageUrl();
+
+    String getLenght();
+
+    String getReleaseYear();
+
+    String getOverview();
+
+    List<String> getGenres();
+
+    String getTrailer();
 }

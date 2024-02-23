@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
 public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClickListener {
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewMoviesBySpecificGenre;
     private List<MovieInfo> allMoviesItems;

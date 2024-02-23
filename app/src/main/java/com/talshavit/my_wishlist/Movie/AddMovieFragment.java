@@ -220,8 +220,6 @@ public class AddMovieFragment extends Fragment {
                 } else {
                     Toast.makeText(fragment.getContext(), "No matches found!", Toast.LENGTH_SHORT).show();
                     fragment.titleEditText.setText("");
-                    //Log.e("MovieName", "Error getting movie names");
-                    //Toast.makeText(fragment.getContext(), "Error getting movie info", Toast.LENGTH_SHORT).show();
                 }
             }else {
                 Log.e("MovieName", "Fragment reference is null");

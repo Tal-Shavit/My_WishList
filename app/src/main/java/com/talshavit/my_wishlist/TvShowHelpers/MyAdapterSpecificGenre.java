@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.GeneralHelpers.SpecificFragmentGeneral;
 import com.talshavit.my_wishlist.R;
-import com.talshavit.my_wishlist.TvShow.SpecificTvShowFragment;
 import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
 import java.util.List;
@@ -71,25 +71,17 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
         TvShowInfo tvShowInfo = new TvShowInfo(tvShowID, title, imageUrl, releaseYear,numOfSeries,genres,overview,trailerKey, isWatched);
 
         Bundle bundle=new Bundle();
-        bundle.putSerializable("TVSHOW_INFO", tvShowInfo);
-//        bundle.putString("IMGURL",imageUrl);
-//        bundle.putString("TITLE",title);
-//        bundle.putString("NUMSERIAL",numOfSeries);
-//        bundle.putString("YEAR",releaseYear);
-//        bundle.putString("OVERVIEW",overview);
-//        bundle.putString("GENRE", formattedGenres);
-//        if (trailerKey == null || trailerKey.isEmpty()){
-//            bundle.putString("TRAILER", "");
-//        }
-//        else
-//            bundle.putString("TRAILER", trailerKey);
-//        bundle.putInt("ID", tvShowID);
+        //bundle.putSerializable("TVSHOW_INFO", tvShowInfo);
+        bundle.putSerializable("MEDIA_INFO", tvShowInfo);
 
-        SpecificTvShowFragment specificTvShowFragment = new SpecificTvShowFragment();
-        specificTvShowFragment.setArguments(bundle);
+        //SpecificTvShowFragment specificTvShowFragment = new SpecificTvShowFragment();
+        //specificTvShowFragment.setArguments(bundle);
+
+        SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("tv shows");
+        specificFragmentGeneral.setArguments(bundle);
 
         fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, specificTvShowFragment, null)
+                .replace(R.id.frame_layout, specificFragmentGeneral, null)
                 .setReorderingAllowed(true).addToBackStack(null)
                 .commit();
     }

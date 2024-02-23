@@ -144,4 +144,9 @@ public class TvShowInfo implements Serializable , GenerealInterfaces {
     public String getName() {
         return tvShowName;
     }
+
+    @Override
+    public String getLenght() {
+        return numOfSeasons;
+    }
 }

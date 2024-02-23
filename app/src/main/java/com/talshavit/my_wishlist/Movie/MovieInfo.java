@@ -143,7 +143,10 @@ public class MovieInfo implements Serializable , GenerealInterfaces{
         return movieName;
     }
 
-
+    @Override
+    public String getLenght() {
+        return movieLenght;
+    }
 
 
 }

@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Movie.SpecificMovieFragment"
-    android:background="@color/black"
-
-    >
+    tools:context=".GeneralHelpers.SpecificFragmentGeneral">    android:background="@color/black"
 
     <ImageView
         android:id="@+id/imageBackground"
@@ -29,95 +26,90 @@
 
 
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/baseline_close_24"
-        android:scaleType="centerCrop"
-        android:backgroundTint="@color/red"
-        android:layout_gravity="end"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/movieImageView"
-            android:layout_width="160dp"
-            android:layout_height="240dp"
-            android:layout_marginStart="20dp"
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_close_24"
             android:scaleType="centerCrop"
+            android:backgroundTint="@color/red"
+            android:layout_gravity="end"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginStart="15dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/movieTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:fontFamily="@font/roboto_black"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:gravity="center"/>
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="160dp"
+                android:layout_height="240dp"
+                android:layout_marginStart="20dp"
+                android:scaleType="centerCrop"
+                />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="40dp"
-                android:layout_gravity="center">
-
-                <TextView
-                    android:id="@+id/movieLenght"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
-
-                <TextView
-                    android:id="@+id/movieReleaseYear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="30dp"/>
-            </LinearLayout>
-
-            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginStart="15dp">
+
                 <TextView
-                    android:id="@+id/movieGenre"
+                    android:id="@+id/titleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/roboto_light"
+                    android:textSize="24sp"
+                    android:fontFamily="@font/roboto_black"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:gravity="center"/>
-            </ScrollView>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="40dp"
+                    android:layout_gravity="center">
 
+                    <TextView
+                        android:id="@+id/lenghtTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
 
+                    <TextView
+                        android:id="@+id/releaseYearTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="30dp"/>
+                </LinearLayout>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp">
+                    <TextView
+                        android:id="@+id/genreTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:gravity="center"/>
+                </ScrollView>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-
-
-    </LinearLayout>
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -126,7 +118,7 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:id="@+id/movieOverview"
+                android:id="@+id/overviewTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_light"
@@ -138,11 +130,11 @@
         </ScrollView>
 
         <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"/>
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -152,7 +144,7 @@
             android:layout_marginTop="5dp">
 
             <Button
-                android:id="@+id/deleteMovieButton"
+                android:id="@+id/deleteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DELETE"
@@ -166,7 +158,7 @@
                 android:layout_height="0dp"/>
 
             <Button
-                android:id="@+id/watchedMovieButton"
+                android:id="@+id/watchedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="WATCHED"
@@ -177,7 +169,7 @@
                 android:visibility="gone"/>
 
             <Button
-                android:id="@+id/notWatchedMovieButton"
+                android:id="@+id/notWatchedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DIDNT WATCHED"
@@ -192,7 +184,5 @@
 
     </LinearLayout>
 
-
-
-
 </FrameLayout>
+

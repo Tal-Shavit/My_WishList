@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.Movie;
+package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,9 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +20,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,47 +29,50 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
 import com.talshavit.my_wishlist.R;
 
 import java.util.List;
 
-public class SpecificMovieFragment extends Fragment {
+public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragment{
 
-    private ImageView movieImageView, imageBackground;
-    private TextView movieTitle, movieLenght, movieReleaseYear, movieOverview, movieGenre;
+    private ImageView imageView, imageBackground;
+    private TextView titleTxt, lenghtTxt, releaseYearTxt, overviewTxt, genreTxt;
     private ImageButton backButton;
     private WebView webView;
     private ScrollView scrollView;
-    private Button deleteMovieButton, watchedMovieButton, notWatchedMovieButton;
+    private Button deleteButton, watchedButton, notWatchedButton;
 
     private DatabaseReference databaseReference;
 
-    GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>();
+    GeneralFunctions<T> generalFunctions = new GeneralFunctions<>();
 
-    public SpecificMovieFragment() {
+    private String itemType;
+
+    private T mediaInfo;
+
+    public SpecificFragmentGeneral() {
         // Required empty public constructor
     }
 
+    public SpecificFragmentGeneral(String itemType) {
+        this.itemType = itemType;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_specific_movie, container, false);
+        return inflater.inflate(R.layout.fragment_specific_general, container, false);
     }
 
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
-        //initView();
         Bundle arguments = getArguments();
         if (arguments != null) {
             initView(arguments);
@@ -88,28 +87,26 @@ public class SpecificMovieFragment extends Fragment {
     }
 
     private void initView(Bundle arguments) {
-        MovieInfo movieInfo = (MovieInfo) arguments.getSerializable("MOVIE_INFO");
+        mediaInfo = (T) arguments.getSerializable("MEDIA_INFO");
 
-        int movieID = movieInfo.getMovieID();
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+movieInfo.getImageUrl()).into(movieImageView);
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+movieInfo.getImageUrl()).into(imageBackground);
-        movieTitle.setText(movieInfo.getMovieName());
-        movieLenght.setText(movieInfo.getMovieLenght());
-        movieReleaseYear.setText(movieInfo.getReleaseYear());
-        if(movieInfo.getOverview().equals(""))
-            movieOverview.setText("There is no overview");
+        //int movieID = mediaInfo.getID();
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageView);
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageBackground);
+        titleTxt.setText(mediaInfo.getName());
+        lenghtTxt.setText(mediaInfo.getLenght());
+        releaseYearTxt.setText(mediaInfo.getReleaseYear());
+        if(mediaInfo.getOverview().equals(""))
+            overviewTxt.setText("There is no overview");
         else
-            movieOverview.setText(movieInfo.getOverview());
-        List<String> genres = movieInfo.getGenres();
+            overviewTxt.setText(mediaInfo.getOverview());
+        List<String> genres = mediaInfo.getGenres();
         String formattedGenres = generalFunctions.formatGenres(genres);
-        movieGenre.setText(formattedGenres);
-        String trailerKey = movieInfo.getTrailer();
+        genreTxt.setText(formattedGenres);
+        String trailerKey = mediaInfo.getTrailer();
         if (trailerKey == null || trailerKey.isEmpty() || trailerKey.equals("") ){
             webView.setVisibility(View.GONE);
             ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
             layoutParams.height = (int) (370 * getResources().getDisplayMetrics().density);
-            //layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            // Apply the updated layout parameters
             scrollView.setLayoutParams(layoutParams);
         }
         else{
@@ -122,41 +119,32 @@ public class SpecificMovieFragment extends Fragment {
         }
 
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(String.valueOf(movieID));
-        deleteMovieButton.setOnClickListener(new View.OnClickListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(String.valueOf(mediaInfo.getID()));
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("DELETE MOVIE");
-                builder.setMessage("Do you want to delete \"" + movieInfo.getMovieName().toUpperCase() + "\"?");
-                builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteMovieFromFirebase(movieID);
-                        requireActivity().getSupportFragmentManager().popBackStackImmediate();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-                builder.show();
+                if(itemType.equals("movies"))
+                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete");
+                else
+                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete");
             }
         });
 
-        watchedMovieButton.setOnClickListener(new View.OnClickListener() {
+        watchedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", movieInfo, "add");
+                if(itemType.equals("movies"))
+                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add");
+                else
+                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add");
+
             }
         });
 
-        notWatchedMovieButton.setOnClickListener(new View.OnClickListener() {
+        notWatchedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"",movieInfo, "remove");
+                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove");
             }
         });
 
@@ -165,12 +153,12 @@ public class SpecificMovieFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Boolean isWatched = snapshot.getValue(Boolean.class);
                 if(isWatched != null && isWatched){
-                    watchedMovieButton.setVisibility(View.GONE);
-                    notWatchedMovieButton.setVisibility(View.VISIBLE);
+                    watchedButton.setVisibility(View.GONE);
+                    notWatchedButton.setVisibility(View.VISIBLE);
                 }
                 else if(isWatched != null && !isWatched){
-                    watchedMovieButton.setVisibility(View.VISIBLE);
-                    notWatchedMovieButton.setVisibility(View.GONE);
+                    watchedButton.setVisibility(View.VISIBLE);
+                    notWatchedButton.setVisibility(View.GONE);
                 }
             }
 
@@ -181,7 +169,7 @@ public class SpecificMovieFragment extends Fragment {
         });
     }
 
-    private void deleteMovieFromFirebase(int movieID) {
+    private void deleteFromFirebase(int movieID) {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(movieID+"");
         specificTvShowReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -195,24 +183,28 @@ public class SpecificMovieFragment extends Fragment {
         });
     }
 
-    private void AlertDialogFunc(String title,String messege, MovieInfo movieInfo, String removeOrAdd ){
+    private void AlertDialogFunc(String title,String messege, String removeOrAddOrDelete ){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(title);
-        builder.setMessage( messege + movieInfo.getMovieName().toUpperCase() +"\"?");
+        builder.setMessage( messege + mediaInfo.getName().toUpperCase() +"\"?");
         builder.setCancelable(false);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (removeOrAdd.equals("add")) {
-                    movieInfo.setWatched(true);
+                if (removeOrAddOrDelete.equals("add")) {
+                    mediaInfo.setWatched(true);
                     databaseReference.child("watched").setValue(true);
-                    watchedMovieButton.setVisibility(View.GONE);
-                    notWatchedMovieButton.setVisibility(View.VISIBLE);
-                } else {
-                    movieInfo.setWatched(false);
+                    watchedButton.setVisibility(View.GONE);
+                    notWatchedButton.setVisibility(View.VISIBLE);
+                } else if (removeOrAddOrDelete.equals("remove")){
+                    mediaInfo.setWatched(false);
                     databaseReference.child("watched").setValue(false);
-                    watchedMovieButton.setVisibility(View.VISIBLE);
-                    notWatchedMovieButton.setVisibility(View.GONE);
+                    watchedButton.setVisibility(View.VISIBLE);
+                    notWatchedButton.setVisibility(View.GONE);
+                }
+                else{
+                    deleteFromFirebase(mediaInfo.getID());
+                    requireActivity().getSupportFragmentManager().popBackStackImmediate();
                 }
             }
         });
@@ -233,18 +225,18 @@ public class SpecificMovieFragment extends Fragment {
     }
 
     private void findViews(View view) {
-        movieImageView = view.findViewById(R.id.movieImageView);
+        imageView = view.findViewById(R.id.imageView);
         imageBackground = view.findViewById(R.id.imageBackground);
-        movieTitle = view.findViewById(R.id.movieTitle);
-        movieLenght = view.findViewById(R.id.movieLenght);
-        movieReleaseYear = view.findViewById(R.id.movieReleaseYear);
-        movieOverview = view.findViewById(R.id.movieOverview);
-        movieGenre = view.findViewById(R.id.movieGenre);
+        titleTxt = view.findViewById(R.id.titleTxt);
+        lenghtTxt = view.findViewById(R.id.lenghtTxt);
+        releaseYearTxt = view.findViewById(R.id.releaseYearTxt);
+        overviewTxt = view.findViewById(R.id.overviewTxt);
+        genreTxt = view.findViewById(R.id.genreTxt);
         backButton = view.findViewById(R.id.backButton);
         webView = view.findViewById(R.id.webView);
         scrollView = view.findViewById(R.id.scrollView);
-        deleteMovieButton = view.findViewById(R.id.deleteMovieButton);
-        watchedMovieButton = view.findViewById(R.id.watchedMovieButton);
-        notWatchedMovieButton = view.findViewById(R.id.notWatchedMovieButton);
+        deleteButton = view.findViewById(R.id.deleteButton);
+        watchedButton = view.findViewById(R.id.watchedButton);
+        notWatchedButton = view.findViewById(R.id.notWatchedButton);
     }
 }

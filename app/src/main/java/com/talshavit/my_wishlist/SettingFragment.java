@@ -78,6 +78,7 @@ public class SettingFragment extends Fragment {
                             String userID = user.getUid();
                             //Delete user's movies list from firebase
                             DatabaseReference moviesReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+                            DatabaseReference tvReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
                             user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -85,6 +86,7 @@ public class SettingFragment extends Fragment {
                                         firebaseAuth.signOut();
                                         openStartActivity();
                                         moviesReference.removeValue();
+                                        tvReference.removeValue();
                                     }
                                 }
                             });
@@ -117,8 +119,6 @@ public class SettingFragment extends Fragment {
         TextView textViewHtml = dialog.findViewById(R.id.textViewHtml);
         String htmlContent = loadHtmlFromAsset("privacy_policy");
         textViewHtml.setText(Html.fromHtml(htmlContent, Html.FROM_HTML_MODE_LEGACY));
-        //Log.d("lala", textView.getText().toString());
-
 
         dialog.show();
 

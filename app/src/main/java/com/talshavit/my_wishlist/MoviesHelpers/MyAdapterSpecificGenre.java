@@ -11,10 +11,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.GeneralHelpers.SpecificFragmentGeneral;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
-import com.talshavit.my_wishlist.Movie.SpecificMovieFragment;
-import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
 import java.util.List;
 
@@ -77,13 +76,17 @@ public class MyAdapterSpecificGenre extends RecyclerView.Adapter<MyViewHolderSpe
         MovieInfo movieInfo = new MovieInfo(movieID,title,releaseYear,imageUrl,lenght,genres,overview,trailerKey, isWatched);
 
         Bundle bundle=new Bundle();
-        bundle.putSerializable("MOVIE_INFO", movieInfo);
+        //bundle.putSerializable("MOVIE_INFO", movieInfo);
+        bundle.putSerializable("MEDIA_INFO", movieInfo);
 
-        SpecificMovieFragment specificMovieFragment = new SpecificMovieFragment();
-        specificMovieFragment.setArguments(bundle);
+        //SpecificMovieFragment specificMovieFragment = new SpecificMovieFragment();
+        //specificMovieFragment.setArguments(bundle);
+
+        SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("movies");
+        specificFragmentGeneral.setArguments(bundle);
 
         fragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, specificMovieFragment, null)
+                .replace(R.id.frame_layout, specificFragmentGeneral, null)
                 .setReorderingAllowed(true).addToBackStack(null)
                 .commit();
     }

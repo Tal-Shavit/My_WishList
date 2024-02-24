@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.TvShowHelpers;
+package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,16 +12,15 @@ import com.talshavit.my_wishlist.R;
 
 public class MyViewHolderSpecificGenre extends RecyclerView.ViewHolder {
 
-    ImageButton tvShowImageButton;
-    TextView tvShowTextView;
-
+    ImageButton imageButton;
+    TextView titleTextView;
     ImageView seenImageView;
+
 
     public MyViewHolderSpecificGenre(@NonNull View itemView) {
         super(itemView);
-        tvShowImageButton  = itemView.findViewById(R.id.tvShowImageButton);
-        tvShowTextView = itemView.findViewById(R.id.tvShowTextView);
+        imageButton = itemView.findViewById(R.id.imageButton);
+        titleTextView = itemView.findViewById(R.id.titleTextView);
         seenImageView = itemView.findViewById(R.id.seenImageView);
     }
-
 }

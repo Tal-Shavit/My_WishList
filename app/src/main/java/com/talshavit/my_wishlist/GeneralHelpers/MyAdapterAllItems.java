@@ -1,8 +1,7 @@
-package com.talshavit.my_wishlist.Movie;
+package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,53 +11,59 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
-import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
 import com.talshavit.my_wishlist.R;
 
 import java.util.List;
 
-public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
+public class MyAdapterAllItems <T extends GenerealInterfaces> extends RecyclerView.Adapter<MyViewHolderAllItems<T>> {
 
     private Context context;
     private Context context1;
-    public List<MovieInfo> movieInfoList;
+    private List<T> itemInfoList;
+
+    private String itemType;
+
     private int selectedPosition = RecyclerView.NO_POSITION; //Initially, no item is selected
-    GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>();
-    public MyAdapterMovie(Context context, Context context1, List<MovieInfo> movieInfoList) {
+
+    public MyAdapterAllItems(Context context, Context context1, List<T> itemInfoList, String itemType) {
         this.context = context;
-        this.movieInfoList = movieInfoList;
+        this.itemInfoList = itemInfoList;
         this.context1 = context1;
+        this.itemType = itemType;
     }
+
 
     @NonNull
     @Override
-    public MyViewHolderMovie onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolderMovie(LayoutInflater.from(context).inflate(R.layout.recycler_all_items,parent,false));
+    public MyViewHolderAllItems onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new MyViewHolderAllItems(LayoutInflater.from(context).inflate(R.layout.recycler_all_items,parent,false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolderMovie holder, int position) {
-        String title = movieInfoList.get(position).getMovieName() + " (" + movieInfoList.get(position).getReleaseYear() +")";
+    public void onBindViewHolder(@NonNull MyViewHolderAllItems holder, int position) {
+        String title;
+        if(itemType.equals("movies"))
+            title = itemInfoList.get(position).getName() + " (" + itemInfoList.get(position).getReleaseYear() +")";
+        else
+            title = itemInfoList.get(position).getName();
+
         holder.titleTxt.setText(title);
-
         holder.titleTextView.setText(title);
-
-        String overview = movieInfoList.get(position).getOverview();
+        String overview = itemInfoList.get(position).getOverview();
         if(overview.equals(""))
             holder.overviewTxt.setText("There is no overview");
         else
             holder.overviewTxt.setText(overview);
 
-        holder.lenghtTxt.setText(movieInfoList.get(position).getMovieLenght());
+        holder.lenghtTxt.setText(itemInfoList.get(position).getLenght());
 
-        String imageUrl = movieInfoList.get(position).getImageUrl();
+        String imageUrl = itemInfoList.get(position).getImageUrl();
         Picasso.get().load("https://image.tmdb.org/t/p/w500/"+imageUrl).into(holder.imageButton);
 
-        List<String> genres = movieInfoList.get(position).getGenres();
+        List<String> genres = itemInfoList.get(position).getGenres();
         String formattedGenres = formatGenres(genres);
         holder.genreTxt.setText(formattedGenres);
 
@@ -69,7 +74,7 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
             holder.textCardView.setVisibility(View.INVISIBLE);
             holder.imageCardView.setVisibility((View.VISIBLE));
         }
-        if(movieInfoList.get(position).isWatched()){
+        if(itemInfoList.get(position).isWatched()){
             holder.seenImageView.setVisibility(View.VISIBLE);
         }
 
@@ -81,7 +86,7 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
             }
         });
 
-        String trailerKey = movieInfoList.get(position).getTrailer();
+        String trailerKey = itemInfoList.get(position).getTrailer();
         if (trailerKey == null || trailerKey.isEmpty()){
             holder.trailerImageButton.setVisibility(View.INVISIBLE);
         }
@@ -130,8 +135,9 @@ public class MyAdapterMovie extends RecyclerView.Adapter<MyViewHolderMovie> {
         return stringBuilder.toString();
     }
 
+
     @Override
     public int getItemCount() {
-        return movieInfoList.size();
+        return itemInfoList.size();
     }
 }

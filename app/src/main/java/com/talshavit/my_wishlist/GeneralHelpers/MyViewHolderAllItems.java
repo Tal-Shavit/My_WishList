@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.TvShow;
+package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.talshavit.my_wishlist.R;
 
-public class MyViewHolderTvShow extends RecyclerView.ViewHolder {
+public class MyViewHolderAllItems<T> extends RecyclerView.ViewHolder {
 
     ImageButton imageButton;
     Button trailerImageButton;
@@ -21,7 +21,7 @@ public class MyViewHolderTvShow extends RecyclerView.ViewHolder {
     ImageView seenImageView;
 
 
-    public MyViewHolderTvShow(@NonNull View itemView) {
+    public MyViewHolderAllItems(@NonNull View itemView) {
         super(itemView);
         imageButton = itemView.findViewById(R.id.imageButton);
         trailerImageButton = itemView.findViewById(R.id.trailerImageButton);

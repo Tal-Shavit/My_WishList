@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,9 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
+import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterAllItems;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterGenres;
+import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
 import com.talshavit.my_wishlist.R;
-import com.talshavit.my_wishlist.TvShowHelpers.MyAdapterSpecificGenre;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,9 +39,9 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewBySpecificGenre;
     private List<TvShowInfo> allTvShowInfos;
     private DatabaseReference databaseReference;
-    private MyAdapterTvShow myAdapterTvShow;
+    private MyAdapterAllItems<TvShowInfo> myAdapterAllItems;
     private MyAdapterGenres myAdapterGenres;
-    private com.talshavit.my_wishlist.TvShowHelpers.MyAdapterSpecificGenre myAdapterSpecificGenre;
+    private MyAdapterSpecificGenge<TvShowInfo> myAdapterSpecificGenre;
     private Context context;
     private String userID;
     private List<String> genresList;
@@ -64,7 +64,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        //Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_general, container, false);
     }
 
@@ -78,8 +78,8 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     private void initViews() {
         allTvTitle.setText("ALL TV SHOWS");
         allTvShowInfos = new ArrayList<TvShowInfo>();
-        myAdapterTvShow = new MyAdapterTvShow(getActivity().getApplicationContext(), requireContext(), allTvShowInfos);
-        initAdapter(recyclerViewAll, myAdapterTvShow);
+        myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allTvShowInfos, "tv shows");
+        initAdapter(recyclerViewAll, myAdapterAllItems);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
@@ -103,7 +103,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                         }
                     });
                     createGenres(allTvShowInfos);
-                    myAdapterTvShow.notifyDataSetChanged();
+                    myAdapterAllItems.notifyDataSetChanged();
 
                     if (selectedGenre != null)
                         updateGenreList();
@@ -121,7 +121,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
             }
         });
         generalFunctions.setSwipeToDelete("DELETE TV SHOW","Do you want to delete \"",
-                context,allTvShowInfos,myAdapterTvShow,
+                context,allTvShowInfos,myAdapterAllItems,
                 databaseReference,recyclerViewAll,userID,"tc shows");
     }
 
@@ -174,7 +174,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                         }
                     }
                 }
-                myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, allTvShowsByGenre, fragmentManager);
+                myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allTvShowsByGenre, fragmentManager, "tv shows");
                 initAdapter(recyclerViewBySpecificGenre, myAdapterSpecificGenre);
             }
         }

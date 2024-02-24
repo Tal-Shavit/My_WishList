@@ -21,9 +21,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
 import com.talshavit.my_wishlist.Movie.AddMovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
-import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
+//import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
 import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class WatchedFragment extends Fragment {
     private RecyclerView allWatchedMovies;
     private RecyclerView allWatchedTvShows;
 
-    private MyAdapterSpecificGenre myAdapterSpecificGenre;
-    private com.talshavit.my_wishlist.TvShowHelpers.MyAdapterSpecificGenre myAdapterSpecificGenreTv;
+    private MyAdapterSpecificGenge<MovieInfo> myAdapterSpecificGenreMovie;
+    private MyAdapterSpecificGenge<TvShowInfo> myAdapterSpecificGenreTv;
 
     private DatabaseReference databaseReference;
 
@@ -79,13 +80,13 @@ public class WatchedFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
         allWatchedMovies.setLayoutManager(linearLayoutManager);
-        myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesItems);
-        allWatchedMovies.setAdapter(myAdapterSpecificGenre);
+        myAdapterSpecificGenreMovie = new MyAdapterSpecificGenge<>(context,  allMoviesItems,fragmentManager, "movies");
+        allWatchedMovies.setAdapter(myAdapterSpecificGenreMovie);
 
         LinearLayoutManager linearLayoutManagerTv = new LinearLayoutManager(context);
         linearLayoutManagerTv.setOrientation(linearLayoutManagerTv.HORIZONTAL);
         allWatchedTvShows.setLayoutManager(linearLayoutManagerTv);
-        myAdapterSpecificGenreTv = new com.talshavit.my_wishlist.TvShowHelpers.MyAdapterSpecificGenre(context, allTvShowItems, fragmentManager);
+        myAdapterSpecificGenreTv = new MyAdapterSpecificGenge<>(context, allTvShowItems, fragmentManager,"tv shows");
         allWatchedTvShows.setAdapter(myAdapterSpecificGenreTv);
     }
 
@@ -109,7 +110,7 @@ public class WatchedFragment extends Fragment {
                         return Integer.compare(movieInfo2.getSerialID(), movieInfo1.getSerialID());
                     }
                 });
-                myAdapterSpecificGenre.notifyDataSetChanged();
+                myAdapterSpecificGenreMovie.notifyDataSetChanged();
             }
 
             @Override

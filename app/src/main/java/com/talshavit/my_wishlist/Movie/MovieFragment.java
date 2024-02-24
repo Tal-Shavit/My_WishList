@@ -5,11 +5,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,8 +24,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
+import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterAllItems;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterGenres;
-import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
+import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
 import com.talshavit.my_wishlist.R;
 
 import java.util.ArrayList;
@@ -39,9 +38,9 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewMoviesBySpecificGenre;
     private List<MovieInfo> allMoviesItems;
     private DatabaseReference databaseReference;
-    private MyAdapterMovie myAdapterMovie;
+    private MyAdapterAllItems<MovieInfo> myAdapterAllItems;
     private MyAdapterGenres myAdapterGenres;
-    private MyAdapterSpecificGenre myAdapterSpecificGenre;
+    private MyAdapterSpecificGenge<MovieInfo> myAdapterSpecificGenre;
     private Context context;
     private String userID;
     private List<String> genresList;
@@ -63,7 +62,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        //Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_general, container, false);
     }
 
@@ -79,8 +78,8 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
     private void initViews(View view) {
         allMoviesItems = new ArrayList<MovieInfo>();
-        myAdapterMovie = new MyAdapterMovie(getActivity().getApplicationContext(), requireContext(), allMoviesItems);
-        initAdapter(recyclerViewAll, myAdapterMovie);
+        myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allMoviesItems, "movies");
+        initAdapter(recyclerViewAll, myAdapterAllItems);
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
@@ -104,7 +103,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                         }
                     });
                     createGenres(allMoviesItems);
-                    myAdapterMovie.notifyDataSetChanged();
+                    myAdapterAllItems.notifyDataSetChanged();
 
                     if (selectedGenre != null)
                         updateGenreList();
@@ -121,7 +120,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 replaceFragment(new AddMovieFragment());
             }
         });
-        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context,allMoviesItems,myAdapterMovie,
+        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context,allMoviesItems,myAdapterAllItems,
                 databaseReference,recyclerViewAll,userID,"movies");
     }
 
@@ -177,7 +176,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                             }
                         }
                     }
-                    myAdapterSpecificGenre = new MyAdapterSpecificGenre(context, fragmentManager, allMoviesByGenre);
+                    myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allMoviesByGenre,fragmentManager, "movies");
                     initAdapter(recyclerViewMoviesBySpecificGenre, myAdapterSpecificGenre);
                 }
             }

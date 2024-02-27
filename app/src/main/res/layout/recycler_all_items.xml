@@ -200,7 +200,7 @@
             android:id="@+id/titleTextView"
             android:layout_width="160dp"
             android:layout_height="30dp"
-            android:textColor="@color/red"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:fontFamily="@font/roboto_light"
             android:textStyle="bold"

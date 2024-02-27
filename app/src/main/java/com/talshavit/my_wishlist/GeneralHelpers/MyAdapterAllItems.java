@@ -2,6 +2,7 @@ package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,6 +112,7 @@ public class MyAdapterAllItems <T extends GenerealInterfaces> extends RecyclerVi
         String url = "https://www.youtube.com/embed/" + trailerKey;
         webView.loadUrl(url);
         dialog.show();
+
 
         textCardView.setVisibility(View.INVISIBLE);
         imageCardView.setVisibility((View.VISIBLE));

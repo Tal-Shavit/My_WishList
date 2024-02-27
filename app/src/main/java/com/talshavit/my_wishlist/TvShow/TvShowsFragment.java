@@ -122,7 +122,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         });
         generalFunctions.setSwipeToDelete("DELETE TV SHOW","Do you want to delete \"",
                 context,allTvShowInfos,myAdapterAllItems,
-                databaseReference,recyclerViewAll,userID,"tc shows");
+                databaseReference,recyclerViewAll,userID,"tv shows");
     }
 
 

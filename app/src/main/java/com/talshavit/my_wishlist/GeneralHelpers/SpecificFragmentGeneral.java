@@ -28,6 +28,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.R;
 
@@ -38,7 +41,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
     private ImageView imageView, imageBackground;
     private TextView titleTxt, lenghtTxt, releaseYearTxt, overviewTxt, genreTxt;
     private ImageButton backButton;
-    private WebView webView;
+    private YouTubePlayerView youTubePlayerView;
     private ScrollView scrollView;
     private Button deleteButton, watchedButton, notWatchedButton;
 
@@ -104,18 +107,19 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         genreTxt.setText(formattedGenres);
         String trailerKey = mediaInfo.getTrailer();
         if (trailerKey == null || trailerKey.isEmpty() || trailerKey.equals("") ){
-            webView.setVisibility(View.GONE);
+            youTubePlayerView.setVisibility(View.GONE);
             ViewGroup.LayoutParams layoutParams = scrollView.getLayoutParams();
             layoutParams.height = (int) (370 * getResources().getDisplayMetrics().density);
             scrollView.setLayoutParams(layoutParams);
         }
         else{
-            WebSettings webSettings = webView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            webView.setWebViewClient(new WebViewClient());
-            // Load URL with trailer key
-            String url = "https://www.youtube.com/embed/" + trailerKey;
-            webView.loadUrl(url);
+            youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                @Override
+                public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                    super.onReady(youTubePlayer);
+                    youTubePlayer.loadVideo(trailerKey, 0);
+                }
+            });
         }
 
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -233,7 +237,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         overviewTxt = view.findViewById(R.id.overviewTxt);
         genreTxt = view.findViewById(R.id.genreTxt);
         backButton = view.findViewById(R.id.backButton);
-        webView = view.findViewById(R.id.webView);
+        youTubePlayerView = view.findViewById(R.id.youTubePlayer);
         scrollView = view.findViewById(R.id.scrollView);
         deleteButton = view.findViewById(R.id.deleteButton);
         watchedButton = view.findViewById(R.id.watchedButton);

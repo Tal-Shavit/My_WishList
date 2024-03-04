@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GeneralHelpers.SpecificFragmentGeneral">    android:background="@color/black"
+    tools:context=".GeneralHelpers.SpecificFragmentGeneral">
 
     <ImageView
         android:id="@+id/imageBackground"
@@ -129,8 +129,8 @@
                 android:textStyle="bold" />
         </ScrollView>
 
-        <WebView
-            android:id="@+id/webView"
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/youTubePlayer"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginStart="20dp"

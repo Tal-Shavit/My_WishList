@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.R;
 
@@ -103,14 +106,16 @@ public class MyAdapterAllItems <T extends GenerealInterfaces> extends RecyclerVi
     private void openTrailerInWebView(String trailerKey, CardView imageCardView, CardView textCardView) {
         Dialog dialog = new Dialog(context1);
         dialog.setContentView(R.layout.dialog_trailer);
-        WebView webView = dialog.findViewById(R.id.webView);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient());
 
-        //Load URL with trailer key
-        String url = "https://www.youtube.com/embed/" + trailerKey;
-        webView.loadUrl(url);
+        YouTubePlayerView youTubePlayerView = dialog.findViewById(R.id.youTubePlayer);
+        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                super.onReady(youTubePlayer);
+                youTubePlayer.loadVideo(trailerKey, 0);
+            }
+        });
+
         dialog.show();
 
 

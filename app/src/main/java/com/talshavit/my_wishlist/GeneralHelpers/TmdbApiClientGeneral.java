@@ -23,7 +23,6 @@ public class TmdbApiClientGeneral<T> {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
 
     public static String title;
-
     public String itemType;
 
 
@@ -95,7 +94,8 @@ public class TmdbApiClientGeneral<T> {
 
                     List<String> genres = getItemGenres(itemID, itemType);
                     String overview= itemObject.get("overview").getAsString();
-                    String trailer = getTrailerKey(itemID);
+                    //String trailer = getTrailerKey(itemID);
+                    String trailer = getYouTubeVideoKey(itemID);
 
 
                     if(itemType.equals("movie")) {
@@ -296,6 +296,47 @@ public class TmdbApiClientGeneral<T> {
         } else {
             return 0; // Default value if the number of seasons is not available
         }
+    }
+
+
+    public String getYouTubeVideoKey(int itemID) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        String endpoint = "/" + itemType.toLowerCase() + "/" + itemID + "/videos";
+        String url = BASE_URL + endpoint + "?api_key=" + API_KEY;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                String jsonResponse = response.body().string();
+                return parseYouTubeVideoKey(jsonResponse);
+            } else {
+                throw new IOException("Unexpected code " + response);
+            }
+        }
+    }
+
+    private String parseYouTubeVideoKey(String jsonResponse) {
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = jsonParser.parse(jsonResponse).getAsJsonObject();
+
+        JsonArray results = jsonObject.getAsJsonArray("results");
+        for (int i = 0; i < results.size(); i++) {
+            JsonObject videoObject = results.get(i).getAsJsonObject();
+
+            // Check if the video is from YouTube
+            if (videoObject.has("site") && "YouTube".equals(videoObject.get("site").getAsString())) {
+                // Return the key of the first YouTube video found
+                if (videoObject.has("key")) {
+                    return videoObject.get("key").getAsString();
+                }
+            }
+        }
+
+        return null;
     }
 
 

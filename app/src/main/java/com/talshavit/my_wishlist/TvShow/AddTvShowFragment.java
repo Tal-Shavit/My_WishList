@@ -184,6 +184,7 @@ public class AddTvShowFragment extends Fragment {
                             genres = tvShowInfos.get(position).getGenres();
                             overview = tvShowInfos.get(position).getOverview();
                             trailer = tvShowInfos.get(position).getTrailer();
+
                         }
 
                         @Override

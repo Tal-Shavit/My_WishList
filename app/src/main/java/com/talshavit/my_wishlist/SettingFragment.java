@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,16 +21,15 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.talshavit.my_wishlist.Signup_Login.StartActivity;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class SettingFragment extends Fragment {
 
@@ -112,19 +112,25 @@ public class SettingFragment extends Fragment {
     }
 
     private void initDialog() {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialog_privacy_policy);
-        dialog.getWindow().setLayout(1000,1200);
+        String htmlContent = loadHtmlFromAsset("privacy_policy.html");
 
-        TextView textViewHtml = dialog.findViewById(R.id.textViewHtml);
-        String htmlContent = loadHtmlFromAsset("privacy_policy");
-        textViewHtml.setText(Html.fromHtml(htmlContent, Html.FROM_HTML_MODE_LEGACY));
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(getContext());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            materialAlertDialogBuilder.setMessage(Html.fromHtml(htmlContent, Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            materialAlertDialogBuilder.setMessage(Html.fromHtml(htmlContent));
+        }
+        materialAlertDialogBuilder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss(); //Close the dialog
+            }
+        });
 
-        dialog.show();
-
-
-
+        materialAlertDialogBuilder.setCancelable(false);
+        materialAlertDialogBuilder.show();
     }
+
 
     private void findViews(View view) {
         linearPrivacyPolicy = view.findViewById(R.id.privacy_policy);

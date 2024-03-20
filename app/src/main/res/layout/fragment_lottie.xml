@@ -12,11 +12,17 @@
         android:text="WatchNext"
         android:textSize="50sp"
         android:gravity="center"
-        android:fontFamily="@font/titan_one_regular"
-        android:textColor="#716666"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:shadowColor="@color/lavander"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="30"
         android:layout_marginTop="-100dp"
-        android:layout_alignTop="@+id/animationLottie"/>
+        android:layout_alignTop="@+id/animationLottie"
+        android:fontFamily="@font/titan_one_regular"
 
+        />
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationLottie"
         android:layout_width="300dp"

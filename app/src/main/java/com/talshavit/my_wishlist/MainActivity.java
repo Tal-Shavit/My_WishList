@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,9 +39,14 @@ public class MainActivity extends AppCompatActivity{
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //findViews();
-        //initViews();
         replaceFragment(new LottieFragment());
+
+//        // Deselect all items in the bottom navigation view
+//        Menu menu = binding.bottomNavigationView.getMenu();
+//        for (int i = 0; i < menu.size(); i++) {
+//            MenuItem menuItem = menu.getItem(i);
+//            menuItem.setChecked(false);
+//        }
 
         binding.bottomNavigationView.setBackground(null);
 
@@ -66,68 +73,6 @@ public class MainActivity extends AppCompatActivity{
             return true;
         });
     }
-
-//    private void initViews() {
-//
-//        allMoviesItems = new ArrayList<MovieInfo>();
-//
-//        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                // Check if the activity is still valid
-//                if (isFinishing() || isDestroyed()) {
-//                    return;
-//                }
-//
-//                allMoviesItems.clear();
-//                for (DataSnapshot itemSnapshot : snapshot.getChildren()){
-//                    MovieInfo movieInfo = itemSnapshot.getValue(MovieInfo.class);
-//                    allMoviesItems.add(movieInfo);
-//                }
-//                if(allMoviesItems.size() == 0){
-//                    /*replaceFragment(new addMovieFragment());
-//                    dialog = new Dialog(MainActivity.this);
-//                    dialog.setContentView(R.layout.dialog_add_movie);
-//                    dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,1400);
-//                    dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_add_bg));
-//                    dialog.setCancelable(false);
-//                    ImageButton exitButton = dialog.findViewById(R.id.exitButton);
-//                    dialog.show();
-//                    exitButton.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            dialog.dismiss();
-//                        }
-//                    });*/
-//                }
-//                else{
-//                    replaceFragment(new MovieFragment());
-//                }
-//                //replaceFragment(new AddTvShowFragment());
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//
-//        /*addButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                replaceFragment(new AddMovieOrTvShowFragment());
-//            }
-//        });*/
-//
-//    }
-//
-//    private void findViews() {
-//        //addButton = findViewById(R.id.add_button);
-//    }
 
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();

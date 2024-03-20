@@ -10,6 +10,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Html;
 import android.util.Log;
@@ -26,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.talshavit.my_wishlist.Movie.MovieFragment;
 import com.talshavit.my_wishlist.Signup_Login.StartActivity;
 
 import java.io.IOException;
@@ -34,7 +37,7 @@ import java.io.InputStream;
 public class SettingFragment extends Fragment {
 
     private LinearLayout linearPrivacyPolicy ,deleteAccount, LogOut;
-
+    private TextView changePassword;
     public SettingFragment() {
     }
 
@@ -61,6 +64,17 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 initDialog();
+            }
+        });
+
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, ChangePasswordFragment.class, null)
+                        .setReorderingAllowed(true).addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -131,30 +145,23 @@ public class SettingFragment extends Fragment {
         materialAlertDialogBuilder.show();
     }
 
-
     private void findViews(View view) {
         linearPrivacyPolicy = view.findViewById(R.id.privacy_policy);
         deleteAccount = view.findViewById(R.id.deleteAccount);
         LogOut = view.findViewById(R.id.LogOut);
+        changePassword = view.findViewById(R.id.changePassword);
     }
 
     private String loadHtmlFromAsset(String filename){
-        Log.d("lala", "a");
         String textFile = "";
         try {
-            Log.d("lala", "b");
             InputStream inputStream = requireContext().getAssets().open(filename);
-            Log.d("lala", "c");
             int size = inputStream.available();
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
-            Log.d("lala", "d");
             textFile = new String(buffer);
-            Log.d("lala", "e");
-            //textView.setText(Html.fromHtml(textFile,Html.FROM_HTML_MODE_LEGACY));
             inputStream.close();
         }catch (IOException e){
-            Log.d("lala", "f");
             e.printStackTrace();
         }
         return textFile;

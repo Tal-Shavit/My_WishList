@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--    <item-->
-    <!--        android:id="@+id/home"-->
-    <!--        android:title="Home"-->
-    <!--        android:icon="@drawable/baseline_home_24"/>-->
-
-
     <item
         android:id="@+id/movies"
         android:title="Movies"
-        android:icon="@drawable/movie"/>
+        android:icon="@drawable/movie"
+        />
 
     <item
         android:id="@+id/TvShows"
@@ -27,7 +22,8 @@
     <item
         android:id="@+id/setting"
         android:title="Setting"
-        android:icon="@drawable/baseline_settings_24"/>
+        android:icon="@drawable/baseline_settings_24"
+        />
 
 
 </menu>

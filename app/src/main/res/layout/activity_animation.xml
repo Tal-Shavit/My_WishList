@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AnimationActivity"
+    android:background="#939EFA">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:layout_centerInParent="true"
+        android:src="@drawable/popcorn"/>
+
+    <TextView
+        android:id="@+id/textAnimation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WatchNext"
+        android:textSize="60sp"
+        android:textColor="#C6090707"
+        android:textStyle="bold"
+        android:shadowColor="@color/white"
+        android:shadowDx="1"
+        android:shadowDy="0"
+        android:shadowRadius="50"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/titan_one_regular"
+    />
+
+    <!-- TextView with white fill -->
+<!--    <TextView-->
+<!--        android:id="@+id/textAnimation1"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="WatchNext"-->
+<!--        android:textSize="65sp"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textStyle="bold"-->
+<!--        android:paddingLeft="5dp"-->
+<!--        android:paddingTop="5dp"-->
+<!--        android:paddingRight="3dp"-->
+<!--        android:paddingBottom="1dp"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:fontFamily="@font/titan_one_regular"/>-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textAnimation"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="WatchNext"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:fontFamily="@font/titan_one_regular"-->
+<!--        android:textSize="65sp"-->
+<!--        android:background="@drawable/text_background"/>-->
+
+
+</RelativeLayout>

@@ -57,7 +57,7 @@ public class MyAdapterAllItems <T extends GenerealInterfaces> extends RecyclerVi
         holder.titleTxt.setText(title);
         holder.titleTextView.setText(title);
         String overview = itemInfoList.get(position).getOverview();
-        if(overview.equals(""))
+        if(overview.equals("") || overview.isEmpty())
             holder.overviewTxt.setText("There is no overview");
         else
             holder.overviewTxt.setText(overview);

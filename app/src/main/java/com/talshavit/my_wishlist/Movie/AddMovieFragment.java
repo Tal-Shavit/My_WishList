@@ -29,30 +29,43 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.talshavit.my_wishlist.GeneralHelpers.TmdbApiClientGeneral;
+import com.talshavit.my_wishlist.Movie.Interfaces.MovieApiService;
+import com.talshavit.my_wishlist.Movie.Interfaces.TrailerCallback;
+import com.talshavit.my_wishlist.Movie.Models.MovieSearchResponse;
+import com.talshavit.my_wishlist.Movie.Models.RootForSearch;
+import com.talshavit.my_wishlist.Movie.Models.RootForSpecific;
+import com.talshavit.my_wishlist.Movie.Models.RootForVideo;
 import com.talshavit.my_wishlist.R;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
-public class AddMovieFragment extends Fragment {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class AddMovieFragment extends Fragment implements TrailerCallback {
 
     private DatabaseReference databaseReference;
     private EditText titleEditText;
     private ImageButton titleButton;
-    private static Spinner dynamicSpinner;
+    private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
     private ImageView movieImageView;
-    private static Button addButton;
-    private static String titleNameMovie;
-    private static String releaseYearMovie;
-    private static String imgMovie;
-    private static int movieID;
-    private static String movieLenght;
-    private static List<String> genres;
-    private static String overview;
-    private static String trailer;
+    private Button addButton;
+    private String titleNameMovie;
+    private String releaseYearMovie;
+    private String imgMovie;
+    private int movieID;
+    private String movieLenght;
+    private List<String> genresList;
+    private String overview;
+    private String trailer;
     private static int nextID;
+    private MovieApiService movieApiService;
 
     public AddMovieFragment() {
     }
@@ -60,92 +73,94 @@ public class AddMovieFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_movie, container, false);
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initRetrofit();
         findViews(view);
         initView();
     }
 
+    private void initRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        movieApiService = retrofit.create(MovieApiService.class);
+    }
+
     private void initView() {
         checkLastSerialNumber();
+        onTitleButtonClick();
+        onAddButtonClick();
+    }
 
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dynamicSpinner.setAdapter(adapter);
-
-        titleButton.setOnClickListener(new View.OnClickListener() {
+    private void getMovieDetails(int id) {
+        movieApiService.getMovieDetails(id, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(new Callback<RootForSpecific>() {
             @Override
-            public void onClick(View v) {
-                String title = titleEditText.getText().toString();
-                if(!title.equals("")){
-                    TmdbApiClientMovie.title = title;
-
-                    dynamicSpinner.setVisibility(View.INVISIBLE);
-                    movieImageView.setVisibility(View.INVISIBLE);
-
-                    ProgressDialog progressDialog = new ProgressDialog(getContext());
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                    progressDialog.setContentView(R.layout.progress_dialog);
-                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
-                    adapter.clear();
-                    adapter.notifyDataSetChanged();
-
-                    new MyAsyncTask(AddMovieFragment.this, progressDialog).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            public void onResponse(Call<RootForSpecific> call, Response<RootForSpecific> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    List<String> genresStringList = new ArrayList<String>();
+                    RootForSpecific specificMovie = response.body();
+                    Picasso.get().load("https://image.tmdb.org/t/p/w500/" + specificMovie.poster_path).into(movieImageView);
+                    addButton.setVisibility(View.VISIBLE);
+                    titleNameMovie = specificMovie.title;
+                    String releaseYear = specificMovie.release_date.substring(0, 4);
+                    if (releaseYear != null)
+                        releaseYearMovie = releaseYear;
+                    else
+                        releaseYearMovie = "";
+                    imgMovie = specificMovie.poster_path;
+                    int movieLenghtInMinutes = specificMovie.runtime;
+                    String hours = calcHours(movieLenghtInMinutes);
+                    String minutes = calcMin(movieLenghtInMinutes);
+                    movieLenght = hours + "h " + minutes + "m";
+                    for (int i = 0; i < specificMovie.genres.size(); i++) {
+                        genresStringList.add(specificMovie.genres.get(i).name);
+                    }
+                    genresList = genresStringList;
+                    overview = specificMovie.overview;
+                    getMovieTrailerKey(id);
                 }
-                else
-                    Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
             }
 
-        });
-
-        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                databaseReference= FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-                MovieInfo movieInfo = new MovieInfo(movieID,titleNameMovie,releaseYearMovie,imgMovie,movieLenght,genres,overview,trailer,false);
-                movieInfo.setUserID(userID);
-                movieInfo.setSerialID(nextID);
-
-                databaseReference.child(movieID+"").setValue(movieInfo);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, MovieFragment.class, null)
-                        .setReorderingAllowed(true).addToBackStack(null)
-                        .commit();
+            public void onFailure(Call<RootForSpecific> call, Throwable throwable) {
 
             }
         });
     }
 
+    private static String calcMin(int movieLenght) {
+        return movieLenght % 60 + "";
+    }
+
+    private static String calcHours(int movieLenght) {
+        return movieLenght / 60 + "";
+    }
+
     private void checkLastSerialNumber() {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference= FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
         databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     MovieInfo lastAddedMovie = snapshot.getValue(MovieInfo.class);
                     if (lastAddedMovie != null) {
-                        nextID = lastAddedMovie.getSerialID()+1;
+                        nextID = lastAddedMovie.getSerialID() + 1;
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
@@ -156,74 +171,128 @@ public class AddMovieFragment extends Fragment {
         dynamicSpinner = view.findViewById(R.id.dynamicSpinner);
         movieImageView = view.findViewById(R.id.movieImageView);
         addButton = view.findViewById(R.id.addButton);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dynamicSpinner.setAdapter(adapter);
     }
 
-    private static class MyAsyncTask extends AsyncTask<Void, Void, List<MovieInfo>> {
-        private final WeakReference<AddMovieFragment> fragmentReference;
-        private ProgressDialog progressDialog;
-        MyAsyncTask(AddMovieFragment fragment, ProgressDialog progressDialog) {
-            this.fragmentReference = new WeakReference<>(fragment);
-            this.progressDialog = progressDialog;
-        }
-
-        @Override
-        protected List<MovieInfo> doInBackground(Void... voids) {
-            try {
-                Log.d("MovieName", "doInBackground executed");
-                return TmdbApiClientMovie.getAllPopularMovies();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("MovieName", "Exception in doInBackground: " + e.getMessage());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<MovieInfo> movieInfos) {
-            AddMovieFragment fragment = fragmentReference.get();
-            if (fragment != null) {
-                Log.d("MovieName", "Fragment is still valid");
-                Log.d("MovieName", "onPostExecute executed");
-
-                progressDialog.dismiss();
-
-                if (movieInfos != null && !movieInfos.isEmpty()) {
-                    for (MovieInfo movieInfo : movieInfos) {
-                        fragment.adapter.add(movieInfo.getMovieName() + " (" + movieInfo.getReleaseYear() + ")");
+    private void getMovieTrailerKey(int id) {//, TrailerCallback callback
+        movieApiService.getVideoDetails(id, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(new Callback<RootForVideo>() {
+            @Override
+            public void onResponse(Call<RootForVideo> call, Response<RootForVideo> response) {
+                String trailerKey = null;
+                for (int i = 0; i < response.body().results.size(); i++) {
+                    if (response.body().results.get(i).type.toLowerCase().equals("trailer")) {
+                        trailerKey = response.body().results.get(i).key;
+                        trailer = onTrailerLoaded(trailerKey);
+                        break;
                     }
-                    fragment.adapter.notifyDataSetChanged();  // Notify adapter after adding all items
-
-                    fragment.dynamicSpinner.setVisibility(View.VISIBLE);
-                    fragment.movieImageView.setVisibility(View.VISIBLE);
-
-                        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movieInfos.get(position).getImageUrl()).into(fragment.movieImageView);
-                                addButton.setVisibility(View.VISIBLE);
-                                movieID = movieInfos.get(position).getMovieID();
-                                titleNameMovie = movieInfos.get(position).getMovieName();
-                                releaseYearMovie = movieInfos.get(position).getReleaseYear();
-                                imgMovie = movieInfos.get(position).getImageUrl();
-                                movieLenght = movieInfos.get(position).getMovieLenght();
-                                genres = movieInfos.get(position).getGenres();
-                                overview = movieInfos.get(position).getOverview();
-                                trailer = movieInfos.get(position).getTrailer();
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-                } else {
-                    Toast.makeText(fragment.getContext(), "No matches found!", Toast.LENGTH_SHORT).show();
-                    fragment.titleEditText.setText("");
                 }
-            }else {
-                Log.e("MovieName", "Fragment reference is null");
             }
-        }
+
+            @Override
+            public void onFailure(Call<RootForVideo> call, Throwable throwable) {
+
+            }
+        });
+    }
+
+    private void onTitleButtonClick(){
+        titleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = titleEditText.getText().toString();
+                if (!title.equals("")) {
+                    dynamicSpinner.setVisibility(View.INVISIBLE);
+                    movieImageView.setVisibility(View.INVISIBLE);
+
+                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                    progressDialog.setContentView(R.layout.progress_dialog);
+                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                    adapter.clear();
+                    adapter.notifyDataSetChanged();
+                    movieApiService.searchMovies("e7bc0f9166ef27fb13b4271519c0b354", title, "popularity.desc", 1).enqueue(new Callback<MovieSearchResponse>() {
+                        @Override
+                        public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+                            progressDialog.dismiss();
+
+                            ArrayList<RootForSearch> movieInfos = response.body().results;
+                            if (movieInfos != null && !movieInfos.isEmpty()) {
+                                for (RootForSearch movieInfo : movieInfos) {
+                                    if (movieInfo.release_date != null && !movieInfo.release_date.isEmpty())
+                                        adapter.add(movieInfo.title + " (" + movieInfo.release_date.substring(0, 4) + ")");
+                                    else {
+                                        adapter.add(movieInfo.title);
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();  // Notify adapter after adding all items
+
+                                dynamicSpinner.setVisibility(View.VISIBLE);
+                                movieImageView.setVisibility(View.VISIBLE);
+
+                                dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        movieID = movieInfos.get(position).id;
+                                        getMovieDetails(movieID);
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(getContext(), "No matches found!", Toast.LENGTH_SHORT).show();
+                                titleEditText.setText("");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MovieSearchResponse> call, Throwable throwable) {
+                            Log.d("lala", "no");
+                        }
+                    });
+                } else
+                    Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void onAddButtonClick() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
+
+
+                MovieInfo movieInfo = new MovieInfo(movieID, titleNameMovie, releaseYearMovie, imgMovie, movieLenght, genresList, overview, trailer, false);
+                movieInfo.setUserID(userID);
+                movieInfo.setSerialID(nextID);
+
+                databaseReference.child(movieID + "").setValue(movieInfo);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, MovieFragment.class, null)
+                        .setReorderingAllowed(true).addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
+    @Override
+    public String onTrailerLoaded(String trailerKey) {
+        return trailerKey;
     }
 }
+
+
+
+
+

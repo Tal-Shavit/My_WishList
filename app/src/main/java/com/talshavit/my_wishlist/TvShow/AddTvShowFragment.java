@@ -1,7 +1,6 @@
 package com.talshavit.my_wishlist.TvShow;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,8 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.GeneralHelpers.TrailerCallback;
 import com.talshavit.my_wishlist.R;
-import com.talshavit.my_wishlist.TvShow.Interfaces.TrailerCallback;
 import com.talshavit.my_wishlist.TvShow.Interfaces.TvInterfaceService;
 import com.talshavit.my_wishlist.TvShow.Models.ResultForVideo;
 import com.talshavit.my_wishlist.TvShow.Models.RootForSearch;
@@ -39,7 +38,6 @@ import com.talshavit.my_wishlist.TvShow.Models.RootForSpecificTv;
 import com.talshavit.my_wishlist.TvShow.Models.RootForVideo;
 import com.talshavit.my_wishlist.TvShow.Models.TvSearchResponse;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 

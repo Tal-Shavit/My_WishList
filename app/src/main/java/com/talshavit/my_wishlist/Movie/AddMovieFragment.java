@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.Movie.Interfaces.MovieApiService;
 import com.talshavit.my_wishlist.Movie.Interfaces.TrailerCallback;
 import com.talshavit.my_wishlist.Movie.Models.MovieSearchResponse;
+import com.talshavit.my_wishlist.Movie.Models.ResultForVideo;
 import com.talshavit.my_wishlist.Movie.Models.RootForSearch;
 import com.talshavit.my_wishlist.Movie.Models.RootForSpecific;
 import com.talshavit.my_wishlist.Movie.Models.RootForVideo;
@@ -66,6 +67,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     private String trailer;
     private static int nextID;
     private MovieApiService movieApiService;
+    private ProgressDialog progressDialog;
 
     public AddMovieFragment() {
     }
@@ -176,17 +178,29 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         dynamicSpinner.setAdapter(adapter);
     }
 
-    private void getMovieTrailerKey(int id) {//, TrailerCallback callback
+    private void getMovieTrailerKey(int id) {
         movieApiService.getVideoDetails(id, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(new Callback<RootForVideo>() {
             @Override
             public void onResponse(Call<RootForVideo> call, Response<RootForVideo> response) {
                 String trailerKey = null;
+                String clipKey = null;
+
                 for (int i = 0; i < response.body().results.size(); i++) {
-                    if (response.body().results.get(i).type.toLowerCase().equals("trailer")) {
-                        trailerKey = response.body().results.get(i).key;
-                        trailer = onTrailerLoaded(trailerKey);
+                    ResultForVideo details = response.body().results.get(i);
+                    if (details.type.toLowerCase().equals("trailer")) {
+                        trailerKey = details.key;
                         break;
+                    } else if (details.type.toLowerCase().equals("clip") && clipKey == null) {
+                        //Store the first clip
+                        clipKey = details.key;
                     }
+                }
+
+                //Use trailer if available, otherwise use the clip
+                if (trailerKey != null) {
+                    trailer = onTrailerLoaded(trailerKey);
+                } else if (clipKey != null) {
+                    trailer = onTrailerLoaded(clipKey);
                 }
             }
 
@@ -206,7 +220,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                     dynamicSpinner.setVisibility(View.INVISIBLE);
                     movieImageView.setVisibility(View.INVISIBLE);
 
-                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    progressDialog = new ProgressDialog(getContext());
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);
@@ -214,53 +228,58 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
                     adapter.clear();
                     adapter.notifyDataSetChanged();
-                    movieApiService.searchMovies("e7bc0f9166ef27fb13b4271519c0b354", title, "popularity.desc", 1).enqueue(new Callback<MovieSearchResponse>() {
-                        @Override
-                        public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
-                            progressDialog.dismiss();
 
-                            ArrayList<RootForSearch> movieInfos = response.body().results;
-                            if (movieInfos != null && !movieInfos.isEmpty()) {
-                                for (RootForSearch movieInfo : movieInfos) {
-                                    if (movieInfo.release_date != null && !movieInfo.release_date.isEmpty())
-                                        adapter.add(movieInfo.title + " (" + movieInfo.release_date.substring(0, 4) + ")");
-                                    else {
-                                        adapter.add(movieInfo.title);
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();  // Notify adapter after adding all items
-
-                                dynamicSpinner.setVisibility(View.VISIBLE);
-                                movieImageView.setVisibility(View.VISIBLE);
-
-                                dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        movieID = movieInfos.get(position).id;
-                                        getMovieDetails(movieID);
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(getContext(), "No matches found!", Toast.LENGTH_SHORT).show();
-                                titleEditText.setText("");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<MovieSearchResponse> call, Throwable throwable) {
-                            Log.d("lala", "no");
-                        }
-                    });
+                    getAllSearchMovies(title);
                 } else
                     Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    private void getAllSearchMovies(String title) {
+        movieApiService.searchMovies("e7bc0f9166ef27fb13b4271519c0b354", title, "popularity.desc", 1).enqueue(new Callback<MovieSearchResponse>() {
+            @Override
+            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+                progressDialog.dismiss();
+
+                ArrayList<RootForSearch> movieInfos = response.body().results;
+                if (movieInfos != null && !movieInfos.isEmpty()) {
+                    for (RootForSearch movieInfo : movieInfos) {
+                        if (movieInfo.release_date != null && !movieInfo.release_date.isEmpty())
+                            adapter.add(movieInfo.title + " (" + movieInfo.release_date.substring(0, 4) + ")");
+                        else {
+                            adapter.add(movieInfo.title);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();  // Notify adapter after adding all items
+
+                    dynamicSpinner.setVisibility(View.VISIBLE);
+                    movieImageView.setVisibility(View.VISIBLE);
+
+                    dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            movieID = movieInfos.get(position).id;
+                            getMovieDetails(movieID);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "No matches found!", Toast.LENGTH_SHORT).show();
+                    titleEditText.setText("");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieSearchResponse> call, Throwable throwable) {
+                Log.d("lala", "no");
+            }
+        });
     }
 
     private void onAddButtonClick() {
@@ -269,7 +288,6 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
             public void onClick(View v) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-
 
                 MovieInfo movieInfo = new MovieInfo(movieID, titleNameMovie, releaseYearMovie, imgMovie, movieLenght, genresList, overview, trailer, false);
                 movieInfo.setUserID(userID);

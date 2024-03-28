@@ -28,7 +28,6 @@ public class StartActivity extends AppCompatActivity {
         tableLayout.addTab(tableLayout.newTab().setText("SIGNUP"));
         tableLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-
         MyPageAdapter adapter = new MyPageAdapter(getSupportFragmentManager(), tableLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tableLayout));

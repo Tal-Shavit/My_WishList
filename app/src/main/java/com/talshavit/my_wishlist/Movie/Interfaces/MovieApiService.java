@@ -18,16 +18,16 @@ public interface MovieApiService {
             @Query("page") int page
     );
 
-    @GET("movie/{id}")
+    @GET("movie/{movie_id}")
     Call<RootForSpecific> getMovieDetails(
-            @Path("id") int id,
+            @Path("movie_id") int movie_id,
             @Query("api_key") String apiKey
 
     );
 
-    @GET("movie/{id}/videos")
+    @GET("movie/{movie_id}/videos")
     Call<RootForVideo> getVideoDetails(
-            @Path("id") int id,
+            @Path("movie_id") int movie_id,
             @Query("api_key") String apiKey
 
     );

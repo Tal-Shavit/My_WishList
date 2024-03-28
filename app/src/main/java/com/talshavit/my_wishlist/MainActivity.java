@@ -1,33 +1,16 @@
 package com.talshavit.my_wishlist;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.Movie.MovieFragment;
-import com.talshavit.my_wishlist.Movie.MovieInfo;
-import com.talshavit.my_wishlist.Movie.AddMovieFragment;
-import com.talshavit.my_wishlist.TvShow.AddTvShowFragment;
+import com.talshavit.my_wishlist.Settings.SettingFragment;
 import com.talshavit.my_wishlist.TvShow.TvShowsFragment;
 import com.talshavit.my_wishlist.databinding.ActivityMainBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 

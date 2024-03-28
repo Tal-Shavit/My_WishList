@@ -84,6 +84,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                youTubePlayerView.release();
                 requireActivity().getSupportFragmentManager().popBackStackImmediate();
             }
         });
@@ -128,9 +129,9 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
             @Override
             public void onClick(View v) {
                 if(itemType.equals("movies"))
-                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete");
+                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete", itemType);
                 else
-                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete");
+                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete", itemType);
             }
         });
 
@@ -138,9 +139,9 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
             @Override
             public void onClick(View v) {
                 if(itemType.equals("movies"))
-                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add");
+                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add", itemType);
                 else
-                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add");
+                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add", itemType);
 
             }
         });
@@ -148,7 +149,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         notWatchedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove");
+                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove", itemType);
             }
         });
 
@@ -173,9 +174,9 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         });
     }
 
-    private void deleteFromFirebase(int movieID) {
+    private void deleteFromFirebase(int itemID, String itemType) {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies").child(movieID+"");
+        DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(itemID+"");
         specificTvShowReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -187,7 +188,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         });
     }
 
-    private void AlertDialogFunc(String title,String messege, String removeOrAddOrDelete ){
+    private void AlertDialogFunc(String title,String messege, String removeOrAddOrDelete, String itemType){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(title);
         builder.setMessage( messege + mediaInfo.getName().toUpperCase() +"\"?");
@@ -207,7 +208,8 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
                     notWatchedButton.setVisibility(View.GONE);
                 }
                 else{
-                    deleteFromFirebase(mediaInfo.getID());
+                    deleteFromFirebase(mediaInfo.getID(), itemType);
+                    youTubePlayerView.release();
                     requireActivity().getSupportFragmentManager().popBackStackImmediate();
                 }
             }

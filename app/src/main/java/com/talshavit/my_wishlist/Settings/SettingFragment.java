@@ -1,7 +1,6 @@
-package com.talshavit.my_wishlist;
+package com.talshavit.my_wishlist.Settings;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -11,10 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.talshavit.my_wishlist.Movie.MovieFragment;
+import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.Signup_Login.StartActivity;
 
 import java.io.IOException;

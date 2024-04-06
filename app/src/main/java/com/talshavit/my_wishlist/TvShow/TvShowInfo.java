@@ -12,6 +12,8 @@ public class TvShowInfo implements Serializable , GenerealInterfaces {
     private int tvShowID;
     String tvShowName;
     String imageUrl;
+
+    private String imageUrlBackground;
     private String releaseYear;
     //private int numOfSeasons;
     private String numOfSeasons;
@@ -24,10 +26,11 @@ public class TvShowInfo implements Serializable , GenerealInterfaces {
     public TvShowInfo() {
     }
 
-    public TvShowInfo(int tvShowID, String tvShowName, String imageUrl, String releaseYear, String numOfSeasons, List<String> genres, String overview, String trailer, boolean isWatched) {
+    public TvShowInfo(int tvShowID, String tvShowName, String imageUrl, String imageUrlBackground, String releaseYear, String numOfSeasons, List<String> genres, String overview, String trailer, boolean isWatched) {
         this.tvShowID = tvShowID;
         this.tvShowName = tvShowName;
         this.imageUrl = imageUrl;
+        this.imageUrlBackground = imageUrlBackground;
         this.releaseYear = releaseYear;
         this.numOfSeasons = numOfSeasons;
         this.genres = genres;
@@ -148,5 +151,15 @@ public class TvShowInfo implements Serializable , GenerealInterfaces {
     @Override
     public String getLenght() {
         return numOfSeasons;
+    }
+
+    @Override
+    public String getImageUrlBackground() {
+        return imageUrlBackground;
+    }
+
+    public TvShowInfo setImageUrlBackground(String imageUrlBackground) {
+        this.imageUrlBackground = imageUrlBackground;
+        return this;
     }
 }

@@ -15,7 +15,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F0000000"
+        android:background="#E6000000"
         android:scaleType="centerCrop"
         />
 

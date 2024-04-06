@@ -95,7 +95,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
         //int movieID = mediaInfo.getID();
         Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageView);
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageBackground);
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrlBackground()).into(imageBackground);
         titleTxt.setText(mediaInfo.getName());
         lenghtTxt.setText(mediaInfo.getLenght());
         releaseYearTxt.setText(mediaInfo.getReleaseYear());

@@ -57,7 +57,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     private Button addButton;
     private String titleNameMovie;
     private String releaseYearMovie;
-    private String imgMovie;
+    private String imgMovie, imgBackg;
     private int movieID;
     private String movieLenght;
     private List<String> genresList;
@@ -111,12 +111,13 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                     Picasso.get().load("https://image.tmdb.org/t/p/w500/" + specificMovie.poster_path).into(movieImageView);
                     addButton.setVisibility(View.VISIBLE);
                     titleNameMovie = specificMovie.title;
-                    String releaseYear = specificMovie.release_date.substring(0, 4);
-                    if (releaseYear != null)
-                        releaseYearMovie = releaseYear;
-                    else
+                    //String releaseYear = specificMovie.release_date.substring(0, 4);
+                    if (specificMovie.release_date == null || specificMovie.release_date.isEmpty())
                         releaseYearMovie = "";
+                    else
+                        releaseYearMovie = specificMovie.release_date.substring(0,4);
                     imgMovie = specificMovie.poster_path;
+                    imgBackg = specificMovie.backdrop_path;
                     int movieLenghtInMinutes = specificMovie.runtime;
                     String hours = calcHours(movieLenghtInMinutes);
                     String minutes = calcMin(movieLenghtInMinutes);
@@ -287,7 +288,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
 
-                MovieInfo movieInfo = new MovieInfo(movieID, titleNameMovie, releaseYearMovie, imgMovie, movieLenght, genresList, overview, trailer, false);
+                MovieInfo movieInfo = new MovieInfo(movieID, titleNameMovie, releaseYearMovie, imgMovie, imgBackg, movieLenght, genresList, overview, trailer, false);
                 movieInfo.setUserID(userID);
                 movieInfo.setSerialID(nextID);
 

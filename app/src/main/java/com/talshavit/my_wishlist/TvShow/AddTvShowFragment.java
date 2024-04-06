@@ -55,7 +55,7 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     private Button addButton;
     private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
-    private String tvShowName, imageUrl, releaseYear, overview, trailer, numOfSeasons;
+    private String tvShowName, imageUrl, imgBackg, releaseYear, overview, trailer, numOfSeasons;
     private int tvShowID;
     private List<String> genres;
     private static int nextID;
@@ -210,6 +210,7 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                         numOfSeasons = seasons+" season";
                     }
                     imageUrl = specificTv.poster_path;
+                    imgBackg = specificTv.backdrop_path;
                     if (specificTv.first_air_date == null || specificTv.first_air_date.isEmpty())
                         releaseYear = "";
                     else
@@ -235,7 +236,7 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
             public void onClick(View v) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
-                TvShowInfo tvShowInfo = new TvShowInfo(tvShowID, tvShowName, imageUrl, releaseYear, numOfSeasons, genres, overview, trailer, false);
+                TvShowInfo tvShowInfo = new TvShowInfo(tvShowID, tvShowName, imageUrl, imgBackg, releaseYear, numOfSeasons, genres, overview, trailer, false);
                 tvShowInfo.setUserID(userID);
                 tvShowInfo.setSerialID(nextID);
 

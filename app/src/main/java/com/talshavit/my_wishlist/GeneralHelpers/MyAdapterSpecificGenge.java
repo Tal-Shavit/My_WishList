@@ -23,7 +23,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
 
     private List<T> itemInfoList;
 
-    private String imageUrl;
+    private String imageUrl, imgBackg;
 
     private FragmentManager fragmentManager;
 
@@ -46,8 +46,8 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
     public void onBindViewHolder(@NonNull MyViewHolderSpecificGenre holder, int position) {
         holder.titleTextView.setText(itemInfoList.get(position).getName());
         imageUrl = itemInfoList.get(position).getImageUrl();
+        imgBackg = itemInfoList.get(position).getImageUrlBackground();
         Picasso.get().load("https://image.tmdb.org/t/p/w500/"+imageUrl).into(holder.imageButton);
-
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +63,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
     private void showSpecificItem(int position) {
         T item = itemInfoList.get(position);
         imageUrl = item.getImageUrl();
+        imgBackg = item.getImageUrlBackground();
         String title = item.getName();
         String lenght = item.getLenght();
         String releaseYear = item.getReleaseYear();
@@ -75,7 +76,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
         Bundle bundle=new Bundle();
 
         if(itemType.equals("tv shows")){
-            TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, releaseYear,lenght,genres,overview,trailerKey, isWatched);
+            TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear,lenght,genres,overview,trailerKey, isWatched);
             bundle.putSerializable("MEDIA_INFO", tvShowInfo);
             SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("tv shows");
             specificFragmentGeneral.setArguments(bundle);
@@ -85,7 +86,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
                     .commit();
         }
        else{
-            MovieInfo movieInfo = new MovieInfo(ID,title,releaseYear,imageUrl,lenght,genres,overview,trailerKey, isWatched);
+            MovieInfo movieInfo = new MovieInfo(ID,title,releaseYear,imageUrl,imgBackg,lenght,genres,overview,trailerKey, isWatched);
             bundle.putSerializable("MEDIA_INFO", movieInfo);
             SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("movies");
             specificFragmentGeneral.setArguments(bundle);

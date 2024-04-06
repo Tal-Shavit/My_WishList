@@ -49,8 +49,12 @@ public class MyAdapterAllItems <T extends GenerealInterfaces> extends RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolderAllItems holder, int position) {
         String title;
-        if(itemType.equals("movies"))
-            title = itemInfoList.get(position).getName() + " (" + itemInfoList.get(position).getReleaseYear() +")";
+        if(itemType.equals("movies")){
+            if(itemInfoList.get(position).getReleaseYear()!="")
+                title = itemInfoList.get(position).getName() + " (" + itemInfoList.get(position).getReleaseYear() +")";
+            else
+                title = itemInfoList.get(position).getName();
+        }
         else
             title = itemInfoList.get(position).getName();
 

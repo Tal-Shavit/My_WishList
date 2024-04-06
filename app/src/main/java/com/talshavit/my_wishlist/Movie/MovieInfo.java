@@ -12,6 +12,9 @@ public class MovieInfo implements Serializable , GenerealInterfaces{
     private String movieName;
     private String releaseYear;
     private String imageUrl;
+
+    private String imageUrlBackground;
+
     private String movieLenght;
     private List<String> genres;
     private String overview;
@@ -21,12 +24,13 @@ public class MovieInfo implements Serializable , GenerealInterfaces{
     public MovieInfo() {
     }
 
-    public MovieInfo(int movieID, String movieName, String releaseYear, String imageUrl, String movieLenght, List<String> genres,
+    public MovieInfo(int movieID, String movieName, String releaseYear, String imageUrl, String imageUrlBackground, String movieLenght, List<String> genres,
                         String overview, String trailer, boolean isWatched) {
         this.movieID = movieID;
         this.movieName = movieName;
         this.releaseYear = releaseYear;
         this.imageUrl = imageUrl;
+        this.imageUrlBackground = imageUrlBackground;
         this.movieLenght = movieLenght;
         this.genres = genres;
         this.overview = overview;
@@ -148,5 +152,12 @@ public class MovieInfo implements Serializable , GenerealInterfaces{
         return movieLenght;
     }
 
+    public String getImageUrlBackground() {
+        return imageUrlBackground;
+    }
 
+    public MovieInfo setImageUrlBackground(String imageUrlBackground) {
+        this.imageUrlBackground = imageUrlBackground;
+        return this;
+    }
 }

@@ -12,6 +12,7 @@ public interface GenerealInterfaces {
 
     String getImageUrl();
 
+    String getImageUrlBackground();
     String getLenght();
 
     String getReleaseYear();

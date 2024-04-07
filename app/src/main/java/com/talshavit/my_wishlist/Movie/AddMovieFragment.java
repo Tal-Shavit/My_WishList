@@ -67,6 +67,8 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     private MovieApiService movieApiService;
     private ProgressDialog progressDialog;
 
+    private ArrayList<RootForSearch> movieInfos;
+
     public AddMovieFragment() {
     }
 
@@ -96,6 +98,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     }
 
     private void initView() {
+        movieInfos = new ArrayList<>();
         checkLastSerialNumber();
         onTitleButtonClick();
         onAddButtonClick();
@@ -108,16 +111,19 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                 if (response.body() != null && response.isSuccessful()) {
                     List<String> genresStringList = new ArrayList<String>();
                     RootForSpecific specificMovie = response.body();
+                    Log.d("lala", response.body().title + response.body().id);
                     Picasso.get().load("https://image.tmdb.org/t/p/w500/" + specificMovie.poster_path).into(movieImageView);
                     addButton.setVisibility(View.VISIBLE);
                     titleNameMovie = specificMovie.title;
-                    //String releaseYear = specificMovie.release_date.substring(0, 4);
                     if (specificMovie.release_date == null || specificMovie.release_date.isEmpty())
                         releaseYearMovie = "";
                     else
                         releaseYearMovie = specificMovie.release_date.substring(0,4);
                     imgMovie = specificMovie.poster_path;
-                    imgBackg = specificMovie.backdrop_path;
+                    if(specificMovie.backdrop_path == null || specificMovie.backdrop_path.isEmpty())
+                        imgBackg = imgMovie;
+                    else
+                        imgBackg = specificMovie.backdrop_path;
                     int movieLenghtInMinutes = specificMovie.runtime;
                     String hours = calcHours(movieLenghtInMinutes);
                     String minutes = calcMin(movieLenghtInMinutes);
@@ -242,7 +248,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
             public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
                 progressDialog.dismiss();
 
-                ArrayList<RootForSearch> movieInfos = response.body().results;
+                movieInfos = response.body().results;
                 if (movieInfos != null && !movieInfos.isEmpty()) {
                     for (RootForSearch movieInfo : movieInfos) {
                         if (movieInfo.release_date != null && !movieInfo.release_date.isEmpty())

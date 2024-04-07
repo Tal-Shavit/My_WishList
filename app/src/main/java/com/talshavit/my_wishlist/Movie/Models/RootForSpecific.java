@@ -19,7 +19,7 @@ public class RootForSpecific {
     public ArrayList<ProductionCompany> production_companies;
     public ArrayList<ProductionCountry> production_countries;
     public String release_date;
-    public int revenue;
+    public long revenue;
     public int runtime;
     public ArrayList<SpokenLanguage> spoken_languages;
     public String status;

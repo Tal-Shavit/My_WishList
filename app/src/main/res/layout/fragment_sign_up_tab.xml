@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Signup_Login.LoginTabFragment"
+    android:gravity="center"
     android:orientation="vertical"
-    android:gravity="center">
+    tools:context=".Signup_Login.LoginTabFragment">
 
 
     <EditText
@@ -14,15 +14,14 @@
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:hint="Email"
-        android:textSize="20sp"
-        android:paddingLeft="20dp"
-        android:fontFamily="@font/roboto_light"
-        android:textStyle="bold"
         android:background="@drawable/edit_text_background"
         android:drawableLeft="@drawable/baseline_person_24"
         android:drawablePadding="8dp"
-        />
+        android:fontFamily="@font/roboto_light"
+        android:hint="Email"
+        android:paddingLeft="20dp"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
     <EditText
@@ -30,46 +29,107 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="50dp"
-        android:hint="Password"
-        android:paddingLeft="20dp"
-        android:textSize="20sp"
-        android:fontFamily="@font/roboto_light"
-        android:textStyle="bold"
         android:background="@drawable/edit_text_background"
         android:drawableLeft="@drawable/baseline_lock_24"
         android:drawablePadding="8dp"
+        android:fontFamily="@font/roboto_light"
+        android:hint="Password"
+        android:paddingLeft="20dp"
         android:password="true"
-        />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/confirmSignup"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="50dp"
-        android:hint="Confirm Password"
-        android:paddingLeft="20dp"
-        android:textSize="20sp"
-        android:fontFamily="@font/roboto_light"
-        android:textStyle="bold"
         android:background="@drawable/edit_text_background"
         android:drawableLeft="@drawable/baseline_question_mark_24"
         android:drawablePadding="8dp"
-        android:password="true"/>
+        android:fontFamily="@font/roboto_light"
+        android:hint="Confirm Password"
+        android:paddingLeft="20dp"
+        android:password="true"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="25dp"
+            android:clickable="true"
+            android:fontFamily="@font/roboto_light"
+            android:gravity="center"
+            android:text="By tapping Sign Up, you agree to our Term. Learn how we process your data in our "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/privacypolicytXT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:fontFamily="@font/roboto_light"
+                android:text="Privacy Policy "
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_light"
+                android:text="and "
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/termTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:fontFamily="@font/roboto_light"
+                android:text="Terms&amp;Coditions"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/signupButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/add_button"
         android:layout_gravity="center"
-        android:layout_marginTop="70dp"
-        android:text="SIGNUP"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/add_button"
         android:fontFamily="@font/roboto_black"
+        android:text="SIGNUP"
         android:textColor="@color/white"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </LinearLayout>

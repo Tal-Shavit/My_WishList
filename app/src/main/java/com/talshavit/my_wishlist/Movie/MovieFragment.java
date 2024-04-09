@@ -14,8 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -51,7 +58,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
     GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>();
 
-        public MovieFragment() {
+    public MovieFragment() {
     }
 
     @Override
@@ -69,6 +76,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         findViews(view);
 
         context = view.getContext();
@@ -109,6 +117,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                         updateGenreList();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -120,69 +129,71 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 replaceFragment(new AddMovieFragment());
             }
         });
-        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context,allMoviesItems,myAdapterAllItems,
-                databaseReference,recyclerViewAll,userID,"movies");
+        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context, allMoviesItems, myAdapterAllItems,
+                databaseReference, recyclerViewAll, userID, "movies");
     }
 
     private void initAdapter(RecyclerView recyclerView, RecyclerView.Adapter myAdapter) {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(myAdapter);
-        }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(myAdapter);
+    }
 
     private void createGenres(List<MovieInfo> allMoviesItems) {
         genresList = new ArrayList<String>();
-        for(int i=0; i<allMoviesItems.size(); i++){
+        for (int i = 0; i < allMoviesItems.size(); i++) {
             if (!(allMoviesItems.get(i).getGenres() == null) && !(allMoviesItems.get(i).getGenres().isEmpty())) {
-                for (int j=0; j<allMoviesItems.get(i).getGenres().size(); j++) {
+                for (int j = 0; j < allMoviesItems.get(i).getGenres().size(); j++) {
                     if (!(genresList.contains(allMoviesItems.get(i).getGenres().get(j)))) {
                         genresList.add(allMoviesItems.get(i).getGenres().get(j));
                     }
                 }
             }
         }
-        myAdapterGenres = new MyAdapterGenres(context, genresList,this);
+        myAdapterGenres = new MyAdapterGenres(context, genresList, this);
         initAdapter(recyclerViewGenresButtons, myAdapterGenres);
     }
 
-    private void findViews (View view){
+    private void findViews(View view) {
         recyclerViewAll = view.findViewById(R.id.recyclerViewAllMovies);
         recyclerViewGenresButtons = view.findViewById(R.id.recyclerViewGenresButtons);
         recyclerViewMoviesBySpecificGenre = view.findViewById(R.id.recyclerViewMoviesBySpecificGenre);
         genreTextView = view.findViewById(R.id.genreTextView);
         addButton = view.findViewById(R.id.add_button);
-        }
+    }
+
     @Override
     public void onGenreClick(String genre) {
-            genreTextView.setText(genre.toUpperCase());
-            selectedGenre = genre;
-            if(selectedGenre != null)
-                updateGenreList();
+        genreTextView.setText(genre.toUpperCase());
+        selectedGenre = genre;
+        if (selectedGenre != null)
+            updateGenreList();
     }
-    private void updateGenreList() {
-            if(getActivity() != null && !getActivity().isFinishing()) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                if (fragmentManager != null) {
-                    genreTextView.setText(selectedGenre.toUpperCase());
-                    allMoviesByGenre = new ArrayList<MovieInfo>();
-                    for (int i = 0; i < allMoviesItems.size(); i++) {
-                        List<String> movieGenres = allMoviesItems.get(i).getGenres();
 
-                        if (movieGenres != null) {
-                            if (movieGenres.contains(selectedGenre)) {
-                                if (!(allMoviesByGenre.contains(allMoviesItems.get(i))))
-                                    allMoviesByGenre.add(allMoviesItems.get(i));
-                            }
+    private void updateGenreList() {
+        if (getActivity() != null && !getActivity().isFinishing()) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            if (fragmentManager != null) {
+                genreTextView.setText(selectedGenre.toUpperCase());
+                allMoviesByGenre = new ArrayList<MovieInfo>();
+                for (int i = 0; i < allMoviesItems.size(); i++) {
+                    List<String> movieGenres = allMoviesItems.get(i).getGenres();
+
+                    if (movieGenres != null) {
+                        if (movieGenres.contains(selectedGenre)) {
+                            if (!(allMoviesByGenre.contains(allMoviesItems.get(i))))
+                                allMoviesByGenre.add(allMoviesItems.get(i));
                         }
                     }
-                    myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allMoviesByGenre,fragmentManager, "movies");
-                    initAdapter(recyclerViewMoviesBySpecificGenre, myAdapterSpecificGenre);
                 }
+                myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allMoviesByGenre, fragmentManager, "movies");
+                initAdapter(recyclerViewMoviesBySpecificGenre, myAdapterSpecificGenre);
             }
+        }
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);

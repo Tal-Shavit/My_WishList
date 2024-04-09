@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -152,7 +158,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/deleteAccount"
+                android:id="@+id/payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -162,7 +168,7 @@
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/delete"
+                    android:src="@drawable/money"
                     android:backgroundTint="@color/black"
                     android:scaleType="fitCenter"
                     />
@@ -170,7 +176,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Delete Account"
+                    android:text="Payment"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:textSize="25sp"
@@ -181,33 +187,73 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/LogOut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp">
+                android:orientation="horizontal">
 
-                <ImageButton
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:src="@drawable/exit"
-                    android:backgroundTint="@color/black"
-                    android:scaleType="fitCenter"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/LogOut"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Log Out"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:textSize="25sp"
-                    android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="10dp">
+
+                    <ImageButton
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/exit"
+                        android:backgroundTint="@color/black"
+                        android:scaleType="fitCenter"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Log Out"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:textSize="25sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/deleteAccount"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="10dp">
+
+                    <ImageButton
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/delete"
+                        android:backgroundTint="@color/black"
+                        android:scaleType="fitCenter"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delete Account"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:textSize="25sp"
+                        android:fontFamily="@font/roboto_light"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
 
             </LinearLayout>
+
+
 
 
 
@@ -219,5 +265,7 @@
 
 
 </LinearLayout>
+
+</ScrollView>
 
 

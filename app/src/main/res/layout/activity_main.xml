@@ -1,49 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottomAppBar" />
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            app:fabCradleMargin="10dp"
+            app:fabCradleRoundedCornerRadius="50dp"
+            tools:ignore="BottomAppBar">
+
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:background="@android:color/transparent"
+                app:labelVisibilityMode="labeled"
+                app:menu="@menu/bottom_menu" />
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+    </RelativeLayout>
 
     <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
+        android:id="@+id/bannerFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/white"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="50dp">
+        android:layout_alignParentBottom="true"
+        />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            app:labelVisibilityMode="labeled"
-            android:background="@android:color/transparent"
-            app:menu="@menu/bottom_menu"
-            />
+</androidx.appcompat.widget.LinearLayoutCompat>
 
-    </com.google.android.material.bottomappbar.BottomAppBar>
+    <!--    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+    <!--        android:id="@+id/adView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/bottomAppBar"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        ads:adSize="SMART_BANNER"-->
+    <!--        ads:adUnitId="ca-app-pub-3940256099942544/9214589741">-->
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/add_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:src="@drawable/baseline_add_24"-->
-<!--        android:layout_gravity="bottom|center"-->
-<!--        android:layout_marginBottom="40dp"-->
-<!--        app:maxImageSize="40dp"-->
-<!--        android:visibility="gone"/>-->
+    <!--    </com.google.android.gms.ads.AdView>-->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-<!--    app:layout_anchor="@id/bottomAppBar"-->
+    <!--    app:layout_anchor="@id/bottomAppBar"-->
+
+    <!--    android:layout_gravity="bottom"-->
+    <!--    android:layout_alignParentBottom="true"-->
+
+    <!--    android:layout_above="@id/bannerFrame"-->

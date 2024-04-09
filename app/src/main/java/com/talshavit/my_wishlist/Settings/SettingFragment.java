@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.talshavit.my_wishlist.MainActivity;
 import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.Signup_Login.StartActivity;
 
@@ -33,8 +34,12 @@ import java.io.InputStream;
 
 public class SettingFragment extends Fragment {
 
-    private LinearLayout linearPrivacyPolicy ,deleteAccount, LogOut;
+    private LinearLayout linearPrivacyPolicy ,deleteAccount, LogOut, payment;
     private TextView changePassword;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+
     public SettingFragment() {
     }
 
@@ -53,28 +58,36 @@ public class SettingFragment extends Fragment {
     }
 
     private void initView() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        onPrivacyPolicy();
+        onChangePassword();
+        onDeleteAccount();
+        onLogOut();
+        onPayment();
+    }
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-
-        linearPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+    private void onPayment() {
+        payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initDialog();
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).disableAds();
+                }
             }
         });
+    }
 
-        changePassword.setOnClickListener(new View.OnClickListener() {
+    private void onLogOut() {
+        LogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, ChangePasswordFragment.class, null)
-                        .setReorderingAllowed(true).addToBackStack(null)
-                        .commit();
+                openStartActivity();
             }
         });
+    }
 
+    private void onDeleteAccount() {
         deleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,10 +127,26 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        LogOut.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void onChangePassword() {
+        changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openStartActivity();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, ChangePasswordFragment.class, null)
+                        .setReorderingAllowed(true).addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
+    private void onPrivacyPolicy() {
+        linearPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initDialog();
             }
         });
     }
@@ -146,6 +175,7 @@ public class SettingFragment extends Fragment {
         linearPrivacyPolicy = view.findViewById(R.id.privacy_policy);
         deleteAccount = view.findViewById(R.id.deleteAccount);
         LogOut = view.findViewById(R.id.LogOut);
+        payment = view.findViewById(R.id.payment);
         changePassword = view.findViewById(R.id.changePassword);
     }
 

@@ -72,6 +72,8 @@ dependencies {
 
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.android.gms:play-services-ads:23.0.0")
+
 }
 
 apply plugin: 'com.google.gms.google-services'

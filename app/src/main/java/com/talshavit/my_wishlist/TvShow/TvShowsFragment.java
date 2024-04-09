@@ -15,8 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +42,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreClickListener{
+public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreClickListener {
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewBySpecificGenre;
     private List<TvShowInfo> allTvShowInfos;
     private DatabaseReference databaseReference;
@@ -73,9 +80,10 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         findViews(view);
         context = view.getContext();
 
-        initViews();
+        initViews(view);
     }
-    private void initViews() {
+
+    private void initViews(View view) {
         allTvTitle.setText("ALL TV SHOWS");
         allTvShowInfos = new ArrayList<TvShowInfo>();
         myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allTvShowInfos, "tv shows");
@@ -109,6 +117,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                         updateGenreList();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -120,11 +129,10 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                 replaceFragment(new AddTvShowFragment());
             }
         });
-        generalFunctions.setSwipeToDelete("DELETE TV SHOW","Do you want to delete \"",
-                context,allTvShowInfos,myAdapterAllItems,
-                databaseReference,recyclerViewAll,userID,"tv shows");
+        generalFunctions.setSwipeToDelete("DELETE TV SHOW", "Do you want to delete \"",
+                context, allTvShowInfos, myAdapterAllItems,
+                databaseReference, recyclerViewAll, userID, "tv shows");
     }
-
 
     private void findViews(View view) {
         recyclerViewAll = view.findViewById(R.id.recyclerViewAllMovies);
@@ -137,16 +145,16 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
 
     private void createGenres(List<TvShowInfo> allTvShowInfos) {
         genresList = new ArrayList<String>();
-        for(int i=0; i<allTvShowInfos.size(); i++){
+        for (int i = 0; i < allTvShowInfos.size(); i++) {
             if (!(allTvShowInfos.get(i).getGenres() == null) && !(allTvShowInfos.get(i).getGenres().isEmpty())) {
-                for (int j=0; j<allTvShowInfos.get(i).getGenres().size(); j++) {
+                for (int j = 0; j < allTvShowInfos.get(i).getGenres().size(); j++) {
                     if (!(genresList.contains(allTvShowInfos.get(i).getGenres().get(j)))) {
                         genresList.add(allTvShowInfos.get(i).getGenres().get(j));
                     }
                 }
             }
         }
-        myAdapterGenres = new MyAdapterGenres(context, genresList,this);
+        myAdapterGenres = new MyAdapterGenres(context, genresList, this);
         initAdapter(recyclerViewGenresButtons, myAdapterGenres);
     }
 
@@ -154,12 +162,12 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     public void onGenreClick(String genre) {
         genreTextView.setText(genre.toUpperCase());
         selectedGenre = genre;
-        if(selectedGenre != null)
+        if (selectedGenre != null)
             updateGenreList();
     }
 
     private void updateGenreList() {
-        if(getActivity() != null && !getActivity().isFinishing()) {
+        if (getActivity() != null && !getActivity().isFinishing()) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             if (fragmentManager != null) {
                 genreTextView.setText(selectedGenre.toUpperCase());
@@ -187,7 +195,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         recyclerView.setAdapter(myAdapter);
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);

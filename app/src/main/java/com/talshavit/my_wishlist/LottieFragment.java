@@ -38,11 +38,11 @@ public class LottieFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button crashButton = view.findViewById(R.id.buttonCrash);
-        crashButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                throw new RuntimeException();
-            }
-        });
+//        Button crashButton = view.findViewById(R.id.buttonCrash);
+//        crashButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View view) {
+//                throw new RuntimeException();
+//            }
+//        });
     }
 }

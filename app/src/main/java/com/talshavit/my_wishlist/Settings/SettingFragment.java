@@ -1,6 +1,7 @@
 package com.talshavit.my_wishlist.Settings;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -34,9 +36,8 @@ import java.io.InputStream;
 
 public class SettingFragment extends Fragment {
 
-    private LinearLayout linearPrivacyPolicy ,deleteAccount, LogOut, payment;
+    private LinearLayout linearPrivacyPolicy, deleteAccount, LogOut, payment, rateUs, shareApp;
     private TextView changePassword;
-
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
 
@@ -65,6 +66,41 @@ public class SettingFragment extends Fragment {
         onDeleteAccount();
         onLogOut();
         onPayment();
+        onRating();
+        onShareApp();
+    }
+
+    private void onShareApp() {
+        shareApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share App");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Never Miss a Must-Watch with WatchNext! Check out this app!");
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
+            }
+        });
+    }
+
+    // For this time it doesnt do anything
+    private void onRating() {
+        rateUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.rate_us_dialog);
+                CardView rateCardView = dialog.findViewById(R.id.rateCardView);
+                dialog.show();
+
+                rateCardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     private void onPayment() {
@@ -98,7 +134,7 @@ public class SettingFragment extends Fragment {
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(user != null){
+                        if (user != null) {
                             String userID = user.getUid();
                             //Delete user's movies list from firebase
                             DatabaseReference moviesReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
@@ -106,7 +142,7 @@ public class SettingFragment extends Fragment {
                             user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         firebaseAuth.signOut();
                                         openStartActivity();
                                         moviesReference.removeValue();
@@ -177,9 +213,11 @@ public class SettingFragment extends Fragment {
         LogOut = view.findViewById(R.id.LogOut);
         payment = view.findViewById(R.id.payment);
         changePassword = view.findViewById(R.id.changePassword);
+        rateUs = view.findViewById(R.id.rateUs);
+        shareApp = view.findViewById(R.id.shareApp);
     }
 
-    private String loadHtmlFromAsset(String filename){
+    private String loadHtmlFromAsset(String filename) {
         String textFile = "";
         try {
             InputStream inputStream = requireContext().getAssets().open(filename);
@@ -188,7 +226,7 @@ public class SettingFragment extends Fragment {
             inputStream.read(buffer);
             textFile = new String(buffer);
             inputStream.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return textFile;

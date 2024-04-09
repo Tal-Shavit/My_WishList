@@ -1,159 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Settings.SettingFragment"
-    android:background="@color/white"
-    android:orientation="vertical">
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/settings"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/white"
-        android:scaleType="fitCenter"
-        android:layout_gravity="center"
-        android:layout_marginTop="25dp"/>
+        android:orientation="vertical"
+        tools:context=".Settings.SettingFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SETTINGS"
-        android:textColor="@color/black"
-        android:textSize="45dp"
-        android:fontFamily="@font/roboto_light"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:background="@color/white"
+            android:scaleType="fitCenter"
+            android:src="@drawable/settings" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_light"
+            android:text="SETTINGS"
+            android:textColor="@color/black"
+            android:textSize="45dp"
+            android:textStyle="bold" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_marginTop="20dp"
-            android:background="@drawable/inner_layout_black">
+            android:background="@drawable/inner_layout_black"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/privacy_policy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/privacypolicy"
                     android:backgroundTint="@color/black"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/privacypolicy" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_light"
                     android:text="Privacy Policy"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:textSize="25sp"
                     android:textColor="@color/white"
-                    android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"/>
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/information"
                     android:backgroundTint="@color/black"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/information" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="About"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:textSize="25sp"
-                    android:textColor="@color/white"
                     android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"/>
+                    android:text="About"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/lock"
                     android:backgroundTint="@color/black"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/lock" />
 
                 <TextView
                     android:id="@+id/changePassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Change Password"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:textSize="25sp"
                     android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:text="Change Password"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/rateUs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/star"
                     android:backgroundTint="@color/black"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/star" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:text="Rate Us"
                     android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"
+                    android:text="Rate Us"
                     android:textColor="@color/white"
-                    android:textSize="25sp" />
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -161,110 +156,119 @@
                 android:id="@+id/payment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="10dp">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/money"
                     android:backgroundTint="@color/black"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/money" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Payment"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:textSize="25sp"
                     android:fontFamily="@font/roboto_light"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:text="Payment"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/shareApp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/LogOut"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/share" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginStart="10dp">
-
-                    <ImageButton
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/exit"
-                        android:backgroundTint="@color/black"
-                        android:scaleType="fitCenter"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Log Out"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:textSize="25sp"
-                        android:fontFamily="@font/roboto_light"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/deleteAccount"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginStart="10dp">
-
-                    <ImageButton
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/delete"
-                        android:backgroundTint="@color/black"
-                        android:scaleType="fitCenter"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Delete Account"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:textSize="25sp"
-                        android:fontFamily="@font/roboto_light"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"/>
-
-                </LinearLayout>
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Share App"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/deleteAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/delete" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Delete Account"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LogOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:backgroundTint="@color/black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/exit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Log Out"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
 
         </LinearLayout>
 
 
-
-
-
-
-</LinearLayout>
+    </LinearLayout>
 
 </ScrollView>
 

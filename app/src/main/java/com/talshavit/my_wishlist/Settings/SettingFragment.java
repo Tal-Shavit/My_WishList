@@ -142,13 +142,14 @@ public class SettingFragment extends Fragment {
                             userToDelete.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful())
+                                                if (task.isSuccessful()) {
                                                     firebaseAuth.signOut();
                                                     openStartActivity();
+                                                }
                                             }
                                         });
                                     }

@@ -28,6 +28,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,19 +46,20 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private FrameLayout bannerFrame, frame_layout;
-
-    private AdView adView;
-
     private RewardedAd rewardedAd;
     private Handler adHandler;
     private String userID;
     private DatabaseReference databaseReference;
     private final long adDelay = TimeUnit.MINUTES.toMillis(1); // 3 minutes
 
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Check if the dataSnapshot exists and contains a value
+                //Check if the dataSnapshot exists and contains a value
                 if (dataSnapshot.exists()) {
                     boolean paymentForAds = dataSnapshot.getValue(Boolean.class);
                     if (paymentForAds != true) {
@@ -144,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
             });
         } else {
             Log.d(TAG, "The rewarded ad wasn't ready yet.");
+            loadRewardedVideoAdv(); // Load another rewarded ad if the current one wasn't ready
         }
     }
 

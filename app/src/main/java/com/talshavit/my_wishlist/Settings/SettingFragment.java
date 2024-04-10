@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,17 +137,20 @@ public class SettingFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         if (user != null) {
                             String userID = user.getUid();
-                            //Delete user's movies list from firebase
-                            DatabaseReference moviesReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-                            DatabaseReference tvReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
-                            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            //Delete user from real-time firebase
+                            DatabaseReference userToDelete = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+                            userToDelete.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        firebaseAuth.signOut();
-                                        openStartActivity();
-                                        moviesReference.removeValue();
-                                        tvReference.removeValue();
+                                    if(task.isSuccessful()){
+                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful())
+                                                    firebaseAuth.signOut();
+                                                    openStartActivity();
+                                            }
+                                        });
                                     }
                                 }
                             });

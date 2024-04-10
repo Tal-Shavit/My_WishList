@@ -57,7 +57,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     private String selectedGenre;
     private FloatingActionButton addButton;
 
-    GeneralFunctions<TvShowInfo> generalFunctions = new GeneralFunctions<>();
+    GeneralFunctions<TvShowInfo> generalFunctions = new GeneralFunctions<>(context);
 
     public TvShowsFragment() {
     }
@@ -185,6 +185,9 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                 myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allTvShowsByGenre, fragmentManager, "tv shows");
                 initAdapter(recyclerViewBySpecificGenre, myAdapterSpecificGenre);
             }
+        }
+        if (allTvShowsByGenre.isEmpty()) {
+            genreTextView.setText("");
         }
     }
 

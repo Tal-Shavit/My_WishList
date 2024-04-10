@@ -22,7 +22,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,8 +62,8 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     private List<String> genres;
     private static int nextID;
     private ProgressDialog progressDialog;
-
     private TvInterfaceService tvInterfaceService;
+    private FirebaseAnalytics firebaseAnalytics;
 
 
     public AddTvShowFragment() {
@@ -77,6 +79,9 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
+
         initRetrofit();
         findViews(view);
         initView();
@@ -109,24 +114,29 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     }
 
     private void checkLastSerialNumber() {
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
-        databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    TvShowInfo lastAddedTvShow = snapshot.getValue(TvShowInfo.class);
-                    if (lastAddedTvShow != null) {
-                        nextID = lastAddedTvShow.getSerialID() + 1;
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userID = currentUser.getUid();
+            //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
+            databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        TvShowInfo lastAddedTvShow = snapshot.getValue(TvShowInfo.class);
+                        if (lastAddedTvShow != null) {
+                            nextID = lastAddedTvShow.getSerialID() + 1;
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     private void onTitleButtonClick() {
@@ -204,10 +214,10 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                     addButton.setVisibility(View.VISIBLE);
                     tvShowName = specificTv.name;
                     int seasons = specificTv.number_of_seasons;
-                    if(seasons > 1)
-                        numOfSeasons = seasons+" seasons";
-                    else{
-                        numOfSeasons = seasons+" season";
+                    if (seasons > 1)
+                        numOfSeasons = seasons + " seasons";
+                    else {
+                        numOfSeasons = seasons + " season";
                     }
                     imageUrl = specificTv.poster_path;
                     imgBackg = specificTv.backdrop_path;
@@ -234,6 +244,11 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Log event for add button click
+                Bundle params = new Bundle();
+                params.putString("button_clicked", "add_button_tv_show_fragment");
+                firebaseAnalytics.logEvent("add_button_clicked", params);
+
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
                 TvShowInfo tvShowInfo = new TvShowInfo(tvShowID, tvShowName, imageUrl, imgBackg, releaseYear, numOfSeasons, genres, overview, trailer, false);
@@ -252,7 +267,7 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     }
 
     private void getTvTrailerKey(int tvShowID) {
-        Log.d("lala", tvShowID+"");
+        Log.d("lala", tvShowID + "");
         tvInterfaceService.getVideoDetails(tvShowID, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(new Callback<RootForVideo>() {
             @Override
             public void onResponse(Call<RootForVideo> call, Response<RootForVideo> response) {

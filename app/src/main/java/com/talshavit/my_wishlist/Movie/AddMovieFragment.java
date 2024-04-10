@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,8 +67,9 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     private static int nextID;
     private MovieApiService movieApiService;
     private ProgressDialog progressDialog;
-
     private ArrayList<RootForSearch> movieInfos;
+    private FirebaseAnalytics firebaseAnalytics;
+
 
     public AddMovieFragment() {
     }
@@ -82,6 +84,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
 
         initRetrofit();
         findViews(view);
@@ -118,9 +121,9 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                     if (specificMovie.release_date == null || specificMovie.release_date.isEmpty())
                         releaseYearMovie = "";
                     else
-                        releaseYearMovie = specificMovie.release_date.substring(0,4);
+                        releaseYearMovie = specificMovie.release_date.substring(0, 4);
                     imgMovie = specificMovie.poster_path;
-                    if(specificMovie.backdrop_path == null || specificMovie.backdrop_path.isEmpty())
+                    if (specificMovie.backdrop_path == null || specificMovie.backdrop_path.isEmpty())
                         imgBackg = imgMovie;
                     else
                         imgBackg = specificMovie.backdrop_path;
@@ -216,7 +219,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         });
     }
 
-    private void onTitleButtonClick(){
+    private void onTitleButtonClick() {
         titleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,6 +294,12 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Log event for add button click
+                Bundle params = new Bundle();
+                params.putString("button_clicked", "add_button_movie_fragment");
+                firebaseAnalytics.logEvent("add_button_clicked", params);
+
+
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
 

@@ -56,7 +56,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private String selectedGenre;
     private FloatingActionButton addButton;
 
-    GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>();
+    GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>(context);
 
     public MovieFragment() {
     }
@@ -190,6 +190,9 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allMoviesByGenre, fragmentManager, "movies");
                 initAdapter(recyclerViewMoviesBySpecificGenre, myAdapterSpecificGenre);
             }
+        }
+        if (allMoviesByGenre.isEmpty()) {
+            genreTextView.setText("");
         }
     }
 

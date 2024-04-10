@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.talshavit.my_wishlist.R;
@@ -27,6 +29,12 @@ import com.talshavit.my_wishlist.R;
 import java.util.List;
 
 public class GeneralFunctions<T extends GenerealInterfaces> {
+
+    private FirebaseAnalytics firebaseAnalytics;
+
+    public GeneralFunctions(Context context) {
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+    }
 
     public void setSwipeToDelete(String title,String messege, Context context,
                          List<T> list, RecyclerView.Adapter<?> adapter,
@@ -42,6 +50,9 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 int position = viewHolder.getAdapterPosition();
+
+                logSwipeToDeleteEvent();
+                
                 builder.setTitle(title);
                 builder.setMessage(messege + list.get(position).getName().toUpperCase() +"\"?");
                 builder.setCancelable(false);
@@ -75,6 +86,12 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(recyclerView);
+    }
+
+    private void logSwipeToDeleteEvent() {
+        Bundle params = new Bundle();
+        params.putString("delete", "swipe_to_delete");
+        firebaseAnalytics.logEvent("swipe_to_delete_event", params);
     }
 
     private static void setWatchedIcon(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive, Context context) {

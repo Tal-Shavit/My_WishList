@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,11 +48,12 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     private DatabaseReference databaseReference;
 
-    GeneralFunctions<T> generalFunctions = new GeneralFunctions<>();
+    GeneralFunctions<T> generalFunctions = new GeneralFunctions<>(getContext());
 
     private String itemType;
 
     private T mediaInfo;
+    private FirebaseAnalytics firebaseAnalytics;
 
     public SpecificFragmentGeneral() {
         // Required empty public constructor
@@ -75,12 +77,16 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext());
         findViews(view);
         Bundle arguments = getArguments();
         if (arguments != null) {
             initView(arguments);
         }
+        onBackButton();
+    }
 
+    private void onBackButton() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,34 +131,13 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(String.valueOf(mediaInfo.getID()));
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemType.equals("movies"))
-                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete", itemType);
-                else
-                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete", itemType);
-            }
-        });
+        onDeleteButton();
+        onWatchButton();
+        onNotWatchButton();
+        changeWatchButtonVisibility();
+    }
 
-        watchedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemType.equals("movies"))
-                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add", itemType);
-                else
-                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add", itemType);
-
-            }
-        });
-
-        notWatchedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove", itemType);
-            }
-        });
-
+    private void changeWatchButtonVisibility() {
         databaseReference.child("watched").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -170,6 +155,40 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    private void onNotWatchButton() {
+        notWatchedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove", itemType);
+            }
+        });
+    }
+
+    private void onWatchButton() {
+        watchedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(itemType.equals("movies"))
+                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add", itemType);
+                else
+                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add", itemType);
+
+            }
+        });
+    }
+
+    private void onDeleteButton() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(itemType.equals("movies"))
+                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete", itemType);
+                else
+                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete", itemType);
             }
         });
     }
@@ -201,6 +220,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
                     databaseReference.child("watched").setValue(true);
                     watchedButton.setVisibility(View.GONE);
                     notWatchedButton.setVisibility(View.VISIBLE);
+                    logClickOnWatchEvent();
                 } else if (removeOrAddOrDelete.equals("remove")){
                     mediaInfo.setWatched(false);
                     databaseReference.child("watched").setValue(false);
@@ -209,6 +229,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
                 }
                 else{
                     deleteFromFirebase(mediaInfo.getID(), itemType);
+                    logClickToDeleteEvent();
                     youTubePlayerView.release();
                     requireActivity().getSupportFragmentManager().popBackStackImmediate();
                 }
@@ -230,6 +251,12 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     }
 
+    private void logClickOnWatchEvent() {
+        Bundle params = new Bundle();
+        params.putString("watch", "click_on_watch");
+        firebaseAnalytics.logEvent("click_on_watch", params);
+    }
+
     private void findViews(View view) {
         imageView = view.findViewById(R.id.imageView);
         imageBackground = view.findViewById(R.id.imageBackground);
@@ -244,5 +271,11 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         deleteButton = view.findViewById(R.id.deleteButton);
         watchedButton = view.findViewById(R.id.watchedButton);
         notWatchedButton = view.findViewById(R.id.notWatchedButton);
+    }
+
+    private void logClickToDeleteEvent() {
+        Bundle params = new Bundle();
+        params.putString("delete", "click_to_delete");
+        firebaseAnalytics.logEvent("click_to_delete_event", params);
     }
 }

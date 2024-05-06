@@ -52,7 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class AddTvShowFragment extends Fragment implements TrailerCallback {
     private DatabaseReference databaseReference;
     private EditText titleEditText;
-    private ImageButton titleButton;
+    private ImageButton titleButton, exitButton;
     private ImageView tvImageView;
     private Button addButton;
     private Spinner dynamicSpinner;
@@ -102,6 +102,7 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
         dynamicSpinner = view.findViewById(R.id.dynamicSpinner);
         tvImageView = view.findViewById(R.id.tvImageView);
         addButton = view.findViewById(R.id.addButton);
+        exitButton = view.findViewById(R.id.exitButton);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dynamicSpinner.setAdapter(adapter);
@@ -111,6 +112,17 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
         checkLastSerialNumber();
         onTitleButtonClick();
         onAddButtonClick();
+        onBackButtonClick();
+    }
+
+    private void onBackButtonClick() {
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        });
+
     }
 
     private void checkLastSerialNumber() {
@@ -118,7 +130,6 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             String userID = currentUser.getUid();
-            //String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
             databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
             databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

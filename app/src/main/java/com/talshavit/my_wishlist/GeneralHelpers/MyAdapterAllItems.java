@@ -147,8 +147,8 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
 
         dialog.show();
 
-        textCardView.setVisibility(View.INVISIBLE);
-        imageCardView.setVisibility((View.VISIBLE));
+        //textCardView.setVisibility(View.INVISIBLE);
+        //imageCardView.setVisibility((View.VISIBLE));
 
     }
 

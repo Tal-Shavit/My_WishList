@@ -52,7 +52,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
     private DatabaseReference databaseReference;
     private EditText titleEditText;
-    private ImageButton titleButton;
+    private ImageButton titleButton, exitButton;
     private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
     private ImageView movieImageView;
@@ -106,6 +106,16 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         checkLastSerialNumber();
         onTitleButtonClick();
         onAddButtonClick();
+        onExitButton();
+    }
+
+    private void onExitButton() {
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().popBackStackImmediate();
+            }
+        });
     }
 
     private void getMovieDetails(int id) {
@@ -181,6 +191,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         titleButton = view.findViewById(R.id.titleButton);
         dynamicSpinner = view.findViewById(R.id.dynamicSpinner);
         movieImageView = view.findViewById(R.id.movieImageView);
+        exitButton = view.findViewById(R.id.exitButton);
         addButton = view.findViewById(R.id.addButton);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

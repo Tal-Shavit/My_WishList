@@ -15,15 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -123,15 +116,23 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
             }
         });
 
+        onAddButtonClick();
+        swipeToDelete();
+    }
+
+    private void swipeToDelete() {
+        generalFunctions.setSwipeToDelete("DELETE TV SHOW", "Do you want to delete \"",
+                context, allTvShowInfos, myAdapterAllItems,
+                databaseReference, recyclerViewAll, userID, "tv shows");
+    }
+
+    private void onAddButtonClick() {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 replaceFragment(new AddTvShowFragment());
             }
         });
-        generalFunctions.setSwipeToDelete("DELETE TV SHOW", "Do you want to delete \"",
-                context, allTvShowInfos, myAdapterAllItems,
-                databaseReference, recyclerViewAll, userID, "tv shows");
     }
 
     private void findViews(View view) {

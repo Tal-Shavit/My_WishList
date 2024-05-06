@@ -50,6 +50,17 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
         changeCardView(holder, position);
         onImgButton(holder, position);
         onTrailer(holder, position);
+        onBackButton(holder, position);
+    }
+
+    private void onBackButton(MyViewHolderAllItems holder, int position) {
+        holder.backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.textCardView.setVisibility(View.INVISIBLE);
+                holder.imageCardView.setVisibility((View.VISIBLE));
+            }
+        });
     }
 
     private void getImg(MyViewHolderAllItems holder, int position) {

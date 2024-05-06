@@ -14,7 +14,7 @@ import com.talshavit.my_wishlist.R;
 
 public class MyViewHolderAllItems<T> extends RecyclerView.ViewHolder {
 
-    ImageButton imageButton;
+    ImageButton imageButton, backButton;
     Button trailerImageButton;
     TextView titleTxt, overviewTxt, genreTxt, lenghtTxt, titleTextView;
     CardView textCardView,imageCardView;
@@ -24,6 +24,7 @@ public class MyViewHolderAllItems<T> extends RecyclerView.ViewHolder {
     public MyViewHolderAllItems(@NonNull View itemView) {
         super(itemView);
         imageButton = itemView.findViewById(R.id.imageButton);
+        backButton = itemView.findViewById(R.id.backButton);
         trailerImageButton = itemView.findViewById(R.id.trailerImageButton);
         titleTxt = itemView.findViewById(R.id.titleTxt);
         genreTxt = itemView.findViewById(R.id.genreTxt);

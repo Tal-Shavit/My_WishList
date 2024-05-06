@@ -17,29 +17,46 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.7"
-                android:scrollbars="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/titleTxt"
+                <ImageButton
+                    android:id="@+id/backButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:backgroundTint="@color/red"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/baseline_close_24" />
+
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/roboto_light"/>
+                    android:scrollbars="vertical">
 
-            </ScrollView>
+                    <TextView
+                        android:id="@+id/titleTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/roboto_light"/>
+
+                </ScrollView>
+
+            </LinearLayout>
+
 
 
             <View

@@ -6,26 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".LottieFragment">
 
-<!--    <Button-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/buttonCrash"-->
-<!--        android:text="crachTest"-->
-<!--        android:textColor="@color/white"/>-->
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="WatchNext"
-        android:textSize="50sp"
+        android:text="Never Miss a Must-Watch with WatchNext!"
+        android:textSize="36sp"
         android:gravity="center"
         android:textColor="#FFFFFF"
-        android:textStyle="bold"
         android:shadowColor="@color/lavander"
         android:shadowDx="0"
         android:shadowDy="0"
-        android:shadowRadius="30"
-        android:layout_marginTop="-100dp"
+        android:shadowRadius="10"
+        android:layout_marginTop="-130dp"
         android:layout_alignTop="@+id/animationLottie"
         android:fontFamily="@font/titan_one_regular"
 

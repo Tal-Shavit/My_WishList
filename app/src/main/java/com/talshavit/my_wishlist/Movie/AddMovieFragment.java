@@ -7,9 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,27 +123,13 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                 if (response.body() != null && response.isSuccessful()) {
                     List<String> genresStringList = new ArrayList<String>();
                     RootForSpecific specificMovie = response.body();
-                    Log.d("lala", response.body().title + response.body().id);
                     Picasso.get().load("https://image.tmdb.org/t/p/w500/" + specificMovie.poster_path).into(movieImageView);
                     addButton.setVisibility(View.VISIBLE);
                     titleNameMovie = specificMovie.title;
-                    if (specificMovie.release_date == null || specificMovie.release_date.isEmpty())
-                        releaseYearMovie = "";
-                    else
-                        releaseYearMovie = specificMovie.release_date.substring(0, 4);
-                    imgMovie = specificMovie.poster_path;
-                    if (specificMovie.backdrop_path == null || specificMovie.backdrop_path.isEmpty())
-                        imgBackg = imgMovie;
-                    else
-                        imgBackg = specificMovie.backdrop_path;
-                    int movieLenghtInMinutes = specificMovie.runtime;
-                    String hours = calcHours(movieLenghtInMinutes);
-                    String minutes = calcMin(movieLenghtInMinutes);
-                    movieLenght = hours + "h " + minutes + "m";
-                    for (int i = 0; i < specificMovie.genres.size(); i++) {
-                        genresStringList.add(specificMovie.genres.get(i).name);
-                    }
-                    genresList = genresStringList;
+                    setReleaseYear(specificMovie);
+                    setImg(specificMovie);
+                    setMovieLen(specificMovie);
+                    setGenges(specificMovie, genresStringList);
                     overview = specificMovie.overview;
                     getMovieTrailerKey(id);
                 }
@@ -156,6 +140,35 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
             }
         });
+    }
+
+    private void setGenges(RootForSpecific specificMovie, List<String> genresStringList) {
+        for (int i = 0; i < specificMovie.genres.size(); i++) {
+            genresStringList.add(specificMovie.genres.get(i).name);
+        }
+        genresList = genresStringList;
+    }
+
+    private void setMovieLen(RootForSpecific specificMovie) {
+        int movieLenghtInMinutes = specificMovie.runtime;
+        String hours = calcHours(movieLenghtInMinutes);
+        String minutes = calcMin(movieLenghtInMinutes);
+        movieLenght = hours + "h " + minutes + "m";
+    }
+
+    private void setImg(RootForSpecific specificMovie) {
+        imgMovie = specificMovie.poster_path;
+        if (specificMovie.backdrop_path == null || specificMovie.backdrop_path.isEmpty())
+            imgBackg = imgMovie;
+        else
+            imgBackg = specificMovie.backdrop_path;
+    }
+
+    private void setReleaseYear(RootForSpecific specificMovie) {
+        if (specificMovie.release_date == null || specificMovie.release_date.isEmpty())
+            releaseYearMovie = "";
+        else
+            releaseYearMovie = specificMovie.release_date.substring(0, 4);
     }
 
     private static String calcMin(int movieLenght) {
@@ -240,11 +253,7 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                     dynamicSpinner.setVisibility(View.INVISIBLE);
                     movieImageView.setVisibility(View.INVISIBLE);
 
-                    progressDialog = new ProgressDialog(getContext());
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                    progressDialog.setContentView(R.layout.progress_dialog);
-                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                    initProgressDialog();
 
                     adapter.clear();
                     adapter.notifyDataSetChanged();
@@ -255,6 +264,14 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
             }
         });
 
+    }
+
+    private void initProgressDialog() {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     private void getAllSearchMovies(String title) {

@@ -23,7 +23,6 @@ public class AnimationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_animation);
 
         textAnimation = findViewById(R.id.textAnimation);
-        //textAnimation1 = findViewById(R.id.textAnimation1);
         startAnimation();
 
         // Post a delayed message to switch activities after 3.2 seconds
@@ -44,7 +43,6 @@ public class AnimationActivity extends AppCompatActivity {
     private void startAnimation(){
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim);
         textAnimation.startAnimation(animation);
-        //textAnimation1.startAnimation(animation);
     }
 
 }

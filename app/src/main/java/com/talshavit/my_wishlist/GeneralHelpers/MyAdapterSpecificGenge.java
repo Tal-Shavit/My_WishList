@@ -17,15 +17,20 @@ import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
 import java.util.List;
 
-public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends RecyclerView.Adapter<MyViewHolderSpecificGenre> {
+public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends RecyclerView.Adapter<MyViewHolderSpecificGenre> {
 
     private Context context;
     private List<T> itemInfoList;
     private String imageUrl, imgBackg;
     private FragmentManager fragmentManager;
     private String itemType;
+    private String title, lenght, releaseYear, overview, trailerKey;
+    private int ID;
+    private List<String> genres;
+    private boolean isWatched;
+    private Bundle bundle;
 
-    public MyAdapterSpecificGenge(Context context, List<T> itemInfoList, FragmentManager fragmentManager,String itemType) {
+    public MyAdapterSpecificGenge(Context context, List<T> itemInfoList, FragmentManager fragmentManager, String itemType) {
         this.context = context;
         this.itemInfoList = itemInfoList;
         this.fragmentManager = fragmentManager;
@@ -35,7 +40,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
     @NonNull
     @Override
     public MyViewHolderSpecificGenre onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolderSpecificGenre(LayoutInflater.from(context).inflate(R.layout.recycler_specific_genre,parent,false));
+        return new MyViewHolderSpecificGenre(LayoutInflater.from(context).inflate(R.layout.recycler_specific_genre, parent, false));
     }
 
     @Override
@@ -43,7 +48,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
         holder.titleTextView.setText(itemInfoList.get(position).getName());
         imageUrl = itemInfoList.get(position).getImageUrl();
         imgBackg = itemInfoList.get(position).getImageUrlBackground();
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+imageUrl).into(holder.imageButton);
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/" + imageUrl).into(holder.imageButton);
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +56,7 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
             }
         });
 
-        if(itemInfoList.get(position).isWatched()){
+        if (itemInfoList.get(position).isWatched()) {
             holder.seenImageView.setVisibility(View.VISIBLE);
         }
     }
@@ -60,37 +65,41 @@ public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends Recyc
         T item = itemInfoList.get(position);
         imageUrl = item.getImageUrl();
         imgBackg = item.getImageUrlBackground();
-        String title = item.getName();
-        String lenght = item.getLenght();
-        String releaseYear = item.getReleaseYear();
-        String overview = item.getOverview();
-        List<String> genres = item.getGenres();
-        String trailerKey = item.getTrailer();
-        int ID = item.getID();
-        boolean isWatched = item.isWatched();
+        title = item.getName();
+        lenght = item.getLenght();
+        releaseYear = item.getReleaseYear();
+        overview = item.getOverview();
+        genres = item.getGenres();
+        trailerKey = item.getTrailer();
+        ID = item.getID();
+        isWatched = item.isWatched();
+        bundle = new Bundle();
 
-        Bundle bundle=new Bundle();
+        initGeneralFragment();
 
-        if(itemType.equals("tv shows")){
-            TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear,lenght,genres,overview,trailerKey, isWatched);
+    }
+
+    private void initGeneralFragment() {
+        if (itemType.equals("tv shows")) {
+            TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear, lenght, genres, overview, trailerKey, isWatched);
             bundle.putSerializable("MEDIA_INFO", tvShowInfo);
             SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("tv shows");
             specificFragmentGeneral.setArguments(bundle);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, specificFragmentGeneral, null)
-                    .setReorderingAllowed(true).addToBackStack(null)
-                    .commit();
-        }
-       else{
-            MovieInfo movieInfo = new MovieInfo(ID,title,releaseYear,imageUrl,imgBackg,lenght,genres,overview,trailerKey, isWatched);
+            replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);
+        } else {
+            MovieInfo movieInfo = new MovieInfo(ID, title, releaseYear, imageUrl, imgBackg, lenght, genres, overview, trailerKey, isWatched);
             bundle.putSerializable("MEDIA_INFO", movieInfo);
             SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("movies");
             specificFragmentGeneral.setArguments(bundle);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, specificFragmentGeneral, null)
-                    .setReorderingAllowed(true).addToBackStack(null)
-                    .commit();
+            replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);
         }
+    }
+
+    private void replaceFragment(SpecificFragmentGeneral<T> specificFragmentGeneral) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, specificFragmentGeneral, null)
+                .setReorderingAllowed(true).addToBackStack(null)
+                .commit();
     }
 
     @Override

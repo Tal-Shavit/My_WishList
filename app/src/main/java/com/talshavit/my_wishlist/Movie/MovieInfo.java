@@ -12,9 +12,7 @@ public class MovieInfo implements Serializable , GenerealInterfaces{
     private String movieName;
     private String releaseYear;
     private String imageUrl;
-
     private String imageUrlBackground;
-
     private String movieLenght;
     private List<String> genres;
     private String overview;
@@ -134,7 +132,6 @@ public class MovieInfo implements Serializable , GenerealInterfaces{
 
     public void setWatched(boolean watched) {
         isWatched = watched;
-        //return this;
     }
 
     @Override

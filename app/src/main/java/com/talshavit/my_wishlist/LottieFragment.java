@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 
 import com.airbnb.lottie.LottieAnimationView;
+
 public class LottieFragment extends Fragment {
 
     private LottieAnimationView animationLottie;

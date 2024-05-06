@@ -38,14 +38,12 @@ public class WatchedFragment extends Fragment {
 
     private RecyclerView allWatchedMovies;
     private RecyclerView allWatchedTvShows;
-
     private MyAdapterSpecificGenge<MovieInfo> myAdapterSpecificGenreMovie;
     private MyAdapterSpecificGenge<TvShowInfo> myAdapterSpecificGenreTv;
-
     private DatabaseReference databaseReference;
-
     private List<MovieInfo> allMoviesItems;
     private List<TvShowInfo> allTvShowItems;
+    private FragmentManager fragmentManager;
 
     public WatchedFragment() {
         // Required empty public constructor
@@ -66,28 +64,32 @@ public class WatchedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        findViews(view);
 
+        findViews(view);
         context = view.getContext();
         allMoviesItems = new ArrayList<MovieInfo>();
         allTvShowItems = new ArrayList<TvShowInfo>();
-
         loadWatchedMoviesFromFirebase();
         loadWatchedTvShowsFromFirebase();
+        fragmentManager = getActivity().getSupportFragmentManager();
+        allMoviesList();
+        allTvList();
+    }
 
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
-        allWatchedMovies.setLayoutManager(linearLayoutManager);
-        myAdapterSpecificGenreMovie = new MyAdapterSpecificGenge<>(context,  allMoviesItems,fragmentManager, "movies");
-        allWatchedMovies.setAdapter(myAdapterSpecificGenreMovie);
-
+    private void allTvList() {
         LinearLayoutManager linearLayoutManagerTv = new LinearLayoutManager(context);
         linearLayoutManagerTv.setOrientation(linearLayoutManagerTv.HORIZONTAL);
         allWatchedTvShows.setLayoutManager(linearLayoutManagerTv);
         myAdapterSpecificGenreTv = new MyAdapterSpecificGenge<>(context, allTvShowItems, fragmentManager,"tv shows");
         allWatchedTvShows.setAdapter(myAdapterSpecificGenreTv);
+    }
+
+    private void allMoviesList() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
+        allWatchedMovies.setLayoutManager(linearLayoutManager);
+        myAdapterSpecificGenreMovie = new MyAdapterSpecificGenge<>(context,  allMoviesItems,fragmentManager, "movies");
+        allWatchedMovies.setAdapter(myAdapterSpecificGenreMovie);
     }
 
     private void loadWatchedMoviesFromFirebase() {
@@ -103,18 +105,22 @@ public class WatchedFragment extends Fragment {
                         allMoviesItems.add(movieInfo);
                     }
                 }
-                //Sort the list based on serialID in descending order - last in show first
-                Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
-                    @Override
-                    public int compare(MovieInfo movieInfo1, MovieInfo movieInfo2) {
-                        return Integer.compare(movieInfo2.getSerialID(), movieInfo1.getSerialID());
-                    }
-                });
+                sortMovieList();
                 myAdapterSpecificGenreMovie.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void sortMovieList() {
+        //Sort the list based on serialID in descending order - last in show first
+        Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
+            @Override
+            public int compare(MovieInfo movieInfo1, MovieInfo movieInfo2) {
+                return Integer.compare(movieInfo2.getSerialID(), movieInfo1.getSerialID());
             }
         });
     }
@@ -132,18 +138,22 @@ public class WatchedFragment extends Fragment {
                         allTvShowItems.add(tvShowInfo);
                     }
                 }
-                //Sort the list based on serialID in descending order - last in show first
-                Collections.sort(allTvShowItems, new Comparator<TvShowInfo>() {
-                    @Override
-                    public int compare(TvShowInfo tvShowInfo1, TvShowInfo tvShowInfo2) {
-                        return Integer.compare(tvShowInfo2.getSerialID(), tvShowInfo1.getSerialID());
-                    }
-                });
+                sortTvList();
                 myAdapterSpecificGenreTv.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void sortTvList() {
+        //Sort the list based on serialID in descending order - last in show first
+        Collections.sort(allTvShowItems, new Comparator<TvShowInfo>() {
+            @Override
+            public int compare(TvShowInfo tvShowInfo1, TvShowInfo tvShowInfo2) {
+                return Integer.compare(tvShowInfo2.getSerialID(), tvShowInfo1.getSerialID());
             }
         });
     }

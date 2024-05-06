@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,21 +157,22 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                 if (!title.equals("")) {
                     dynamicSpinner.setVisibility(View.INVISIBLE);
                     tvImageView.setVisibility(View.INVISIBLE);
-
-                    progressDialog = new ProgressDialog(getContext());
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                    progressDialog.setContentView(R.layout.progress_dialog);
-                    progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
+                    initProgressDialog();
                     adapter.clear();
                     adapter.notifyDataSetChanged();
-
                     getAllSearchTv(title);
                 } else
                     Toast.makeText(getContext(), "YOU HAVE TO FILL THE TITLE!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void initProgressDialog() {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     private void getAllSearchTv(String title) {
@@ -224,22 +224,10 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                     Picasso.get().load("https://image.tmdb.org/t/p/w500/" + specificTv.poster_path).into(tvImageView);
                     addButton.setVisibility(View.VISIBLE);
                     tvShowName = specificTv.name;
-                    int seasons = specificTv.number_of_seasons;
-                    if (seasons > 1)
-                        numOfSeasons = seasons + " seasons";
-                    else {
-                        numOfSeasons = seasons + " season";
-                    }
-                    imageUrl = specificTv.poster_path;
-                    imgBackg = specificTv.backdrop_path;
-                    if (specificTv.first_air_date == null || specificTv.first_air_date.isEmpty())
-                        releaseYear = "";
-                    else
-                        releaseYear = specificTv.first_air_date.substring(0, 4);
-                    for (int i = 0; i < specificTv.genres.size(); i++) {
-                        genresStringList.add(specificTv.genres.get(i).name);
-                    }
-                    genres = genresStringList;
+                    setNumOfSeasons(specificTv);
+                    setImgs(specificTv);
+                    setYear(specificTv);
+                    setGenres(specificTv, genresStringList);
                     overview = specificTv.overview;
                     getTvTrailerKey(tvShowID);
                 }
@@ -249,6 +237,34 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
             public void onFailure(Call<RootForSpecificTv> call, Throwable throwable) {
             }
         });
+    }
+
+    private void setGenres(RootForSpecificTv specificTv, List<String> genresStringList) {
+        for (int i = 0; i < specificTv.genres.size(); i++) {
+            genresStringList.add(specificTv.genres.get(i).name);
+        }
+        genres = genresStringList;
+    }
+
+    private void setYear(RootForSpecificTv specificTv) {
+        if (specificTv.first_air_date == null || specificTv.first_air_date.isEmpty())
+            releaseYear = "";
+        else
+            releaseYear = specificTv.first_air_date.substring(0, 4);
+    }
+
+    private void setImgs(RootForSpecificTv specificTv) {
+        imageUrl = specificTv.poster_path;
+        imgBackg = specificTv.backdrop_path;
+    }
+
+    private void setNumOfSeasons(RootForSpecificTv specificTv) {
+        int seasons = specificTv.number_of_seasons;
+        if (seasons > 1)
+            numOfSeasons = seasons + " seasons";
+        else {
+            numOfSeasons = seasons + " season";
+        }
     }
 
     private void onAddButtonClick() {

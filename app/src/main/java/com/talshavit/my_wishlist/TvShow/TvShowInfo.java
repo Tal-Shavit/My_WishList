@@ -12,10 +12,8 @@ public class TvShowInfo implements Serializable , GenerealInterfaces {
     private int tvShowID;
     String tvShowName;
     String imageUrl;
-
     private String imageUrlBackground;
     private String releaseYear;
-    //private int numOfSeasons;
     private String numOfSeasons;
     private List<String> genres;
     private String overview;
@@ -135,7 +133,6 @@ public class TvShowInfo implements Serializable , GenerealInterfaces {
 
     public void setWatched(boolean watched) {
         isWatched = watched;
-        //return this;
     }
 
     @Override

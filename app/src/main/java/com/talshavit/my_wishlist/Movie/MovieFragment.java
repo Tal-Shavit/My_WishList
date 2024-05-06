@@ -48,9 +48,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private TextView genreTextView;
     private String selectedGenre;
     private FloatingActionButton addButton;
-
     GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>(context);
-
     public MovieFragment() {
     }
 
@@ -71,9 +69,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         super.onViewCreated(view, savedInstanceState);
 
         findViews(view);
-
         context = view.getContext();
-
         initViews(view);
     }
 
@@ -81,7 +77,26 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         allMoviesItems = new ArrayList<MovieInfo>();
         myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allMoviesItems, "movies");
         initAdapter(recyclerViewAll, myAdapterAllItems);
+        getMoviesFromDB();
+        onAddButtonClick();
+        swipeToDelete();
+    }
 
+    private void swipeToDelete() {
+        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context, allMoviesItems, myAdapterAllItems,
+                databaseReference, recyclerViewAll, userID, "movies");
+    }
+
+    private void onAddButtonClick() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new AddMovieFragment());
+            }
+        });
+    }
+
+    private void getMoviesFromDB() {
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -115,15 +130,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                replaceFragment(new AddMovieFragment());
-            }
-        });
-        generalFunctions.setSwipeToDelete("DELETE MOVIE", "Do you want to delete \"", context, allMoviesItems, myAdapterAllItems,
-                databaseReference, recyclerViewAll, userID, "movies");
     }
 
     private void initAdapter(RecyclerView recyclerView, RecyclerView.Adapter myAdapter) {

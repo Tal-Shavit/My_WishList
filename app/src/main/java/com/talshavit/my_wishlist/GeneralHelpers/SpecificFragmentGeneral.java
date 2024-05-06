@@ -95,19 +95,27 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     private void initView(Bundle arguments) {
         mediaInfo = (T) arguments.getSerializable("MEDIA_INFO");
-
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageView);
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrlBackground()).into(imageBackground);
+        setImgs();
         titleTxt.setText(mediaInfo.getName());
         lenghtTxt.setText(mediaInfo.getLenght());
         releaseYearTxt.setText(mediaInfo.getReleaseYear());
-        if(mediaInfo.getOverview().equals(""))
-            overviewTxt.setText("There is no overview");
-        else
-            overviewTxt.setText(mediaInfo.getOverview());
-        List<String> genres = mediaInfo.getGenres();
-        String formattedGenres = generalFunctions.formatGenres(genres);
-        genreTxt.setText(formattedGenres);
+        setOverview();
+        setGenres();
+        setTrailer();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(String.valueOf(mediaInfo.getID()));
+        onDeleteButton();
+        onWatchButton();
+        onNotWatchButton();
+        changeWatchButtonVisibility();
+    }
+
+    private void setImgs() {
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageView);
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrlBackground()).into(imageBackground);
+    }
+
+    private void setTrailer() {
         String trailerKey = mediaInfo.getTrailer();
         if (trailerKey == null || trailerKey.isEmpty() || trailerKey.equals("") ){
             youTubePlayerView.setVisibility(View.GONE);
@@ -124,13 +132,19 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
                 }
             });
         }
+    }
 
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(String.valueOf(mediaInfo.getID()));
-        onDeleteButton();
-        onWatchButton();
-        onNotWatchButton();
-        changeWatchButtonVisibility();
+    private void setGenres() {
+        List<String> genres = mediaInfo.getGenres();
+        String formattedGenres = generalFunctions.formatGenres(genres);
+        genreTxt.setText(formattedGenres);
+    }
+
+    private void setOverview() {
+        if(mediaInfo.getOverview().equals(""))
+            overviewTxt.setText("There is no overview");
+        else
+            overviewTxt.setText(mediaInfo.getOverview());
     }
 
     private void changeWatchButtonVisibility() {

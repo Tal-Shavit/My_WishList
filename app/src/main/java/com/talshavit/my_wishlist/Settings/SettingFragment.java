@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,42 +131,49 @@ public class SettingFragment extends Fragment {
                 builder.setTitle("DELETE ACCOUNT");
                 builder.setMessage("Are you sure you want to delete your account?");
                 builder.setCancelable(false);
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (user != null) {
-                            String userID = user.getUid();
-                            //Delete user from real-time firebase
-                            DatabaseReference userToDelete = FirebaseDatabase.getInstance().getReference("Users").child(userID);
-                            userToDelete.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    firebaseAuth.signOut();
-                                                    openStartActivity();
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                positiveButton(builder);
+                negativeButton(builder);
                 builder.show();
             }
         });
+    }
 
+    private void negativeButton(AlertDialog.Builder builder) {
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void positiveButton(AlertDialog.Builder builder) {
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (user != null) {
+                    String userID = user.getUid();
+                    //Delete user from real-time firebase
+                    DatabaseReference userToDelete = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+                    userToDelete.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            firebaseAuth.signOut();
+                                            openStartActivity();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void onChangePassword() {

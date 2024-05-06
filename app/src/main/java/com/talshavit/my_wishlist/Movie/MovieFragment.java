@@ -8,9 +8,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +82,41 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         getMoviesFromDB();
         onAddButtonClick();
         swipeToDelete();
+        dragMovie();
+    }
+
+    private void dragMovie() {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
+                int position_dragged = dragged.getAdapterPosition();
+                int position_target = target.getAdapterPosition();
+
+                Collections.swap(allMoviesItems, position_dragged,position_target);
+                
+                updateSerialIds();
+                updateInFirebaseDatabase();
+                myAdapterAllItems.notifyDataSetChanged();
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+
+        helper.attachToRecyclerView(recyclerViewAll);
+    }
+
+    private void updateInFirebaseDatabase() {
+        databaseReference.setValue(allMoviesItems);
+    }
+
+    private void updateSerialIds() {
+        for (int i = 0; i < allMoviesItems.size(); i++) {
+            allMoviesItems.get(i).setSerialID(i);
+        }
     }
 
     private void swipeToDelete() {
@@ -111,13 +148,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
                 if (allMoviesItems.size() == 0) {
                     replaceFragment(new AddMovieFragment());
                 } else {
-                    //Sort the list based on serialID in descending order - last in show first
-                    Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
-                        @Override
-                        public int compare(MovieInfo movie1, MovieInfo movie2) {
-                            return Integer.compare(movie2.getSerialID(), movie1.getSerialID());
-                        }
-                    });
                     createGenres(allMoviesItems);
                     myAdapterAllItems.notifyDataSetChanged();
 

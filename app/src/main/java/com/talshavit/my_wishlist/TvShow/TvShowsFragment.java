@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -81,7 +82,48 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         allTvShowInfos = new ArrayList<TvShowInfo>();
         myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allTvShowInfos, "tv shows");
         initAdapter(recyclerViewAll, myAdapterAllItems);
+        getTvsFromDB();
+        onAddButtonClick();
+        swipeToDelete();
+        dragTv();
+    }
 
+    private void dragTv() {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
+                int position_dragged = dragged.getAdapterPosition();
+                int position_target = target.getAdapterPosition();
+
+                Collections.swap(allTvShowInfos, position_dragged,position_target);
+
+                updateSerialIds();
+                updateInFirebaseDatabase();
+                myAdapterAllItems.notifyDataSetChanged();
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+
+        helper.attachToRecyclerView(recyclerViewAll);
+    }
+
+    private void updateInFirebaseDatabase() {
+        databaseReference.setValue(allTvShowInfos);
+    }
+
+    private void updateSerialIds() {
+        for (int i = 0; i < allTvShowInfos.size(); i++) {
+            allTvShowInfos.get(i).setSerialID(i);
+        }
+    }
+
+    private void getTvsFromDB() {
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -96,13 +138,6 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                 if (allTvShowInfos.size() == 0) {
                     replaceFragment(new AddTvShowFragment());
                 } else {
-                    //Sort the list based on serialID in descending order - last in show first
-                    Collections.sort(allTvShowInfos, new Comparator<TvShowInfo>() {
-                        @Override
-                        public int compare(TvShowInfo tvShowInfo1, TvShowInfo tvShowInfo2) {
-                            return Integer.compare(tvShowInfo2.getSerialID(), tvShowInfo1.getSerialID());
-                        }
-                    });
                     createGenres(allTvShowInfos);
                     myAdapterAllItems.notifyDataSetChanged();
 
@@ -116,8 +151,6 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
             }
         });
 
-        onAddButtonClick();
-        swipeToDelete();
     }
 
     private void swipeToDelete() {

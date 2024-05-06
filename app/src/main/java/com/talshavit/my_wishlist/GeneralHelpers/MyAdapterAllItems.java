@@ -146,10 +146,6 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
         });
 
         dialog.show();
-
-        //textCardView.setVisibility(View.INVISIBLE);
-        //imageCardView.setVisibility((View.VISIBLE));
-
     }
 
     private String formatGenres(List<String> genres) {
@@ -175,4 +171,5 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
     public int getItemCount() {
         return itemInfoList.size();
     }
+
 }

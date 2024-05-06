@@ -24,8 +24,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
+import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeneralFunctions<T extends GenerealInterfaces> {
@@ -59,8 +62,9 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteFromFirebase(list.get(position).getID(), userID,childPath, context);
+                        deleteFromFirebase(list.get(position).getSerialID(), userID,childPath, context);
                         list.remove(position);
+                        updateSerialIds(list, childPath, databaseReference);
                         adapter.notifyItemRemoved(position);
                     }
                 });
@@ -92,6 +96,25 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
         Bundle params = new Bundle();
         params.putString("delete", "swipe_to_delete");
         firebaseAnalytics.logEvent("swipe_to_delete_event", params);
+    }
+
+    private void updateSerialIds(List<T> list, String childPath, DatabaseReference databaseReference) {
+        if(childPath.equals("movies")){
+            ArrayList<MovieInfo> movies = new ArrayList<>();
+            movies = (ArrayList<MovieInfo>) list;
+            for (int i = 0; i < list.size(); i++) {
+                movies.get(i).setSerialID(i);
+            }
+            databaseReference.setValue(movies);
+        }else{
+            ArrayList<TvShowInfo> tvs = new ArrayList<>();
+            tvs = (ArrayList<TvShowInfo>) list;
+            for (int i = 0; i < list.size(); i++) {
+                tvs.get(i).setSerialID(i);
+            }
+            databaseReference.setValue(tvs);
+        }
+
     }
 
     private static void setWatchedIcon(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive, Context context) {
@@ -132,9 +155,9 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
         viewDrawable.draw(c);
     }
 
-    private static void deleteFromFirebase(int movieId, String userID,String childPath, Context context) {
-        DatabaseReference movieReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath).child(String.valueOf(movieId));
-        movieReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+    private static void deleteFromFirebase(int id, String userID,String childPath, Context context) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath).child(String.valueOf(id));
+        reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
             }
@@ -144,6 +167,8 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
                 Toast.makeText(context, "failed to delet from firebase", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     public String formatGenres(List<String> genres) {

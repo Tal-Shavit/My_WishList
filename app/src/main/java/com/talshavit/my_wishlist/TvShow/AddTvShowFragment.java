@@ -282,7 +282,7 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                 tvShowInfo.setUserID(userID);
                 tvShowInfo.setSerialID(nextID);
 
-                databaseReference.child(tvShowID + "").setValue(tvShowInfo);
+                databaseReference.child(nextID + "").setValue(tvShowInfo);
                 replaceFragment(new TvShowsFragment());
             }
         });

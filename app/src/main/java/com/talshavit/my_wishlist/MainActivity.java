@@ -14,12 +14,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
+import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
@@ -38,64 +37,91 @@ import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.Movie.MovieFragment;
 import com.talshavit.my_wishlist.Settings.SettingFragment;
 import com.talshavit.my_wishlist.TvShow.TvShowsFragment;
-import com.talshavit.my_wishlist.databinding.ActivityMainBinding;
 
 import java.util.concurrent.TimeUnit;
+import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
     private FrameLayout bannerFrame, frame_layout;
     private RewardedAd rewardedAd;
     private Handler adHandler;
     private String userID;
     private DatabaseReference databaseReference;
     private final long adDelay = TimeUnit.MINUTES.toMillis(1); // 3 minutes
-
     private FirebaseAnalytics firebaseAnalytics;
+    private MeowBottomNavigation bottomNavigation;
+    private ReselectListener reselectListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         findViews();
         replaceFragment(new LottieFragment());
         adsFunc();
+        bottomNav();
+    }
 
-        binding.bottomNavigationView.setBackground(null);
+    private void bottomNav() {
+        initBottomNav();
 
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+        bottomNavigation.setOnReselectListener(item -> {
+            // Check if the listener is not null before invoking the method
+            if (reselectListener != null)
+                reselectListener.onReselectItem(item);
+        });
 
-            switch (item.getItemId()) {
-
-                case R.id.movies:
-                    replaceFragment(new MovieFragment());
-                    break;
-
-                case R.id.TvShows:
-                    replaceFragment(new TvShowsFragment());
-                    break;
-
-                case R.id.Seen:
-                    replaceFragment(new WatchedFragment());
-                    break;
-
-                case R.id.setting:
-                    replaceFragment(new SettingFragment());
-                    break;
+        bottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
+            @Override
+            public void onClickItem(MeowBottomNavigation.Model item) {
+                switch (item.getId()) {
+                    case 1:
+                        replaceFragment(new MovieFragment());
+                        break;
+                    case 2:
+                        replaceFragment(new TvShowsFragment());
+                        break;
+                    case 3:
+                        replaceFragment(new WatchedFragment());
+                        break;
+                    case 4:
+                        replaceFragment(new SettingFragment());
+                        break;
+                }
             }
-            return true;
+        });
+
+        bottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
+            @Override
+            public void onShowItem(MeowBottomNavigation.Model item) {
+            }
         });
     }
+
+    private void initBottomNav() {
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.movie));
+        bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.tvshow));
+        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.view));
+        bottomNavigation.add(new MeowBottomNavigation.Model(4, R.drawable.baseline_settings_24));
+    }
+
 
     private void findViews() {
         frame_layout = findViewById(R.id.frame_layout);
         bannerFrame = findViewById(R.id.bannerFrame);
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void adsFunc() {
@@ -167,14 +193,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
     private void loadAd() {

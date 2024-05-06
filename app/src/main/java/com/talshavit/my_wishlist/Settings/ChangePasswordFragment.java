@@ -27,7 +27,6 @@ public class ChangePasswordFragment extends Fragment {
     private ImageView newPasswordImage, confirmPasswordImage;
     private EditText newPasswordEditText, confirmPasswordEditText;
     private Button confirmButton;
-    private String userID, password;
 
     public ChangePasswordFragment() {
         // Required empty public constructor

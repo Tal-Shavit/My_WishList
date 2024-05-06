@@ -13,11 +13,10 @@ import com.talshavit.my_wishlist.R;
 
 import java.util.List;
 
-public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAdapterGenresViewHolder> {
+public class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAdapterGenresViewHolder> {
 
     private Context context;
     private List<String> allGenres;
-
     private GenreClickListener genreClickListener;
 
     public MyAdapterGenres() {
@@ -32,7 +31,7 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
     @NonNull
     @Override
     public MyAdapterGenresViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_by_genres_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_by_genres_item, parent, false);
         return new MyAdapterGenresViewHolder(view);
     }
 
@@ -61,7 +60,7 @@ public  class MyAdapterGenres extends RecyclerView.Adapter<MyAdapterGenres.MyAda
         void onGenreClick(String genre);
     }
 
-    public class MyAdapterGenresViewHolder extends RecyclerView.ViewHolder{
+    public class MyAdapterGenresViewHolder extends RecyclerView.ViewHolder {
         private Button genreButton;
 
         public MyAdapterGenresViewHolder(@NonNull View itemView) {

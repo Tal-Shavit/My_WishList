@@ -17,29 +17,44 @@
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottomAppBar" />
+            android:layout_above="@id/bottomNavigation" />
+<!--        android:layout_above="@id/bottomAppBar"-->
 
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
+<!--        <com.google.android.material.bottomappbar.BottomAppBar-->
+<!--            android:id="@+id/bottomAppBar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:background="@color/white"-->
+<!--            app:fabCradleMargin="10dp"-->
+<!--            app:fabCradleRoundedCornerRadius="50dp"-->
+<!--            tools:ignore="BottomAppBar">-->
+
+
+<!--            <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--                android:id="@+id/bottomNavigationView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                app:labelVisibilityMode="labeled"-->
+<!--                app:menu="@menu/bottom_menu" />-->
+
+<!--        </com.google.android.material.bottomappbar.BottomAppBar>-->
+
+        <com.etebarian.meowbottomnavigation.MeowBottomNavigation
+            android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            app:fabCradleMargin="10dp"
-            app:fabCradleRoundedCornerRadius="50dp"
-            tools:ignore="BottomAppBar">
-
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bottomNavigationView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:background="@android:color/transparent"
-                app:labelVisibilityMode="labeled"
-                app:menu="@menu/bottom_menu" />
-
-        </com.google.android.material.bottomappbar.BottomAppBar>
+            app:mbn_backgroundBottomColor="@color/white"
+            app:mbn_circleColor="@color/white"
+            app:mbn_countBackgroundColor="#ff6f00"
+            app:mbn_countTextColor="@color/white"
+            app:mbn_defaultIconColor="#5E6263"
+            app:mbn_rippleColor="#2f424242"
+            app:mbn_selectedIconColor="#3c415e"
+            app:mbn_shadowColor="#1f212121" />
 
 
     </RelativeLayout>

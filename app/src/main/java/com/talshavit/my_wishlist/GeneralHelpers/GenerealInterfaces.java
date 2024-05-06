@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface GenerealInterfaces {
     void setWatched(boolean watched);
+
     int getID();
 
     String getName();
@@ -13,6 +14,7 @@ public interface GenerealInterfaces {
     String getImageUrl();
 
     String getImageUrlBackground();
+
     String getLenght();
 
     String getReleaseYear();

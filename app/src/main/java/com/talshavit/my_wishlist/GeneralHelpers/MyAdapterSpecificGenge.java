@@ -20,13 +20,9 @@ import java.util.List;
 public class MyAdapterSpecificGenge <T extends GenerealInterfaces> extends RecyclerView.Adapter<MyViewHolderSpecificGenre> {
 
     private Context context;
-
     private List<T> itemInfoList;
-
     private String imageUrl, imgBackg;
-
     private FragmentManager fragmentManager;
-
     private String itemType;
 
     public MyAdapterSpecificGenge(Context context, List<T> itemInfoList, FragmentManager fragmentManager,String itemType) {

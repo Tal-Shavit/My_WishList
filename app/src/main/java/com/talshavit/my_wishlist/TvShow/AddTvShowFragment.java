@@ -256,18 +256,20 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                 tvShowInfo.setSerialID(nextID);
 
                 databaseReference.child(tvShowID + "").setValue(tvShowInfo);
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, TvShowsFragment.class, null)
-                        .setReorderingAllowed(true).addToBackStack(null)
-                        .commit();
+                replaceFragment(new TvShowsFragment());
             }
         });
     }
 
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, fragment, null)
+                .setReorderingAllowed(true).addToBackStack(null)
+                .commit();
+    }
+
     private void getTvTrailerKey(int tvShowID) {
-        Log.d("lala", tvShowID + "");
         tvInterfaceService.getVideoDetails(tvShowID, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(new Callback<RootForVideo>() {
             @Override
             public void onResponse(Call<RootForVideo> call, Response<RootForVideo> response) {

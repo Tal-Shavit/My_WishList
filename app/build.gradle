@@ -74,6 +74,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.android.gms:play-services-ads:23.0.0")
 
+    implementation 'com.etebarian:meow-bottom-navigation-java:1.2.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

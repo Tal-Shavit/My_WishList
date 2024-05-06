@@ -11,9 +11,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -99,7 +96,6 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
     private void initView(Bundle arguments) {
         mediaInfo = (T) arguments.getSerializable("MEDIA_INFO");
 
-        //int movieID = mediaInfo.getID();
         Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrl()).into(imageView);
         Picasso.get().load("https://image.tmdb.org/t/p/w500/"+mediaInfo.getImageUrlBackground()).into(imageBackground);
         titleTxt.setText(mediaInfo.getName());
@@ -215,24 +211,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (removeOrAddOrDelete.equals("add")) {
-                    mediaInfo.setWatched(true);
-                    databaseReference.child("watched").setValue(true);
-                    watchedButton.setVisibility(View.GONE);
-                    notWatchedButton.setVisibility(View.VISIBLE);
-                    logClickOnWatchEvent();
-                } else if (removeOrAddOrDelete.equals("remove")){
-                    mediaInfo.setWatched(false);
-                    databaseReference.child("watched").setValue(false);
-                    watchedButton.setVisibility(View.VISIBLE);
-                    notWatchedButton.setVisibility(View.GONE);
-                }
-                else{
-                    deleteFromFirebase(mediaInfo.getID(), itemType);
-                    logClickToDeleteEvent();
-                    youTubePlayerView.release();
-                    requireActivity().getSupportFragmentManager().popBackStackImmediate();
-                }
+                onClickDialog(removeOrAddOrDelete);
             }
         });
 
@@ -249,6 +228,27 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         });
         builder.show();
 
+    }
+
+    private void onClickDialog(String removeOrAddOrDelete) {
+        if (removeOrAddOrDelete.equals("add")) {
+            mediaInfo.setWatched(true);
+            databaseReference.child("watched").setValue(true);
+            watchedButton.setVisibility(View.GONE);
+            notWatchedButton.setVisibility(View.VISIBLE);
+            logClickOnWatchEvent();
+        } else if (removeOrAddOrDelete.equals("remove")){
+            mediaInfo.setWatched(false);
+            databaseReference.child("watched").setValue(false);
+            watchedButton.setVisibility(View.VISIBLE);
+            notWatchedButton.setVisibility(View.GONE);
+        }
+        else{
+            deleteFromFirebase(mediaInfo.getID(), itemType);
+            logClickToDeleteEvent();
+            youTubePlayerView.release();
+            requireActivity().getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 
     private void logClickOnWatchEvent() {

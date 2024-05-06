@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -285,7 +286,6 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
             @Override
             public void onFailure(Call<MovieSearchResponse> call, Throwable throwable) {
-                Log.d("lala", "no");
             }
         });
     }
@@ -299,7 +299,6 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
                 params.putString("button_clicked", "add_button_movie_fragment");
                 firebaseAnalytics.logEvent("add_button_clicked", params);
 
-
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
 
@@ -309,13 +308,17 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
                 databaseReference.child(movieID + "").setValue(movieInfo);
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, MovieFragment.class, null)
-                        .setReorderingAllowed(true).addToBackStack(null)
-                        .commit();
+                replaceFragment(new MovieFragment());
             }
         });
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, fragment, null)
+                .setReorderingAllowed(true).addToBackStack(null)
+                .commit();
     }
 
     @Override

@@ -18,7 +18,7 @@ public class MyViewHolderAllItems<T> extends RecyclerView.ViewHolder {
     Button trailerImageButton;
     TextView titleTxt, overviewTxt, genreTxt, lenghtTxt, titleTextView;
     CardView textCardView,imageCardView;
-    ImageView seenImageView;
+    public ImageView seenImageView;
 
 
     public MyViewHolderAllItems(@NonNull View itemView) {

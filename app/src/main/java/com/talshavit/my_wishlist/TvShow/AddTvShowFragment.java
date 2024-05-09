@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.talshavit.my_wishlist.GeneralHelpers.TrailerCallback;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.TvShow.Interfaces.TvInterfaceService;
 import com.talshavit.my_wishlist.TvShow.Models.ResultForVideo;
@@ -56,10 +58,10 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     private Button addButton;
     private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
-    private String tvShowName, imageUrl, imgBackg, releaseYear, overview, trailer, numOfSeasons;
+    private String tvShowName, imageUrl, imgBackg, releaseYear, overview, trailer, numOfSeasons, userID;
     private int tvShowID;
     private List<String> genres;
-    private static int nextID;
+    private static int firstID = 0;
     private ProgressDialog progressDialog;
     private TvInterfaceService tvInterfaceService;
     private FirebaseAnalytics firebaseAnalytics;
@@ -108,7 +110,6 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
     }
 
     private void initView() {
-        checkLastSerialNumber();
         onTitleButtonClick();
         onAddButtonClick();
         onBackButtonClick();
@@ -121,32 +122,6 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
                 requireActivity().getSupportFragmentManager().popBackStackImmediate();
             }
         });
-
-    }
-
-    private void checkLastSerialNumber() {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            String userID = currentUser.getUid();
-            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
-            databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        TvShowInfo lastAddedTvShow = snapshot.getValue(TvShowInfo.class);
-                        if (lastAddedTvShow != null) {
-                            nextID = lastAddedTvShow.getSerialID() + 1;
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
     }
 
     private void onTitleButtonClick() {
@@ -271,21 +246,76 @@ public class AddTvShowFragment extends Fragment implements TrailerCallback {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log event for add button click
-                Bundle params = new Bundle();
-                params.putString("button_clicked", "add_button_tv_show_fragment");
-                firebaseAnalytics.logEvent("add_button_clicked", params);
-
-                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                analyticsFirebase();
+                userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
-                TvShowInfo tvShowInfo = new TvShowInfo(tvShowID, tvShowName, imageUrl, imgBackg, releaseYear, numOfSeasons, genres, overview, trailer, false);
-                tvShowInfo.setUserID(userID);
-                tvShowInfo.setSerialID(nextID);
-
-                databaseReference.child(nextID + "").setValue(tvShowInfo);
-                replaceFragment(new TvShowsFragment());
+                checkIfExist();
             }
         });
+    }
+
+    private void checkIfExist() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isExist = false;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    TvShowInfo tvShowInfo = dataSnapshot.getValue(TvShowInfo.class);
+                    if (tvShowInfo.getTvShowID() == tvShowID) {
+                        String txt = "The tv show " + tvShowInfo.getTvShowName() + " is already in your list!";
+                        Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
+                        isExist = true;
+                        break; //Exit loop after removing the reference
+                    }
+                }
+                if (!isExist)
+                    shiftSerialIDs();
+                else
+                    replaceFragment(new TvShowsFragment());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void shiftSerialIDs() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    TvShowInfo tvShow = snapshot.getValue(TvShowInfo.class);
+                    if (tvShow != null) {
+                        int currentSerialId = tvShow.getSerialID();
+                        tvShow.setSerialID(currentSerialId + 1);
+                        databaseReference.child(tvShow.getSerialID() + "").setValue(tvShow);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        createTv(userID);
+    }
+
+    private void createTv(String userID) {
+        TvShowInfo tvShowInfo = new TvShowInfo(tvShowID, tvShowName, imageUrl, imgBackg, releaseYear, numOfSeasons, genres, overview, trailer, false);
+        tvShowInfo.setUserID(userID);
+        tvShowInfo.setSerialID(firstID);
+        databaseReference.child(firstID + "").setValue(tvShowInfo);
+        replaceFragment(new TvShowsFragment());
+    }
+
+    private void analyticsFirebase() {
+        //Log event for add button click
+        Bundle params = new Bundle();
+        params.putString("button_clicked", "add_button_tv_show_fragment");
+        firebaseAnalytics.logEvent("add_button_clicked", params);
     }
 
     private void replaceFragment(Fragment fragment) {

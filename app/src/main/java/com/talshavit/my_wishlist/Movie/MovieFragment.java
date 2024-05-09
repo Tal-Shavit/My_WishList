@@ -29,6 +29,7 @@ import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterAllItems;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterGenres;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
+import com.talshavit.my_wishlist.GeneralHelpers.MyViewHolderAllItems;
 import com.talshavit.my_wishlist.R;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     private String selectedGenre;
     private FloatingActionButton addButton;
     GeneralFunctions<MovieInfo> generalFunctions = new GeneralFunctions<>(context);
+
     public MovieFragment() {
     }
 
@@ -86,14 +88,14 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     }
 
     private void dragMovie() {
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,0) {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
                 int position_dragged = dragged.getAdapterPosition();
                 int position_target = target.getAdapterPosition();
 
-                Collections.swap(allMoviesItems, position_dragged,position_target);
-                
+                Collections.swap(allMoviesItems, position_dragged, position_target);
+
                 updateSerialIds();
                 updateInFirebaseDatabase();
                 myAdapterAllItems.notifyDataSetChanged();
@@ -108,6 +110,7 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
 
         helper.attachToRecyclerView(recyclerViewAll);
     }
+
 
     private void updateInFirebaseDatabase() {
         databaseReference.setValue(allMoviesItems);

@@ -2,6 +2,7 @@ package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
     private Context context1;
     private List<T> itemInfoList;
     private String itemType;
+
+    private YouTubePlayerView youTubePlayerView;
     private int selectedPosition = RecyclerView.NO_POSITION; //Initially, no item is selected
 
     public MyAdapterAllItems(Context context, Context context1, List<T> itemInfoList, String itemType) {
@@ -51,6 +54,15 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
         onImgButton(holder, position);
         onTrailer(holder, position);
         onBackButton(holder, position);
+        updateSeenImageViewVisibility(holder, position);
+    }
+
+    private void updateSeenImageViewVisibility(MyViewHolderAllItems holder, int position) {
+        if (itemInfoList.get(position).isWatched()) {
+            holder.seenImageView.setVisibility(View.VISIBLE);
+        } else {
+            holder.seenImageView.setVisibility(View.GONE);
+        }
     }
 
     private void onBackButton(MyViewHolderAllItems holder, int position) {
@@ -104,9 +116,6 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
             holder.textCardView.setVisibility(View.INVISIBLE);
             holder.imageCardView.setVisibility((View.VISIBLE));
         }
-        if (itemInfoList.get(position).isWatched()) {
-            holder.seenImageView.setVisibility(View.VISIBLE);
-        }
     }
 
     private void onImgButton(MyViewHolderAllItems holder, int position) {
@@ -136,12 +145,22 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
         Dialog dialog = new Dialog(context1);
         dialog.setContentView(R.layout.dialog_trailer);
 
-        YouTubePlayerView youTubePlayerView = dialog.findViewById(R.id.youTubePlayer);
+        //Dismiss the dialog when touched outside of it
+        dialog.setCanceledOnTouchOutside(true);
+
+        youTubePlayerView = dialog.findViewById(R.id.youTubePlayer);
         youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
                 super.onReady(youTubePlayer);
                 youTubePlayer.loadVideo(trailerKey, 0);
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                youTubePlayerView.release();
             }
         });
 

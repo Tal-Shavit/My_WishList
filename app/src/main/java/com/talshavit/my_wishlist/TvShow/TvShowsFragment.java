@@ -89,13 +89,13 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     }
 
     private void dragTv() {
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,0) {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder dragged, @NonNull RecyclerView.ViewHolder target) {
                 int position_dragged = dragged.getAdapterPosition();
                 int position_target = target.getAdapterPosition();
 
-                Collections.swap(allTvShowInfos, position_dragged,position_target);
+                Collections.swap(allTvShowInfos, position_dragged, position_target);
 
                 updateSerialIds();
                 updateInFirebaseDatabase();

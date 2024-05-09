@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -98,7 +99,7 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
         firebaseAnalytics.logEvent("swipe_to_delete_event", params);
     }
 
-    private void updateSerialIds(List<T> list, String childPath, DatabaseReference databaseReference) {
+    public void updateSerialIds(List<T> list, String childPath, DatabaseReference databaseReference) {
         if(childPath.equals("movies")){
             ArrayList<MovieInfo> movies = new ArrayList<>();
             movies = (ArrayList<MovieInfo>) list;
@@ -155,7 +156,7 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
         viewDrawable.draw(c);
     }
 
-    private static void deleteFromFirebase(int id, String userID,String childPath, Context context) {
+    public void deleteFromFirebase(int id, String userID,String childPath, Context context) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath).child(String.valueOf(id));
         reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

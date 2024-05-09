@@ -116,11 +116,11 @@ public class WatchedFragment extends Fragment {
     }
 
     private void sortMovieList() {
-        //Sort the list based on serialID in descending order - last in show first
+        //Sort the list based on serialID in ascending order - last in show first
         Collections.sort(allMoviesItems, new Comparator<MovieInfo>() {
             @Override
             public int compare(MovieInfo movieInfo1, MovieInfo movieInfo2) {
-                return Integer.compare(movieInfo2.getSerialID(), movieInfo1.getSerialID());
+                return Integer.compare(movieInfo1.getSerialID(), movieInfo2.getSerialID());
             }
         });
     }
@@ -149,11 +149,11 @@ public class WatchedFragment extends Fragment {
     }
 
     private void sortTvList() {
-        //Sort the list based on serialID in descending order - last in show first
+        //Sort the list based on serialID in ascending order - last in show first
         Collections.sort(allTvShowItems, new Comparator<TvShowInfo>() {
             @Override
             public int compare(TvShowInfo tvShowInfo1, TvShowInfo tvShowInfo2) {
-                return Integer.compare(tvShowInfo2.getSerialID(), tvShowInfo1.getSerialID());
+                return Integer.compare(tvShowInfo1.getSerialID(), tvShowInfo2.getSerialID());
             }
         });
     }

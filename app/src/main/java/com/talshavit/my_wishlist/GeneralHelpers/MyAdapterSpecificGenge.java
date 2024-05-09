@@ -2,6 +2,7 @@ package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
     private FragmentManager fragmentManager;
     private String itemType;
     private String title, lenght, releaseYear, overview, trailerKey;
-    private int ID;
+    private int ID, serialID;
     private List<String> genres;
     private boolean isWatched;
     private Bundle bundle;
@@ -72,7 +73,9 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
         genres = item.getGenres();
         trailerKey = item.getTrailer();
         ID = item.getID();
+        serialID = item.getSerialID();
         isWatched = item.isWatched();
+
         bundle = new Bundle();
 
         initGeneralFragment();
@@ -83,12 +86,14 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
         if (itemType.equals("tv shows")) {
             TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear, lenght, genres, overview, trailerKey, isWatched);
             bundle.putSerializable("MEDIA_INFO", tvShowInfo);
+            bundle.putSerializable("SERIAL_ID", serialID);
             SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("tv shows");
             specificFragmentGeneral.setArguments(bundle);
             replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);
         } else {
             MovieInfo movieInfo = new MovieInfo(ID, title, releaseYear, imageUrl, imgBackg, lenght, genres, overview, trailerKey, isWatched);
             bundle.putSerializable("MEDIA_INFO", movieInfo);
+            bundle.putSerializable("SERIAL_ID", serialID);
             SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("movies");
             specificFragmentGeneral.setArguments(bundle);
             replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);

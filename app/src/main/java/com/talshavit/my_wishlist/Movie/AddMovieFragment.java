@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddMovieFragment extends Fragment implements TrailerCallback {
-
     private DatabaseReference databaseReference;
     private EditText titleEditText;
     private ImageButton titleButton, exitButton;
@@ -56,20 +54,14 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
     private ArrayAdapter<String> adapter;
     private ImageView movieImageView;
     private Button addButton;
-    private String titleNameMovie;
-    private String releaseYearMovie;
-    private String imgMovie, imgBackg;
+    private String titleNameMovie, releaseYearMovie, imgMovie, imgBackg, userID, movieLenght, overview, trailer;
     private int movieID;
-    private String movieLenght;
     private List<String> genresList;
-    private String overview;
-    private String trailer;
-    private static int nextID;
+    private static int firstId = 0;
     private MovieApiService movieApiService;
     private ProgressDialog progressDialog;
     private ArrayList<RootForSearch> movieInfos;
     private FirebaseAnalytics firebaseAnalytics;
-
 
     public AddMovieFragment() {
     }
@@ -102,7 +94,6 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
     private void initView() {
         movieInfos = new ArrayList<>();
-        checkLastSerialNumber();
         onTitleButtonClick();
         onAddButtonClick();
         onExitButton();
@@ -178,26 +169,6 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
 
     private static String calcHours(int movieLenght) {
         return movieLenght / 60 + "";
-    }
-
-    private void checkLastSerialNumber() {
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-        databaseReference.orderByChild("serialID").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    MovieInfo lastAddedMovie = snapshot.getValue(MovieInfo.class);
-                    if (lastAddedMovie != null) {
-                        nextID = lastAddedMovie.getSerialID() + 1;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
     }
 
     private void findViews(View view) {
@@ -323,22 +294,77 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log event for add button click
-                Bundle params = new Bundle();
-                params.putString("button_clicked", "add_button_movie_fragment");
-                firebaseAnalytics.logEvent("add_button_clicked", params);
-
-                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                analyticsFirebase();
+                userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("movies");
-
-                MovieInfo movieInfo = new MovieInfo(movieID, titleNameMovie, releaseYearMovie, imgMovie, imgBackg, movieLenght, genresList, overview, trailer, false);
-                movieInfo.setUserID(userID);
-                movieInfo.setSerialID(nextID);
-
-                databaseReference.child(nextID + "").setValue(movieInfo);
-                replaceFragment(new MovieFragment());
+                checkIfExist();
             }
         });
+    }
+
+    private void checkIfExist() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isExist = false;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    MovieInfo movieInfo = dataSnapshot.getValue(MovieInfo.class);
+                    if (movieInfo.getMovieID() == movieID) {
+                        String txt = "The movie " + movieInfo.getMovieName() + " is already in your list!";
+                        Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
+                        isExist = true;
+                        break; //Exit loop after removing the reference
+                    }
+                }
+                if (!isExist)
+                    shiftSerialIDs();
+                else{
+                    replaceFragment(new MovieFragment());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void analyticsFirebase() {
+        //Log event for add button click
+        Bundle params = new Bundle();
+        params.putString("button_clicked", "add_button_movie_fragment");
+        firebaseAnalytics.logEvent("add_button_clicked", params);
+    }
+
+    private void createMovie(String userID) {
+        MovieInfo movieInfo = new MovieInfo(movieID, titleNameMovie, releaseYearMovie, imgMovie, imgBackg, movieLenght, genresList, overview, trailer, false);
+        movieInfo.setUserID(userID);
+        movieInfo.setSerialID(firstId);
+        databaseReference.child(firstId + "").setValue(movieInfo);
+        replaceFragment(new MovieFragment());
+    }
+
+    private void shiftSerialIDs() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    MovieInfo movie = snapshot.getValue(MovieInfo.class);
+                    if (movie != null) {
+                        int currentSerialId = movie.getSerialID();
+                        movie.setSerialID(currentSerialId + 1);
+                        databaseReference.child(movie.getSerialID() + "").setValue(movie);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        createMovie(userID);
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -354,8 +380,3 @@ public class AddMovieFragment extends Fragment implements TrailerCallback {
         return trailerKey;
     }
 }
-
-
-
-
-

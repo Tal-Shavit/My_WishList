@@ -30,24 +30,28 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
+import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragment{
 
     private ImageView imageView, imageBackground;
     private TextView titleTxt, lenghtTxt, releaseYearTxt, overviewTxt, genreTxt;
+    private int serialID;
     private ImageButton backButton;
     private YouTubePlayerView youTubePlayerView;
     private ScrollView scrollView;
     private Button deleteButton, watchedButton, notWatchedButton;
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReference, databaseReferenceAllItems;
 
     GeneralFunctions<T> generalFunctions = new GeneralFunctions<>(getContext());
 
-    private String itemType;
+    private String itemType, userID;
 
     private T mediaInfo;
     private FirebaseAnalytics firebaseAnalytics;
@@ -95,6 +99,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     private void initView(Bundle arguments) {
         mediaInfo = (T) arguments.getSerializable("MEDIA_INFO");
+        serialID = (int) arguments.getSerializable("SERIAL_ID");
         setImgs();
         titleTxt.setText(mediaInfo.getName());
         lenghtTxt.setText(mediaInfo.getLenght());
@@ -102,8 +107,9 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         setOverview();
         setGenres();
         setTrailer();
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(String.valueOf(mediaInfo.getID()));
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(serialID+"");
+        databaseReferenceAllItems = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType);
         onDeleteButton();
         onWatchButton();
         onNotWatchButton();
@@ -205,14 +211,50 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     private void deleteFromFirebase(int itemID, String itemType) {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(itemID+"");
+        DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(serialID+"");
         specificTvShowReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
+                updateSerialIds(userID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
+
+    private void updateSerialIds(String userID) {
+        databaseReferenceAllItems.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(itemType.equals("movies")){
+                    List<MovieInfo> movies = new ArrayList<>();
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        MovieInfo movieInfo = snapshot.getValue(MovieInfo.class);
+                        movies.add(movieInfo);
+                    }
+                    for (int i = 0; i < movies.size(); i++) {
+                        movies.get(i).setSerialID(i);
+                    }
+                    databaseReferenceAllItems.setValue(movies);
+                }
+                else{
+                    List<TvShowInfo> tvs = new ArrayList<>();
+                    for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        TvShowInfo tvShowInfo = snapshot.getValue(TvShowInfo.class);
+                        tvs.add(tvShowInfo);
+                    }
+                    for (int i = 0; i < tvs.size(); i++) {
+                        tvs.get(i).setSerialID(i);
+                    }
+                    databaseReferenceAllItems.setValue(tvs);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -258,7 +300,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
             notWatchedButton.setVisibility(View.GONE);
         }
         else{
-            deleteFromFirebase(mediaInfo.getID(), itemType);
+            deleteFromFirebase(serialID, itemType);
             logClickToDeleteEvent();
             youTubePlayerView.release();
             requireActivity().getSupportFragmentManager().popBackStackImmediate();

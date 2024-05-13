@@ -68,7 +68,6 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("lala", "specific on create");
     }
 
     @Override
@@ -340,24 +339,20 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("lala", "specific on start");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("lala", "specific on pause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("lala", "specific on stop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("lala", "specific on destroy");
     }
 }

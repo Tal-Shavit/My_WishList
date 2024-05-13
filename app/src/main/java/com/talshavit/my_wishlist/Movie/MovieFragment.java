@@ -59,7 +59,6 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("lala", "movie on create");
     }
 
     @Override
@@ -237,34 +236,28 @@ public class MovieFragment extends Fragment implements MyAdapterGenres.GenreClic
         fragmentTransaction.commit();
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("lala", "movie on resume");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("lala", "movie on start");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("lala", "movie on pause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("lala", "movie on stop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("lala", "movie on destroy");
     }
 }

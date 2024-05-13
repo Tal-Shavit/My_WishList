@@ -27,7 +27,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,13 +43,13 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FrameLayout bannerFrame, frame_layout;
+    private FrameLayout bannerFrame;
     private RewardedAd rewardedAd;
     private Handler adHandler;
     private String userID;
     private DatabaseReference databaseReference;
     private final long adDelay = TimeUnit.MINUTES.toMillis(1); // 3 minutes
-    private FirebaseAnalytics firebaseAnalytics;
+    //private FirebaseAnalytics firebaseAnalytics;
     private MeowBottomNavigation bottomNavigation;
     private ReselectListener reselectListener;
 
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        //firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         findViews();
         replaceFragment(new LottieFragment());
@@ -76,30 +75,24 @@ public class MainActivity extends AppCompatActivity {
                 reselectListener.onReselectItem(item);
         });
 
-        bottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
-            @Override
-            public void onClickItem(MeowBottomNavigation.Model item) {
-                switch (item.getId()) {
-                    case 1:
-                        replaceFragment(new MediaFragment<>("movies", MovieInfo.class));
-                        break;
-                    case 2:
-                        replaceFragment(new MediaFragment<>("tv shows", TvShowInfo.class));
-                        break;
-                    case 3:
-                        replaceFragment(new WatchedFragment());
-                        break;
-                    case 4:
-                        replaceFragment(new SettingFragment());
-                        break;
-                }
+        bottomNavigation.setOnClickMenuListener(item -> {
+            switch (item.getId()) {
+                case 1:
+                    replaceFragment(new MediaFragment<>("movies", MovieInfo.class));
+                    break;
+                case 2:
+                    replaceFragment(new MediaFragment<>("tv shows", TvShowInfo.class));
+                    break;
+                case 3:
+                    replaceFragment(new WatchedFragment());
+                    break;
+                case 4:
+                    replaceFragment(new SettingFragment());
+                    break;
             }
         });
 
-        bottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
-            @Override
-            public void onShowItem(MeowBottomNavigation.Model item) {
-            }
+        bottomNavigation.setOnShowListener(item -> {
         });
     }
 
@@ -113,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void findViews() {
-        frame_layout = findViewById(R.id.frame_layout);
+        //frame_layout = findViewById(R.id.frame_layout);
         bannerFrame = findViewById(R.id.bannerFrame);
     }
 
@@ -134,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 //Check if the dataSnapshot exists and contains a value
                 if (dataSnapshot.exists()) {
                     boolean paymentForAds = dataSnapshot.getValue(Boolean.class);
-                    if (paymentForAds != true) {
+                    if (!paymentForAds) {
                         loadAd();
                         //Initialize the handler
                         adHandler = new Handler(Looper.getMainLooper());

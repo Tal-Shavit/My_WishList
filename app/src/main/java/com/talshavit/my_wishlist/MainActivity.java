@@ -232,5 +232,4 @@ public class MainActivity extends AppCompatActivity {
             adHandler.removeCallbacksAndMessages(null);
         }
     }
-
 }

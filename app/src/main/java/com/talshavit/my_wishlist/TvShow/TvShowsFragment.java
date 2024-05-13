@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("lala", "tv on create");
     }
 
     @Override
@@ -239,4 +241,36 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("lala", "tv on resume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("lala", "tv on start");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("lala", "tv on pause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("lala", "tv on stop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("lala", "tv on destroy");
+    }
+
 }

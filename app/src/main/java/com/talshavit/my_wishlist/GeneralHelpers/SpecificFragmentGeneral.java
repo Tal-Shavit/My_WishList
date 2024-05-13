@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("lala", "specific on create");
     }
 
     @Override
@@ -333,5 +335,29 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         Bundle params = new Bundle();
         params.putString("delete", "click_to_delete");
         firebaseAnalytics.logEvent("click_to_delete_event", params);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("lala", "specific on start");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("lala", "specific on pause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("lala", "specific on stop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("lala", "specific on destroy");
     }
 }

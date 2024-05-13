@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TvShowInfo implements Serializable , GenerealInterfaces {
-
     private int serialID;
     private String userID;
     private int tvShowID;

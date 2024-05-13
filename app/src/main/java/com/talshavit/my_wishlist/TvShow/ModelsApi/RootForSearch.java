@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.TvShow.Models;
+package com.talshavit.my_wishlist.TvShow.ModelsApi;
 
 import java.util.ArrayList;
 

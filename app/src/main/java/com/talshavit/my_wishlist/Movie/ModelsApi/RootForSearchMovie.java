@@ -1,8 +1,8 @@
-package com.talshavit.my_wishlist.Movie.Models;
+package com.talshavit.my_wishlist.Movie.ModelsApi;
 
 import java.util.ArrayList;
 
-public class RootForSearch {
+public class RootForSearchMovie {
     public boolean adult;
     public String backdrop_path;
     public ArrayList<Integer> genre_ids;

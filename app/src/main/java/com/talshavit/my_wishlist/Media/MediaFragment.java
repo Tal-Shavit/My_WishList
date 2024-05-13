@@ -1,23 +1,20 @@
-package com.talshavit.my_wishlist.TvShow;
+package com.talshavit.my_wishlist.Media;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.GeneralHelpers.GeneralFunctions;
+import com.talshavit.my_wishlist.GeneralHelpers.GenerealInterfaces;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterAllItems;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterGenres;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
@@ -34,27 +32,34 @@ import com.talshavit.my_wishlist.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreClickListener {
+public class MediaFragment<T extends GenerealInterfaces> extends Fragment implements MyAdapterGenres.GenreClickListener {
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewBySpecificGenre;
-    private List<TvShowInfo> allTvShowInfos;
+    private List<T> allMediaInfos;
     private DatabaseReference databaseReference;
-    private MyAdapterAllItems<TvShowInfo> myAdapterAllItems;
+    private MyAdapterAllItems<?> myAdapterAllItems;
     private MyAdapterGenres myAdapterGenres;
-    private MyAdapterSpecificGenge<TvShowInfo> myAdapterSpecificGenre;
+    private MyAdapterSpecificGenge<T> myAdapterSpecificGenre;
     private Context context;
     private String userID;
     private List<String> genresList;
-    private List<TvShowInfo> allTvShowsByGenre;
+    private List<T> alllistByGenre;
     private TextView genreTextView, allTvTitle;
     private String selectedGenre;
     private FloatingActionButton addButton;
 
-    GeneralFunctions<TvShowInfo> generalFunctions = new GeneralFunctions<>(context);
+    private String mediaType;
 
-    public TvShowsFragment() {
+    GeneralFunctions<T> generalFunctions;
+
+    private Class<T> genericType;
+
+    public MediaFragment(String mediaType, Class<T> genericType) {
+        this.mediaType = mediaType;
+        this.genericType = genericType;
+        allMediaInfos = new ArrayList<>();
+        generalFunctions = new GeneralFunctions<>(context);
     }
 
 
@@ -74,14 +79,12 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
         context = view.getContext();
-
         initViews(view);
     }
 
     private void initViews(View view) {
-        allTvTitle.setText("ALL TV SHOWS");
-        allTvShowInfos = new ArrayList<TvShowInfo>();
-        myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allTvShowInfos, "tv shows");
+        allTvTitle.setText("ALL " + mediaType.toUpperCase());
+        myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allMediaInfos, mediaType);
         initAdapter(recyclerViewAll, myAdapterAllItems);
         getTvsFromDB();
         onAddButtonClick();
@@ -96,7 +99,7 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
                 int position_dragged = dragged.getAdapterPosition();
                 int position_target = target.getAdapterPosition();
 
-                Collections.swap(allTvShowInfos, position_dragged, position_target);
+                Collections.swap(allMediaInfos, position_dragged, position_target);
 
                 updateSerialIds();
                 updateInFirebaseDatabase();
@@ -115,31 +118,31 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     }
 
     private void updateInFirebaseDatabase() {
-        databaseReference.setValue(allTvShowInfos);
+        databaseReference.setValue(allMediaInfos);
     }
 
     private void updateSerialIds() {
-        for (int i = 0; i < allTvShowInfos.size(); i++) {
-            allTvShowInfos.get(i).setSerialID(i);
+        for (int i = 0; i < allMediaInfos.size(); i++) {
+            allMediaInfos.get(i).setSerialID(i);
         }
     }
 
     private void getTvsFromDB() {
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child("tv shows");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(mediaType);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                allTvShowInfos.clear();
+                allMediaInfos.clear();
                 for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
-                    TvShowInfo tvShowInfo = itemSnapshot.getValue(TvShowInfo.class);
-                    allTvShowInfos.add(tvShowInfo);
+                    T mediaInfo = itemSnapshot.getValue(genericType);
+                    allMediaInfos.add(mediaInfo);
                 }
 
-                if (allTvShowInfos.size() == 0) {
-                    replaceFragment(new AddTvShowFragment());
+                if (allMediaInfos.size() == 0) {
+                    replaceFragment(new AddMediaFragment(mediaType));
                 } else {
-                    createGenres(allTvShowInfos);
+                    createGenres(allMediaInfos);
                     myAdapterAllItems.notifyDataSetChanged();
 
                     if (selectedGenre != null)
@@ -155,22 +158,22 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
     }
 
     private void swipeToDelete() {
-        generalFunctions.setSwipeToDelete("DELETE TV SHOW", "Do you want to delete \"",
-                context, allTvShowInfos, myAdapterAllItems,
-                databaseReference, recyclerViewAll, userID, "tv shows");
+        generalFunctions.setSwipeToDelete("DELETE " + mediaType.toUpperCase(), "Do you want to delete \"",
+                context, allMediaInfos, myAdapterAllItems,
+                databaseReference, recyclerViewAll, userID, mediaType);
     }
 
     private void onAddButtonClick() {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new AddTvShowFragment());
+                replaceFragment(new AddMediaFragment(mediaType));
             }
         });
     }
 
     private void findViews(View view) {
-        recyclerViewAll = view.findViewById(R.id.recyclerViewAllMovies);
+        recyclerViewAll = view.findViewById(R.id.recyclerViewAllItems);
         recyclerViewGenresButtons = view.findViewById(R.id.recyclerViewGenresButtons);
         recyclerViewBySpecificGenre = view.findViewById(R.id.recyclerViewMoviesBySpecificGenre);
         genreTextView = view.findViewById(R.id.genreTextView);
@@ -178,13 +181,13 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
         allTvTitle = view.findViewById(R.id.allTvTitle);
     }
 
-    private void createGenres(List<TvShowInfo> allTvShowInfos) {
+    private void createGenres(List<T> allMediaInfos) {
         genresList = new ArrayList<String>();
-        for (int i = 0; i < allTvShowInfos.size(); i++) {
-            if (!(allTvShowInfos.get(i).getGenres() == null) && !(allTvShowInfos.get(i).getGenres().isEmpty())) {
-                for (int j = 0; j < allTvShowInfos.get(i).getGenres().size(); j++) {
-                    if (!(genresList.contains(allTvShowInfos.get(i).getGenres().get(j)))) {
-                        genresList.add(allTvShowInfos.get(i).getGenres().get(j));
+        for (int i = 0; i < allMediaInfos.size(); i++) {
+            if (!(allMediaInfos.get(i).getGenres() == null) && !(allMediaInfos.get(i).getGenres().isEmpty())) {
+                for (int j = 0; j < allMediaInfos.get(i).getGenres().size(); j++) {
+                    if (!(genresList.contains(allMediaInfos.get(i).getGenres().get(j)))) {
+                        genresList.add(allMediaInfos.get(i).getGenres().get(j));
                     }
                 }
             }
@@ -206,22 +209,22 @@ public class TvShowsFragment extends Fragment implements MyAdapterGenres.GenreCl
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             if (fragmentManager != null) {
                 genreTextView.setText(selectedGenre.toUpperCase());
-                allTvShowsByGenre = new ArrayList<TvShowInfo>();
-                for (int i = 0; i < allTvShowInfos.size(); i++) {
-                    List<String> tvShowGenres = allTvShowInfos.get(i).getGenres();
+                alllistByGenre = new ArrayList<T>();
+                for (int i = 0; i < allMediaInfos.size(); i++) {
+                    List<String> listGenres = allMediaInfos.get(i).getGenres();
 
-                    if (tvShowGenres != null) {
-                        if (tvShowGenres.contains(selectedGenre)) {
-                            if (!(allTvShowsByGenre.contains(allTvShowInfos.get(i))))
-                                allTvShowsByGenre.add(allTvShowInfos.get(i));
+                    if (listGenres != null) {
+                        if (listGenres.contains(selectedGenre)) {
+                            if (!(alllistByGenre.contains(allMediaInfos.get(i))))
+                                alllistByGenre.add(allMediaInfos.get(i));
                         }
                     }
                 }
-                myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, allTvShowsByGenre, fragmentManager, "tv shows");
+                myAdapterSpecificGenre = new MyAdapterSpecificGenge<>(context, alllistByGenre, fragmentManager, mediaType);
                 initAdapter(recyclerViewBySpecificGenre, myAdapterSpecificGenre);
             }
         }
-        if (allTvShowsByGenre.isEmpty()) {
+        if (alllistByGenre.isEmpty()) {
             genreTextView.setText("");
         }
     }

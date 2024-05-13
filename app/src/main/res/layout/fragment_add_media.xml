@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".TvShow.AddTvShowFragment">
+    tools:context=".ToDelete.AddTvShowFragment">
 
     <ImageButton
         android:id="@+id/exitButton"
@@ -23,6 +23,7 @@
 
 
         <TextView
+            android:id="@+id/titleTvOrMovie"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_light"

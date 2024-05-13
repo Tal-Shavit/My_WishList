@@ -1,4 +1,9 @@
-package com.talshavit.my_wishlist.TvShow.Models;
+package com.talshavit.my_wishlist.TvShow.ModelsApi;
+
+import com.talshavit.my_wishlist.HelpersForApi.Genre;
+import com.talshavit.my_wishlist.HelpersForApi.ProductionCompany;
+import com.talshavit.my_wishlist.HelpersForApi.ProductionCountry;
+import com.talshavit.my_wishlist.HelpersForApi.SpokenLanguage;
 
 import java.util.ArrayList;
 

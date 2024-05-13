@@ -34,9 +34,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.talshavit.my_wishlist.Movie.MovieFragment;
+import com.talshavit.my_wishlist.Media.MediaFragment;
+import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.Settings.SettingFragment;
-import com.talshavit.my_wishlist.TvShow.TvShowsFragment;
+import com.talshavit.my_wishlist.TvShow.TvShowInfo;
 
 import java.util.concurrent.TimeUnit;
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation.ReselectListener;
@@ -80,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClickItem(MeowBottomNavigation.Model item) {
                 switch (item.getId()) {
                     case 1:
-                        replaceFragment(new MovieFragment());
+                        replaceFragment(new MediaFragment<>("movies", MovieInfo.class));
                         break;
                     case 2:
-                        replaceFragment(new TvShowsFragment());
+                        replaceFragment(new MediaFragment<>("tv shows", TvShowInfo.class));
                         break;
                     case 3:
                         replaceFragment(new WatchedFragment());

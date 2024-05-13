@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Movie.AddMovieFragment">
+    tools:context=".ToDelete.AddMovieFragment">
 
     <ImageButton
         android:id="@+id/exitButton"

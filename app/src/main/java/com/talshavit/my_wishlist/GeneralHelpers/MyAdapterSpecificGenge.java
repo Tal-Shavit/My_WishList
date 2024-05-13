@@ -72,7 +72,7 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
         overview = item.getOverview();
         genres = item.getGenres();
         trailerKey = item.getTrailer();
-        ID = item.getID();
+        ID = item.getMediaID();
         serialID = item.getSerialID();
         isWatched = item.isWatched();
 
@@ -84,14 +84,14 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
 
     private void initGeneralFragment() {
         if (itemType.equals("tv shows")) {
-            TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear, lenght, genres, overview, trailerKey, isWatched);
+            TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear, genres, overview, trailerKey, isWatched, lenght);
             bundle.putSerializable("MEDIA_INFO", tvShowInfo);
             bundle.putSerializable("SERIAL_ID", serialID);
             SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("tv shows");
             specificFragmentGeneral.setArguments(bundle);
             replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);
         } else {
-            MovieInfo movieInfo = new MovieInfo(ID, title, releaseYear, imageUrl, imgBackg, lenght, genres, overview, trailerKey, isWatched);
+            MovieInfo movieInfo = new MovieInfo(ID, title, imageUrl, imgBackg, releaseYear, genres, overview, trailerKey, isWatched,lenght);
             bundle.putSerializable("MEDIA_INFO", movieInfo);
             bundle.putSerializable("SERIAL_ID", serialID);
             SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("movies");

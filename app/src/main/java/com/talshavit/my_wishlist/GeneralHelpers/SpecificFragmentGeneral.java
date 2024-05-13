@@ -343,6 +343,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     @Override
     public void onPause() {
+        youTubePlayerView.release();
         super.onPause();
     }
 

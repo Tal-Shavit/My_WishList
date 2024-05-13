@@ -3,6 +3,7 @@ package com.talshavit.my_wishlist.GeneralHelpers;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +98,6 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
                 title = itemInfoList.get(position).getName();
         } else
             title = itemInfoList.get(position).getName();
-
         holder.titleTxt.setText(title);
         holder.titleTextView.setText(title);
     }

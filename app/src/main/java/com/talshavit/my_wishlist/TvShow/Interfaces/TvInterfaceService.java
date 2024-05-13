@@ -1,10 +1,8 @@
 package com.talshavit.my_wishlist.TvShow.Interfaces;
 
-import com.talshavit.my_wishlist.Movie.Models.RootForSpecific;
-import com.talshavit.my_wishlist.TvShow.Models.RootForSearch;
-import com.talshavit.my_wishlist.TvShow.Models.RootForSpecificTv;
-import com.talshavit.my_wishlist.TvShow.Models.RootForVideo;
-import com.talshavit.my_wishlist.TvShow.Models.TvSearchResponse;
+import com.talshavit.my_wishlist.HelpersForApi.RootForVideo;
+import com.talshavit.my_wishlist.TvShow.ModelsApi.RootForSpecificTv;
+import com.talshavit.my_wishlist.TvShow.ModelsApi.TvSearchResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.TvShow.Models;
+package com.talshavit.my_wishlist.TvShow.ModelsApi;
 
 public class Season {
     public String air_date;

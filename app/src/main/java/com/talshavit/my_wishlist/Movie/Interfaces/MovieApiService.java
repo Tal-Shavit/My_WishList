@@ -1,8 +1,8 @@
 package com.talshavit.my_wishlist.Movie.Interfaces;
 
-import com.talshavit.my_wishlist.Movie.Models.MovieSearchResponse;
-import com.talshavit.my_wishlist.Movie.Models.RootForSpecific;
-import com.talshavit.my_wishlist.Movie.Models.RootForVideo;
+import com.talshavit.my_wishlist.Movie.ModelsApi.MovieSearchResponse;
+import com.talshavit.my_wishlist.Movie.ModelsApi.RootForSpecific;
+import com.talshavit.my_wishlist.HelpersForApi.RootForVideo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

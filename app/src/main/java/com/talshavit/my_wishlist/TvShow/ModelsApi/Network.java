@@ -1,6 +1,6 @@
-package com.talshavit.my_wishlist.Movie.Models;
+package com.talshavit.my_wishlist.TvShow.ModelsApi;
 
-public class ProductionCompany {
+public class Network {
     public int id;
     public String logo_path;
     public String name;

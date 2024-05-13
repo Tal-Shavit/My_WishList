@@ -1,4 +1,4 @@
-package com.talshavit.my_wishlist.Movie.Models;
+package com.talshavit.my_wishlist.HelpersForApi;
 
 import java.util.ArrayList;
 

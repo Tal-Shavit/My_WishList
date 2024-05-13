@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
-import com.talshavit.my_wishlist.Movie.AddMovieFragment;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 //import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
 import com.talshavit.my_wishlist.TvShow.TvShowInfo;

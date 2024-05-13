@@ -1,16 +1,17 @@
 package com.talshavit.my_wishlist.GeneralHelpers;
 
-import com.talshavit.my_wishlist.Movie.MovieInfo;
-import com.talshavit.my_wishlist.TvShow.TvShowInfo;
+import com.talshavit.my_wishlist.Media.MediaInfo;
 
 import java.util.List;
 
 public interface GenerealInterfaces {
     void setWatched(boolean watched);
 
-    int getID();
+    int getMediaID();
 
     int getSerialID();
+
+    MediaInfo setSerialID(int serialID);
 
     String getName();
 

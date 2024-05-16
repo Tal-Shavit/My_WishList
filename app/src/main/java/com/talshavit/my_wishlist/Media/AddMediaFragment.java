@@ -62,7 +62,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
     private Button addButton;
     private Spinner dynamicSpinner;
     private ArrayAdapter<String> adapter;
-    private String mediaType;
+    private MediaType mediaType;
     private String titleName, imageUrl, imgBackg, releaseYear, overview, trailer, lenght, userID;
     private int mediaID;
     private List<String> genres;
@@ -72,7 +72,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
     private MovieApiService movieApiService;
     private FirebaseAnalytics firebaseAnalytics;
 
-    public AddMediaFragment(String mediaType) {
+    public AddMediaFragment(MediaType mediaType) {
         this.mediaType = mediaType;
     }
 
@@ -103,9 +103,9 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
     }
 
     private void initApi(Retrofit retrofit) {
-        if (mediaType.equals("movies"))
+        if (mediaType == MediaType.MOVIES)
             movieApiService = retrofit.create(MovieApiService.class);
-        else
+        else if (mediaType == MediaType.TV_SHOWS)
             tvInterfaceService = retrofit.create(TvInterfaceService.class);
     }
 
@@ -114,7 +114,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
         titleEditText = view.findViewById(R.id.titleEditText);
         titleButton = view.findViewById(R.id.titleButton);
         dynamicSpinner = view.findViewById(R.id.dynamicSpinner);
-        imageView = view.findViewById(R.id.tvImageView);
+        imageView = view.findViewById(R.id.imageView);
         addButton = view.findViewById(R.id.addButton);
         exitButton = view.findViewById(R.id.exitButton);
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item);
@@ -123,7 +123,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
     }
 
     public void initView() {
-        if(mediaType.equals("movies"))
+        if (mediaType == MediaType.MOVIES)
             titleTvOrMovie.setText("ADD A MOVIE!");
         onTitleButtonClick();
         onAddButtonClick();
@@ -157,8 +157,8 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
         });
     }
 
-    private void searchMedia(String title, String mediaType) {
-        if (mediaType.equals("movies")) {
+    private void searchMedia(String title, MediaType mediaType) {
+        if (mediaType == MediaType.MOVIES) {
             movieApiService.searchMovies("e7bc0f9166ef27fb13b4271519c0b354", title, "popularity.desc", 1).enqueue(new Callback<MovieSearchResponse>() {
                 @Override
                 public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
@@ -169,7 +169,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
                 public void onFailure(Call<MovieSearchResponse> call, Throwable throwable) {
                 }
             });
-        } else {
+        } else if (mediaType == MediaType.TV_SHOWS) {
             tvInterfaceService.searchTv("e7bc0f9166ef27fb13b4271519c0b354", title, "popularity.desc", 1).enqueue(new Callback<TvSearchResponse>() {
                 @Override
                 public void onResponse(Call<TvSearchResponse> call, Response<TvSearchResponse> response) {
@@ -311,7 +311,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
         });
     }
 
-    private void getTrailerKey(int itemID, String mediaType) {
+    private void getTrailerKey(int itemID, MediaType mediaType) {
         Callback<RootForVideo> callback = new Callback<RootForVideo>() {
             @Override
             public void onResponse(Call<RootForVideo> call, Response<RootForVideo> response) {
@@ -324,9 +324,9 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
             }
         };
 
-        if (mediaType.equals("movies")) {
+        if (mediaType == MediaType.MOVIES) {
             movieApiService.getVideoDetails(itemID, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(callback);
-        } else {
+        } else if (mediaType == MediaType.TV_SHOWS) {
             tvInterfaceService.getVideoDetails(itemID, "e7bc0f9166ef27fb13b4271519c0b354").enqueue(callback);
         }
     }
@@ -426,7 +426,8 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
             public void onClick(View v) {
                 //analyticsFirebase();
                 userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(mediaType);
+                String childPath = mediaType == MediaType.MOVIES ? "movies" : "tv shows";
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath);
                 checkIfExist();
             }
         });
@@ -438,7 +439,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean isExist = false;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (mediaType.equals("movies")) {
+                    if (mediaType == MediaType.MOVIES) {
                         MovieInfo movieInfo = dataSnapshot.getValue(MovieInfo.class);
                         if (movieInfo.getMediaID() == mediaID) {
                             String txt = "The movie " + movieInfo.getName() + " is already in your list!";
@@ -446,7 +447,7 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
                             isExist = true;
                             break; //Exit loop after removing the reference
                         }
-                    } else {
+                    } else if (mediaType == MediaType.TV_SHOWS) {
                         TvShowInfo tvShowInfo = dataSnapshot.getValue(TvShowInfo.class);
                         if (tvShowInfo.getMediaID() == mediaID) {
                             String txt = "The tv show " + tvShowInfo.getName() + " is already in your list!";
@@ -459,9 +460,9 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
                 if (!isExist)
                     shiftSerialIDs();
                 else {
-                    if (mediaType.equals("movies"))
+                    if (mediaType == MediaType.MOVIES)
                         replaceFragment(new MediaFragment<MovieInfo>(mediaType, MovieInfo.class));
-                    else
+                    else if (mediaType == MediaType.TV_SHOWS)
                         replaceFragment(new MediaFragment<TvShowInfo>(mediaType, TvShowInfo.class));
                 }
             }
@@ -478,14 +479,14 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (mediaType.equals("movies")) {
+                    if (mediaType == MediaType.MOVIES) {
                         MovieInfo movie = snapshot.getValue(MovieInfo.class);
                         if (movie != null) {
                             int currentSerialId = movie.getSerialID();
                             movie.setSerialID(currentSerialId + 1);
                             databaseReference.child(movie.getSerialID() + "").setValue(movie);
                         }
-                    } else {
+                    } else if (mediaType == MediaType.TV_SHOWS) {
                         TvShowInfo tvShow = snapshot.getValue(TvShowInfo.class);
                         if (tvShow != null) {
                             int currentSerialId = tvShow.getSerialID();
@@ -502,9 +503,9 @@ public class AddMediaFragment<T extends GenerealInterfaces> extends Fragment imp
             }
         });
 
-        if (mediaType.equals("movies"))
+        if (mediaType == MediaType.MOVIES)
             createMovie(userID);
-        else
+        else if (mediaType == MediaType.TV_SHOWS)
             createTv(userID);
     }
 

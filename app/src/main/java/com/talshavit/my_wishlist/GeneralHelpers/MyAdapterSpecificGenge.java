@@ -2,7 +2,6 @@ package com.talshavit.my_wishlist.GeneralHelpers;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.Media.MediaType;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.TvShow.TvShowInfo;
@@ -22,20 +22,19 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
 
     private Context context;
     private List<T> itemInfoList;
-    private String imageUrl, imgBackg;
+    private String imageUrl, imgBackg, title, lenght, releaseYear, overview, trailerKey;
     private FragmentManager fragmentManager;
-    private String itemType;
-    private String title, lenght, releaseYear, overview, trailerKey;
+    private MediaType mediaType;
     private int ID, serialID;
     private List<String> genres;
     private boolean isWatched;
     private Bundle bundle;
 
-    public MyAdapterSpecificGenge(Context context, List<T> itemInfoList, FragmentManager fragmentManager, String itemType) {
+    public MyAdapterSpecificGenge(Context context, List<T> itemInfoList, FragmentManager fragmentManager, MediaType mediaType) {
         this.context = context;
         this.itemInfoList = itemInfoList;
         this.fragmentManager = fragmentManager;
-        this.itemType = itemType;
+        this.mediaType = mediaType;
     }
 
     @NonNull
@@ -83,18 +82,18 @@ public class MyAdapterSpecificGenge<T extends GenerealInterfaces> extends Recycl
     }
 
     private void initGeneralFragment() {
-        if (itemType.equals("tv shows")) {
+        if (mediaType == MediaType.TV_SHOWS) {
             TvShowInfo tvShowInfo = new TvShowInfo(ID, title, imageUrl, imgBackg, releaseYear, genres, overview, trailerKey, isWatched, lenght);
             bundle.putSerializable("MEDIA_INFO", tvShowInfo);
             bundle.putSerializable("SERIAL_ID", serialID);
-            SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("tv shows");
+            SpecificFragmentGeneral<TvShowInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>(mediaType);
             specificFragmentGeneral.setArguments(bundle);
             replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);
-        } else {
+        } else if(mediaType == MediaType.MOVIES){
             MovieInfo movieInfo = new MovieInfo(ID, title, imageUrl, imgBackg, releaseYear, genres, overview, trailerKey, isWatched,lenght);
             bundle.putSerializable("MEDIA_INFO", movieInfo);
             bundle.putSerializable("SERIAL_ID", serialID);
-            SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>("movies");
+            SpecificFragmentGeneral<MovieInfo> specificFragmentGeneral = new SpecificFragmentGeneral<>(mediaType);
             specificFragmentGeneral.setArguments(bundle);
             replaceFragment((SpecificFragmentGeneral<T>) specificFragmentGeneral);
         }

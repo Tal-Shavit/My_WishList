@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.Media.MediaType;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.TvShow.TvShowInfo;
@@ -52,8 +52,9 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
 
     GeneralFunctions<T> generalFunctions = new GeneralFunctions<>(getContext());
 
-    private String itemType, userID;
+    private String userID, childPath;
 
+    private MediaType mediaType;
     private T mediaInfo;
     private FirebaseAnalytics firebaseAnalytics;
 
@@ -61,8 +62,8 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         // Required empty public constructor
     }
 
-    public SpecificFragmentGeneral(String itemType) {
-        this.itemType = itemType;
+    public SpecificFragmentGeneral(MediaType mediaType) {
+        this.mediaType = mediaType;
     }
 
     @Override
@@ -109,8 +110,9 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         setGenres();
         setTrailer();
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(serialID+"");
-        databaseReferenceAllItems = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType);
+        childPath = mediaType == MediaType.MOVIES ? "movies" : "tv shows";
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath).child(serialID+"");
+        databaseReferenceAllItems = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath);
         onDeleteButton();
         onWatchButton();
         onNotWatchButton();
@@ -180,7 +182,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         notWatchedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove", itemType);
+                AlertDialogFunc("REMOVE FROM WATCH LIST", "Remove \"", "remove");
             }
         });
     }
@@ -189,10 +191,10 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         watchedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(itemType.equals("movies"))
-                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add", itemType);
-                else
-                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add", itemType);
+                if(mediaType == MediaType.MOVIES)
+                    AlertDialogFunc("WATCHED THIS MOVIE","Did you watched \"", "add");
+                else if(mediaType == MediaType.TV_SHOWS)
+                    AlertDialogFunc("WATCHED THIS TV SHOW","Did you watched \"", "add");
 
             }
         });
@@ -202,17 +204,17 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(itemType.equals("movies"))
-                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete", itemType);
-                else
-                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete", itemType);
+                if(mediaType == MediaType.MOVIES)
+                    AlertDialogFunc("DELETE MOVIE","Do you want to delete \"", "delete");
+                else if(mediaType == MediaType.TV_SHOWS)
+                    AlertDialogFunc("DELETE TV SHOW","Do you want to delete \"", "delete");
             }
         });
     }
 
-    private void deleteFromFirebase(int itemID, String itemType) {
+    private void deleteFromFirebase(int itemID) {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(itemType).child(serialID+"");
+        DatabaseReference specificTvShowReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath).child(serialID+"");
         specificTvShowReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -229,7 +231,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         databaseReferenceAllItems.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(itemType.equals("movies")){
+                if(mediaType == MediaType.MOVIES){
                     List<MovieInfo> movies = new ArrayList<>();
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                         MovieInfo movieInfo = snapshot.getValue(MovieInfo.class);
@@ -239,8 +241,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
                         movies.get(i).setSerialID(i);
                     }
                     databaseReferenceAllItems.setValue(movies);
-                }
-                else{
+                } else if(mediaType == MediaType.TV_SHOWS){
                     List<TvShowInfo> tvs = new ArrayList<>();
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                         TvShowInfo tvShowInfo = snapshot.getValue(TvShowInfo.class);
@@ -260,7 +261,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
         });
     }
 
-    private void AlertDialogFunc(String title,String messege, String removeOrAddOrDelete, String itemType){
+    private void AlertDialogFunc(String title,String messege, String removeOrAddOrDelete){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(title);
         builder.setMessage( messege + mediaInfo.getName().toUpperCase() +"\"?");
@@ -301,7 +302,7 @@ public class SpecificFragmentGeneral<T extends GenerealInterfaces> extends Fragm
             notWatchedButton.setVisibility(View.GONE);
         }
         else{
-            deleteFromFirebase(serialID, itemType);
+            deleteFromFirebase(serialID);
             logClickToDeleteEvent();
             youTubePlayerView.release();
             requireActivity().getSupportFragmentManager().popBackStackImmediate();

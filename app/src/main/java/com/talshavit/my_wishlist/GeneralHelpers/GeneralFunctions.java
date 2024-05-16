@@ -11,7 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.talshavit.my_wishlist.Media.MediaType;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.R;
 import com.talshavit.my_wishlist.TvShow.TvShowInfo;
@@ -43,7 +43,7 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
     public void setSwipeToDelete(String title,String messege, Context context,
                          List<T> list, RecyclerView.Adapter<?> adapter,
                          DatabaseReference databaseReference, RecyclerView recyclerView,
-                         String userID, String childPath) {
+                         String userID, MediaType mediaType) {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.DOWN) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -63,9 +63,9 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteFromFirebase(list.get(position).getSerialID(), userID,childPath, context);
+                        deleteFromFirebase(list.get(position).getSerialID(), userID,mediaType, context);
                         list.remove(position);
-                        updateSerialIds(list, childPath, databaseReference);
+                        updateSerialIds(list, mediaType, databaseReference);
                         adapter.notifyItemRemoved(position);
                     }
                 });
@@ -99,15 +99,15 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
         firebaseAnalytics.logEvent("swipe_to_delete_event", params);
     }
 
-    public void updateSerialIds(List<T> list, String childPath, DatabaseReference databaseReference) {
-        if(childPath.equals("movies")){
+    public void updateSerialIds(List<T> list, MediaType mediaType, DatabaseReference databaseReference) {
+        if(mediaType == MediaType.MOVIES){
             ArrayList<MovieInfo> movies = new ArrayList<>();
             movies = (ArrayList<MovieInfo>) list;
             for (int i = 0; i < list.size(); i++) {
                 movies.get(i).setSerialID(i);
             }
             databaseReference.setValue(movies);
-        }else{
+        }else if(mediaType == MediaType.TV_SHOWS){
             ArrayList<TvShowInfo> tvs = new ArrayList<>();
             tvs = (ArrayList<TvShowInfo>) list;
             for (int i = 0; i < list.size(); i++) {
@@ -156,7 +156,8 @@ public class GeneralFunctions<T extends GenerealInterfaces> {
         viewDrawable.draw(c);
     }
 
-    public void deleteFromFirebase(int id, String userID,String childPath, Context context) {
+    public void deleteFromFirebase(int id, String userID,MediaType mediaType, Context context) {
+        String childPath = mediaType == MediaType.MOVIES ? "movies" : "tv shows";
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath).child(String.valueOf(id));
         reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

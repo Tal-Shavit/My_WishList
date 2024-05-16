@@ -38,24 +38,25 @@ public class MediaFragment<T extends GenerealInterfaces> extends Fragment implem
     private RecyclerView recyclerViewAll, recyclerViewGenresButtons, recyclerViewBySpecificGenre;
     private List<T> allMediaInfos;
     private DatabaseReference databaseReference;
-    private MyAdapterAllItems<?> myAdapterAllItems;
+    private MyAdapterAllItems<T> myAdapterAllItems;
     private MyAdapterGenres myAdapterGenres;
     private MyAdapterSpecificGenge<T> myAdapterSpecificGenre;
     private Context context;
     private String userID;
     private List<String> genresList;
     private List<T> alllistByGenre;
-    private TextView genreTextView, allTvTitle;
+    private TextView genreTextView, allTitle;
     private String selectedGenre;
     private FloatingActionButton addButton;
-
-    private String mediaType;
-
+    //private String mediaType;
+    private MediaType mediaType;
     GeneralFunctions<T> generalFunctions;
+
+    private String childPath;
 
     private Class<T> genericType;
 
-    public MediaFragment(String mediaType, Class<T> genericType) {
+    public MediaFragment(MediaType mediaType, Class<T> genericType) {
         this.mediaType = mediaType;
         this.genericType = genericType;
         allMediaInfos = new ArrayList<>();
@@ -83,10 +84,11 @@ public class MediaFragment<T extends GenerealInterfaces> extends Fragment implem
     }
 
     private void initViews(View view) {
-        allTvTitle.setText("ALL " + mediaType.toUpperCase());
+        if (mediaType == MediaType.TV_SHOWS)
+            allTitle.setText("ALL TV SHOWS");
         myAdapterAllItems = new MyAdapterAllItems<>(getActivity().getApplicationContext(), requireContext(), allMediaInfos, mediaType);
+        getMediasFromDB();
         initAdapter(recyclerViewAll, myAdapterAllItems);
-        getTvsFromDB();
         onAddButtonClick();
         swipeToDelete();
         dragTv();
@@ -127,9 +129,10 @@ public class MediaFragment<T extends GenerealInterfaces> extends Fragment implem
         }
     }
 
-    private void getTvsFromDB() {
+    private void getMediasFromDB() {
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(mediaType);
+        childPath = mediaType == MediaType.MOVIES ? "movies" : "tv shows";
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userID).child(childPath);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -158,7 +161,7 @@ public class MediaFragment<T extends GenerealInterfaces> extends Fragment implem
     }
 
     private void swipeToDelete() {
-        generalFunctions.setSwipeToDelete("DELETE " + mediaType.toUpperCase(), "Do you want to delete \"",
+        generalFunctions.setSwipeToDelete("DELETE " + childPath.toUpperCase(), "Do you want to delete \"",
                 context, allMediaInfos, myAdapterAllItems,
                 databaseReference, recyclerViewAll, userID, mediaType);
     }
@@ -178,7 +181,7 @@ public class MediaFragment<T extends GenerealInterfaces> extends Fragment implem
         recyclerViewBySpecificGenre = view.findViewById(R.id.recyclerViewMoviesBySpecificGenre);
         genreTextView = view.findViewById(R.id.genreTextView);
         addButton = view.findViewById(R.id.add_button);
-        allTvTitle = view.findViewById(R.id.allTvTitle);
+        allTitle = view.findViewById(R.id.allTitle);
     }
 
     private void createGenres(List<T> allMediaInfos) {

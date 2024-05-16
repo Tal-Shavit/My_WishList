@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.talshavit.my_wishlist.Media.MediaType;
 import com.talshavit.my_wishlist.Media.MediaFragment;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 import com.talshavit.my_wishlist.Settings.SettingFragment;
@@ -78,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnClickMenuListener(item -> {
             switch (item.getId()) {
                 case 1:
-                    replaceFragment(new MediaFragment<>("movies", MovieInfo.class));
+                    replaceFragment(new MediaFragment<>(MediaType.MOVIES, MovieInfo.class));
                     break;
                 case 2:
-                    replaceFragment(new MediaFragment<>("tv shows", TvShowInfo.class));
+                    replaceFragment(new MediaFragment<>(MediaType.TV_SHOWS, TvShowInfo.class));
                     break;
                 case 3:
                     replaceFragment(new WatchedFragment());

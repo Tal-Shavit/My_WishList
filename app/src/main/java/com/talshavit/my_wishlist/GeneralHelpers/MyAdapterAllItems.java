@@ -3,7 +3,6 @@ package com.talshavit.my_wishlist.GeneralHelpers;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import com.talshavit.my_wishlist.Media.MediaType;
 import com.talshavit.my_wishlist.R;
 
 import java.util.List;
@@ -25,16 +25,16 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
     private Context context;
     private Context context1;
     private List<T> itemInfoList;
-    private String itemType;
+    private MediaType mediaType;
 
     private YouTubePlayerView youTubePlayerView;
     private int selectedPosition = RecyclerView.NO_POSITION; //Initially, no item is selected
 
-    public MyAdapterAllItems(Context context, Context context1, List<T> itemInfoList, String itemType) {
+    public MyAdapterAllItems(Context context, Context context1, List<T> itemInfoList, MediaType mediaType) {
         this.context = context;
         this.itemInfoList = itemInfoList;
         this.context1 = context1;
-        this.itemType = itemType;
+        this.mediaType = mediaType;
     }
 
 
@@ -90,14 +90,15 @@ public class MyAdapterAllItems<T extends GenerealInterfaces> extends RecyclerVie
     }
 
     private void getTitle(MyViewHolderAllItems holder, int position) {
-        String title;
-        if (itemType.equals("movies")) {
+        String title = "";
+        if (mediaType == MediaType.MOVIES) {
             if (itemInfoList.get(position).getReleaseYear() != "")
                 title = itemInfoList.get(position).getName() + " (" + itemInfoList.get(position).getReleaseYear() + ")";
             else
                 title = itemInfoList.get(position).getName();
-        } else
+        } else if (mediaType == MediaType.TV_SHOWS) {
             title = itemInfoList.get(position).getName();
+        }
         holder.titleTxt.setText(title);
         holder.titleTextView.setText(title);
     }

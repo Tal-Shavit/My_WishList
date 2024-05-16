@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.talshavit.my_wishlist.Media.MediaType;
 import com.talshavit.my_wishlist.GeneralHelpers.MyAdapterSpecificGenge;
 import com.talshavit.my_wishlist.Movie.MovieInfo;
 //import com.talshavit.my_wishlist.MoviesHelpers.MyAdapterSpecificGenre;
@@ -31,9 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class WatchedFragment extends Fragment {
-
     private Context context;
-
     private RecyclerView allWatchedMovies;
     private RecyclerView allWatchedTvShows;
     private MyAdapterSpecificGenge<MovieInfo> myAdapterSpecificGenreMovie;
@@ -78,7 +77,7 @@ public class WatchedFragment extends Fragment {
         LinearLayoutManager linearLayoutManagerTv = new LinearLayoutManager(context);
         linearLayoutManagerTv.setOrientation(linearLayoutManagerTv.HORIZONTAL);
         allWatchedTvShows.setLayoutManager(linearLayoutManagerTv);
-        myAdapterSpecificGenreTv = new MyAdapterSpecificGenge<>(context, allTvShowItems, fragmentManager,"tv shows");
+        myAdapterSpecificGenreTv = new MyAdapterSpecificGenge<>(context, allTvShowItems, fragmentManager, MediaType.TV_SHOWS);
         allWatchedTvShows.setAdapter(myAdapterSpecificGenreTv);
     }
 
@@ -86,7 +85,7 @@ public class WatchedFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(linearLayoutManager.HORIZONTAL);
         allWatchedMovies.setLayoutManager(linearLayoutManager);
-        myAdapterSpecificGenreMovie = new MyAdapterSpecificGenge<>(context,  allMoviesItems,fragmentManager, "movies");
+        myAdapterSpecificGenreMovie = new MyAdapterSpecificGenge<>(context,  allMoviesItems,fragmentManager, MediaType.MOVIES);
         allWatchedMovies.setAdapter(myAdapterSpecificGenreMovie);
     }
 

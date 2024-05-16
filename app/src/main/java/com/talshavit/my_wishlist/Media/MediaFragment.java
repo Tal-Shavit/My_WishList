@@ -48,7 +48,6 @@ public class MediaFragment<T extends GenerealInterfaces> extends Fragment implem
     private TextView genreTextView, allTitle;
     private String selectedGenre;
     private FloatingActionButton addButton;
-    //private String mediaType;
     private MediaType mediaType;
     GeneralFunctions<T> generalFunctions;
 
